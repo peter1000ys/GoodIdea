@@ -19,7 +19,6 @@ public class HelloService {
                 .hello_id(hello.getId())
                 .content(hello.getContent())
                 .build();
-
     }
 
 }

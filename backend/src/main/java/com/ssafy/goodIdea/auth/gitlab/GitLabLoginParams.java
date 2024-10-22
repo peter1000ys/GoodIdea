@@ -4,6 +4,7 @@ import com.ssafy.goodIdea.auth.OAuthLoginParams;
 import com.ssafy.goodIdea.user.entity.OAuthProvider;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -23,5 +24,9 @@ public class GitLabLoginParams implements OAuthLoginParams {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("code", authorizationCode);
         return body;
+    }
+
+    public void setAuthorizationCode(String authorizationCode) {
+        this.authorizationCode = authorizationCode;
     }
 }
