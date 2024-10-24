@@ -1,9 +1,4 @@
-import axios, {
-  AxiosRequestConfig,
-  AxiosResponse,
-  AxiosError,
-  InternalAxiosRequestConfig,
-} from "axios";
+import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 

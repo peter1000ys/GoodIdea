@@ -23,33 +23,43 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
 
             <Route path="/projectdetail/:id">
+              {/* 프로젝트 기본 정보 페이지 */}
+              <Route index element={<ProjectEssentialPage />} />
+
+              {/* api명세서 페이지 */}
               <Route
                 path="/projectdetail/:id/apispecification"
                 element={<ApiSpecificationPage />}
               />
+
+              {/* 브레인스토밍 페이지 */}
               <Route
                 path="/projectdetail/:id/brainstorming"
                 element={<BrainStormingPage />}
               />
+
+              {/* ERD페이지 */}
               <Route path="/projectdetail/:id/erd" element={<ERDPage />} />
               <Route
                 path="/projectdetail/:id/ideaboard"
                 element={<IdeaBoardPage />}
               />
-              <Route
-                path="/projectdetail/:id/projectessential"
-                element={<ProjectEssentialPage />}
-              />
+
+              {/* 기획서 페이지 */}
               <Route
                 path="/projectdetail/:id/proposal"
                 element={<ProposalPage />}
               />
+
+              {/* 요구사항 명세서 페이지 */}
               <Route
                 path="/projectdetail/:id/requirementsspecification"
                 element={<RequirementsSpecificationPage />}
               />
             </Route>
           </Route>
+
+          {/* 404 not found */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
