@@ -1,0 +1,24 @@
+version: "3"
+services:
+  front:
+    container_name: frontend
+    image: ssafy/frontend
+    ports:
+      - 3000:80
+
+  backend:
+    container_name: backend
+    image: ssafy/backend
+    ports:
+      - 8080:8081
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger
+    ports:
+      - "8000:8080"
+    restart: on-failure
+    environment:
+      SWAGGER_JSON: /usr/share/nginx/html/docs/openapi3.yml
+    volumes:
+      - ./build/api-spec:/usr/share/nginx/html/docs

@@ -105,13 +105,13 @@ tasks.register('openapi3-security') {
 	doFirst {
 		def swaggerUIFile = file("${openapi3.outputDirectory}/${openapi3.outputFileNamePrefix}.${openapi3.format}")
 
-//		def securitySchemesContent = "  securitySchemes:\n" +         \
-//                                             "    APIKey:\n" +         \
-//                                             "      type: apiKey\n" +         \
-//                                             "      name: Authorization\n" +         \
-//                                             "      in: header\n" +        \
-//                                             "security:\n" +
-//				"  - APIKey: []  # Apply the security scheme here"
+		def securitySchemesContent = "  securitySchemes:\n" +         \
+                                             "    APIKey:\n" +         \
+                                             "      type: apiKey\n" +         \
+                                             "      name: Authorization\n" +         \
+                                             "      in: header\n" +        \
+                                             "security:\n" +
+				"  - APIKey: []  # Apply the security scheme here"
 
 		swaggerUIFile
 	}
