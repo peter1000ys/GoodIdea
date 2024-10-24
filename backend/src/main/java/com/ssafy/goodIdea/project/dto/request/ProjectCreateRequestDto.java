@@ -9,6 +9,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class ProjectCreateRequestDto {
     //    GitLab 프로젝트 Id
     Long projectId;

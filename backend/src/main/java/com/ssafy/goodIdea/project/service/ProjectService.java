@@ -37,9 +37,11 @@ public class ProjectService {
     /*
     * @param user
     * @param ProjectCreateRequestDto
+    * @param GitLabProjectResponseDto
+    * @param List<GitLabUserResponseDto>
     */
     @Transactional
-    public void createProject(User user, ProjectCreateRequestDto dto, GitLabProjectResponseDto myProject, List<GitLabUserResponseDto> users) {
+    public ProjectResponseDto createProject(User user, ProjectCreateRequestDto dto, GitLabProjectResponseDto myProject, List<GitLabUserResponseDto> users) {
 
 //        같은 타입의 프로젝트를 생성하려할 경우 에러 발생
         Optional<Project> ou = projectRepository.findByUserIdAndProjectType(user.getId(), dto.getProjectType());
@@ -72,6 +74,30 @@ public class ProjectService {
                     .user(member.get())
                     .build());
                 });
+
+        return ProjectResponseDto.builder()
+                .project_id(project.getId())
+                .projectType(project.getProjectType())
+                .name(project.getName())
+                .description(project.getDescription())
+                .gitlab_name(project.getGitlab_name())
+                .gitlab_url(project.getGitlab_url())
+                .members(
+                        userProjectRepository.findAllByProjectId(project.getId())
+                                .stream()
+                                .map( up -> {
+                                    User us = up.getUser();
+                                    return UserDto.builder()
+                                            .id(us.getId())
+                                            .grade(us.getGrade())
+                                            .locationType(us.getLocationType())
+                                            .username(us.getUsername())
+                                            .roleType(us.getRoleType())
+                                            .build();
+                                })
+                                .collect(Collectors.toList())
+                )
+                .build();
     }
 
     /*

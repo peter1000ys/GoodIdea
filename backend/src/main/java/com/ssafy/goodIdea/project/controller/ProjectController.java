@@ -32,12 +32,11 @@ public class ProjectController {
 * return MsgType
 * */
     @PostMapping("/create")
-    public ApiResponse<MsgType> createProject(@CurrentUser User user,
+    public ApiResponse<ProjectResponseDto> createProject(@CurrentUser User user,
                                               @RequestBody ProjectCreateRequestDto dto) throws JsonProcessingException {
         GitLabProjectResponseDto myProject = gitLabApiClient.getGitLabProject(user.getUsername(), dto.getProjectId());
         List<GitLabUserResponseDto> users = gitLabApiClient.getGitLabMembers(user.getUsername(), dto.getProjectId());
-        projectService.createProject(user, dto, myProject, users);
-        return ApiResponse.ok(MsgType.PROJECT_CREATE_SUCCESS);
+        return ApiResponse.ok(projectService.createProject(user, dto, myProject, users));
     }
 
 /*
