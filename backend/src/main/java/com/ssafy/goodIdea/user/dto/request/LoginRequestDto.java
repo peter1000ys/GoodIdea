@@ -1,4 +1,4 @@
-package com.ssafy.goodIdea.user.dto;
+package com.ssafy.goodIdea.user.dto.request;
 
 import lombok.Data;
 

@@ -21,16 +21,13 @@ public class User extends BaseTime {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Setter
-    @Column(nullable = false, unique = true)
-    private String email;
-
     @Enumerated(value = EnumType.STRING)
     // USER, 컨설턴트
     private RoleType roleType;
 
     // 지역
     @Enumerated(value = EnumType.STRING)
+    @Setter
     private LocationType locationType;
 
     // 기수
@@ -38,10 +35,9 @@ public class User extends BaseTime {
     private Integer grade;
 
     @Builder
-    private User(Long id, String username, String email, RoleType roleType, LocationType locationType, OAuthProvider oAuthProvider) {
+    private User(Long id, String username, RoleType roleType, LocationType locationType, OAuthProvider oAuthProvider) {
         this.id = id;
         this.username = username;
-        this.email = email;
         this.roleType = roleType;
         this.locationType = locationType;
     }

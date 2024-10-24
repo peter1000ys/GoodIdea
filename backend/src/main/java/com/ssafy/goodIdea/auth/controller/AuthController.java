@@ -1,10 +1,5 @@
 package com.ssafy.goodIdea.auth.controller;
 
-//import back.shoppingMart.common.auth.AuthTokens;
-//import back.shoppingMart.common.auth.service.OAuthLoginService;
-//import back.shoppingMart.common.response.MsgType;
-//import back.shoppingMart.common.response.ResponseEntityDto;
-//import back.shoppingMart.common.response.ResponseUtils;
 import com.ssafy.goodIdea.auth.AuthTokens;
 import com.ssafy.goodIdea.auth.gitlab.GitLabLoginParams;
 import com.ssafy.goodIdea.auth.service.OAuthLoginService;

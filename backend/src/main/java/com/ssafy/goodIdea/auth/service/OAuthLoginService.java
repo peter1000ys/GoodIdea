@@ -2,12 +2,14 @@ package com.ssafy.goodIdea.auth.service;
 
 
 import com.ssafy.goodIdea.auth.*;
+import com.ssafy.goodIdea.common.redis.RedisService;
 import com.ssafy.goodIdea.user.entity.RoleType;
 import com.ssafy.goodIdea.user.entity.User;
 import com.ssafy.goodIdea.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.Optional;
 
 @Service
@@ -35,7 +37,6 @@ public class OAuthLoginService {
     private String newUser(OAuthInfoResponse oAuthInfoResponse) {
 
         User user = User.builder()
-                .email(oAuthInfoResponse.getEmail())
                 .username(oAuthInfoResponse.getUsername())
                 .roleType(oAuthInfoResponse.getRoleType())
                 .oAuthProvider(oAuthInfoResponse.getOAuthProvider())

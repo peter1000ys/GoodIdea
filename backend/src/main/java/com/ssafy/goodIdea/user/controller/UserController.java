@@ -1,8 +1,10 @@
 package com.ssafy.goodIdea.user.controller;
 
 import com.ssafy.goodIdea.auth.PrincipalDetails;
+import com.ssafy.goodIdea.common.annotation.CurrentUser;
 import com.ssafy.goodIdea.common.exception.ApiResponse;
 import com.ssafy.goodIdea.user.dto.UserDto;
+import com.ssafy.goodIdea.user.dto.request.ChangeUserLocationRequestDto;
 import com.ssafy.goodIdea.user.entity.User;
 import com.ssafy.goodIdea.user.service.UserService;
 import jakarta.validation.Valid;
@@ -22,17 +24,29 @@ public class UserController {
 
     private final UserService userService;
 
-    // 회원 정보 조회
+    /*
+    * 유저 정보 조회
+    * */
     @GetMapping("/profile")
-    public ApiResponse<UserDto> getUserProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        UserDto user = userService.getUserById(principalDetails.getUser().getId());
+    public ApiResponse<UserDto> getUserProfile(@CurrentUser User user) {
+
         return ApiResponse.ok(UserDto.builder()
                     .id(user.getId())
                     .username(user.getUsername())
-                    .email(user.getEmail())
                     .roleType(user.getRoleType())
+                    .grade(user.getGrade())
                     .locationType(user.getLocationType())
                 .build());
+    }
+
+    /*
+    * 유저 기수, 지역 변경
+    * */
+    @PutMapping("/update")
+    public ApiResponse<UserDto> changeUserLocation(@CurrentUser User user,
+                                                   @RequestBody ChangeUserLocationRequestDto dto) {
+
+        return ApiResponse.ok(userService.changeUserLocation(user, dto));
     }
 
 }

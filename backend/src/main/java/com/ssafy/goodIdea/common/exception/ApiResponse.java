@@ -1,5 +1,6 @@
 package com.ssafy.goodIdea.common.exception;
 
+import com.ssafy.goodIdea.common.entity.MsgType;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -18,6 +19,13 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
+    public ApiResponse(HttpStatus status, String message) {
+        this.code = status.value();
+        this.status = status;
+        this.message = message;
+        this.data = null;
+    }
+
     public static <T> ApiResponse<T> of(HttpStatus httpStatus, String message, T data) {
         return new ApiResponse<>(httpStatus, message, data);
     }
@@ -27,6 +35,11 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> ok(T data) {
+        if (data instanceof MsgType) {
+            // data가 enum MsgType일 경우, 메시지를 추출
+            MsgType msgType = (MsgType) data;
+            return new ApiResponse<>(HttpStatus.OK, msgType.getMessage());
+        }
         return of(HttpStatus.OK, data);
     }
 
