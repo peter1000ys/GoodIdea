@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GitLabUserResponseDto {
     String username;
-    String email;
 }

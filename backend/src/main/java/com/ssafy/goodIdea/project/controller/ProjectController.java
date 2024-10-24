@@ -1,31 +1,23 @@
 package com.ssafy.goodIdea.project.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.goodIdea.auth.PrincipalDetails;
 import com.ssafy.goodIdea.auth.gitlab.GitLabApiClient;
 import com.ssafy.goodIdea.common.annotation.CurrentUser;
 import com.ssafy.goodIdea.common.entity.MsgType;
 import com.ssafy.goodIdea.common.exception.ApiResponse;
-import com.ssafy.goodIdea.common.exception.BaseException;
-import com.ssafy.goodIdea.common.exception.ErrorType;
 import com.ssafy.goodIdea.project.dto.request.ProjectCreateRequestDto;
 import com.ssafy.goodIdea.project.dto.request.ProjectUpdateRequestDto;
 import com.ssafy.goodIdea.project.dto.response.GitLabProjectResponseDto;
 import com.ssafy.goodIdea.project.dto.response.ProjectResponseDto;
-import com.ssafy.goodIdea.project.entity.Project;
+import com.ssafy.goodIdea.project.entity.ProjectType;
 import com.ssafy.goodIdea.project.service.ProjectService;
 import com.ssafy.goodIdea.user.dto.response.GitLabUserResponseDto;
 import com.ssafy.goodIdea.user.entity.User;
-import com.ssafy.goodIdea.user.repository.UserRepository;
-import com.ssafy.goodIdea.userProject.entity.UserProject;
-import com.ssafy.goodIdea.userProject.repository.UserProjectRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,20 +51,21 @@ public class ProjectController {
     }
 
 /*
- * 유저 Gitlab 프로젝트 목록 조회
+ * 유저 프로젝트 목록 조회
  * */
     @GetMapping("")
-    public ApiResponse<List<ProjectResponseDto>> getGitLabProjects(@CurrentUser User user) {
-        return ApiResponse.ok(projectService.getUserProjects(user));
+    public ApiResponse<List<ProjectResponseDto>> getUserProjects(@CurrentUser User user,
+                                                                 @RequestParam(value = "projectType", required = false) Optional<ProjectType> projectType,
+                                                                 @RequestParam(value = "grade", required = false) Optional<Integer> grade) {
+        return ApiResponse.ok(projectService.getUserProjects(user, projectType, grade));
     }
-
 
 /*
  * 유저 Gitlab 프로젝트 리스트 조회
  * return List<ProjectResponseDto>
  * */
     @GetMapping("/gitlab")
-    public ApiResponse<List<GitLabProjectResponseDto>> getUserProjects(@CurrentUser User user) throws JsonProcessingException {
+    public ApiResponse<List<GitLabProjectResponseDto>> getGitlabProjects(@CurrentUser User user) throws JsonProcessingException {
         List<GitLabProjectResponseDto> projects =  gitLabApiClient.getGitLabProjects(user.getUsername());
         return ApiResponse.ok(projects);
     }

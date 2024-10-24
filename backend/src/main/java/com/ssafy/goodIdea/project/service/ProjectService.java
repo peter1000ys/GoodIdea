@@ -7,6 +7,7 @@ import com.ssafy.goodIdea.project.dto.request.ProjectUpdateRequestDto;
 import com.ssafy.goodIdea.project.dto.response.GitLabProjectResponseDto;
 import com.ssafy.goodIdea.project.dto.response.ProjectResponseDto;
 import com.ssafy.goodIdea.project.entity.Project;
+import com.ssafy.goodIdea.project.entity.ProjectType;
 import com.ssafy.goodIdea.project.repository.ProjectRepository;
 import com.ssafy.goodIdea.user.dto.UserDto;
 import com.ssafy.goodIdea.user.dto.response.GitLabUserResponseDto;
@@ -39,6 +40,12 @@ public class ProjectService {
     */
     @Transactional
     public void createProject(User user, ProjectCreateRequestDto dto, GitLabProjectResponseDto myProject, List<GitLabUserResponseDto> users) {
+
+//        같은 타입의 프로젝트를 생성하려할 경우 에러 발생
+        Optional<Project> ou = projectRepository.findByUserIdAndProjectType(user.getId(), dto.getProjectType());
+        if(ou.isPresent()){
+            throw new BaseException(ErrorType.PROJECT_ALREADY_EXIST);
+        }
 
         Project project = projectRepository.save(
                 Project.builder()
@@ -103,10 +110,21 @@ public class ProjectService {
     /*
      * @param User
      */
-    public List<ProjectResponseDto> getUserProjects(User user) {
-        List<UserProject> projects = userProjectRepository.findAllByUserId(user.getId());
+    public List<ProjectResponseDto> getUserProjects(User user, Optional<ProjectType> projectType, Optional<Integer> grade) {
+        List<UserProject> userProjects;
 
-        return projects.stream()
+        // 동적 쿼리 처리
+        if (projectType.isPresent() && grade.isPresent()) {
+            userProjects = userProjectRepository.findByUserIdAndGradeAndProjectType(user.getId(), grade.get(), projectType.get());
+        } else if (projectType.isPresent()) {
+            userProjects = userProjectRepository.findByUserIdAndProjectType(user.getId(), projectType.get());
+        } else if (grade.isPresent()) {
+            userProjects = userProjectRepository.findByUserIdAndGrade(user.getId(), grade.get());
+        } else {
+            userProjects = userProjectRepository.findByUserId(user.getId());
+        }
+
+        return userProjects.stream()
                 .map( userProject -> {
                     Project project = userProject.getProject();
                     return ProjectResponseDto.builder()
