@@ -1,5 +1,14 @@
+import { Helmet } from "react-helmet-async";
+
 function LoginPage() {
-  return <>로그인페이지</>;
+  return (
+    <>
+      <Helmet>
+        <title>로그인페이지</title>
+      </Helmet>
+      로그인페이지
+    </>
+  );
 }
 
 export default LoginPage;
