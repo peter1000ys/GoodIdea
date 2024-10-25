@@ -1,15 +1,14 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Header from "./common/Header";
+import Nav from "./common/Nav";
 
 function CommonLayout() {
   return (
-    <div className="flex">
-      {/* Header - 세로로 길게 배치 */}
-      <Header />
+    <div className="flex min-h-screen min-w-screen">
+      <Nav />
 
       {/* Main Content */}
-      <main className="flex-1 p-4">
+      <main className="flex-1">
         {/* 자식 컴포넌트를 렌더링 */}
         <Outlet />
       </main>
