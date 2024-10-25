@@ -1,6 +1,8 @@
 import { Helmet } from "react-helmet-async";
 import Header from "../../components/common/Header";
 
+// 깃랩 정보 등은 api요청으로 받아와서 작성
+
 function ProjectEssentialPage() {
   return (
     <>
@@ -8,12 +10,10 @@ function ProjectEssentialPage() {
         <title>프로젝트 기본 정보 페이지</title>
       </Helmet>
       <div className="h-full w-full flex flex-col">
-        <div>
-          <Header content="관통프로젝트" />
-        </div>
+        <Header content="관통프로젝트" />
 
         {/* 전체 배경 */}
-        <div className="flex-1 flex justify-center items-center bg-gray-100">
+        <div className="flex-1 flex justify-center items-center bg-gray-100 py-8">
           {/* 메인 컨테이너 */}
           <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
             {/* 상단 헤더 */}
@@ -29,7 +29,7 @@ function ProjectEssentialPage() {
               </h2>
 
               {/* 그리드 레이아웃 */}
-              <div className="grid grid-cols-3 gap-4 mb-8">
+              <div className="grid grid-cols-3 gap-4 mb-6">
                 {/* Row 1 */}
                 <div className="col-span-1 flex items-center">팀 깃랩 코드</div>
                 <div className="col-span-2">

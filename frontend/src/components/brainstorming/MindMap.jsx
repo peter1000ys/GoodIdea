@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRef } from "react";
 import * as d3 from "d3";
 
@@ -76,11 +76,16 @@ const colorMap = {
   turquoise: "#1ABC9C",
 };
 
-const MindMap = () => {
+const MindMap = ({ setSelectedKeyword }) => {
   const svgRef = useRef();
-  const clickHandle = (event, d) => {
-    console.log("Clicked node:", d);
-  };
+  const clickHandle = useCallback(
+    (event, d) => {
+      setSelectedKeyword(d.id);
+      console.log("Clicked node:", d);
+    },
+    [setSelectedKeyword]
+  );
+
   useEffect(() => {
     const width = 800;
     const height = 800;
@@ -88,8 +93,10 @@ const MindMap = () => {
     // SVG 초기화
     const svg = d3
       .select(svgRef.current)
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .attr("viewBox", `0 0 800 800`) // 800x800 좌표계를 사용하지만 SVG 크기는 부모 컨테이너에 맞게 자동 조정
+      .attr("preserveAspectRatio", "xMidYMid meet"); // 화면 비율 유지
 
     svg.selectAll("*").remove();
 
@@ -199,10 +206,11 @@ const MindMap = () => {
       d.fx = null;
       d.fy = null;
     }
-  }, []);
+  }, [clickHandle]);
 
   return (
-    <div className="flex justify-center items-center w-full h-full">
+    <div className="flex justify-center items-center w-full h-screen">
+      {/* 컨테이너의 너비와 높이에 맞춰 SVG 100% 적용 */}
       <svg ref={svgRef}></svg>
     </div>
   );
