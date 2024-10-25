@@ -3,12 +3,12 @@ import MindMap from "../../components/brainstorming/MindMap";
 import Header from "../../components/common/Header";
 import { useState } from "react";
 
-function BrainStormingPage() {
+function MindMapPage() {
   const [selectedKeyword, setSelectedKeyword] = useState(null);
   return (
     <>
       <Helmet>
-        <title>브레인스토밍페이지</title>
+        <title>마인드맵페이지</title>
       </Helmet>
       <div className="h-full w-full flex flex-col">
         <Header content={"관통 프로젝트"} />
@@ -58,4 +58,4 @@ function BrainStormingPage() {
   );
 }
 
-export default BrainStormingPage;
+export default MindMapPage;

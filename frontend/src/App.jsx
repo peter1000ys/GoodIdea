@@ -6,7 +6,7 @@ import LoginPage from "./page/LoginPage";
 import NotFoundPage from "./page/NotFoundPage";
 import CommonLayout from "./components/CommonLayout";
 import ApiSpecificationPage from "./page/projectdetail/ApiSpecificationPage";
-import BrainStormingPage from "./page/projectdetail/BrainStormingPage";
+import MindMapPage from "./page/projectdetail/MindMapPage";
 import ERDPage from "./page/projectdetail/ERDPage";
 import IdeaBoardPage from "./page/projectdetail/IdeaBoardPage";
 import ProjectEssentialPage from "./page/projectdetail/ProjectEssentialPage";
@@ -35,8 +35,8 @@ function App() {
 
               {/* 마인드맵 페이지 */}
               <Route
-                path="/projectdetail/:id/brainstorming"
-                element={<BrainStormingPage />}
+                path="/projectdetail/:id/mindmap"
+                element={<MindMapPage />}
               />
 
               {/* 아이디어보드페이지 */}

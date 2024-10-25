@@ -27,7 +27,7 @@ function Nav() {
                 />
               </svg>
               <li className="text-xl">
-                <Link to="/projectdetail/:id/brainstorming">마인드 맵</Link>
+                <Link to="/projectdetail/:id/mindmap">마인드 맵</Link>
               </li>
               <li className="text-xl">
                 <Link to="/projectdetail/:id/ideaboard">아이디어 보드</Link>
