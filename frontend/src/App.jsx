@@ -12,6 +12,7 @@ import IdeaBoardPage from "./page/projectdetail/IdeaBoardPage";
 import ProjectEssentialPage from "./page/projectdetail/ProjectEssentialPage";
 import ProposalPage from "./page/projectdetail/ProposalPage";
 import RequirementsSpecificationPage from "./page/projectdetail/RequirementsSpecificationPage";
+import FlowChartPage from "./page/projectdetail/FlowChartPage";
 
 function App() {
   return (
@@ -32,29 +33,37 @@ function App() {
                 element={<ApiSpecificationPage />}
               />
 
-              {/* 브레인스토밍 페이지 */}
+              {/* 마인드맵 페이지 */}
               <Route
                 path="/projectdetail/:id/brainstorming"
                 element={<BrainStormingPage />}
               />
 
-              {/* ERD페이지 */}
-              <Route path="/projectdetail/:id/erd" element={<ERDPage />} />
+              {/* 아이디어보드페이지 */}
               <Route
                 path="/projectdetail/:id/ideaboard"
                 element={<IdeaBoardPage />}
               />
 
-              {/* 기획서 페이지 */}
+              {/* 프로젝트개요 페이지 */}
               <Route
                 path="/projectdetail/:id/proposal"
                 element={<ProposalPage />}
               />
 
+              {/* ERD페이지 */}
+              <Route path="/projectdetail/:id/erd" element={<ERDPage />} />
+
               {/* 요구사항 명세서 페이지 */}
               <Route
                 path="/projectdetail/:id/requirementsspecification"
                 element={<RequirementsSpecificationPage />}
+              />
+
+              {/* 플로우차트 페이지 */}
+              <Route
+                path="/projectdetail/:id/flowchart"
+                element={<FlowChartPage />}
               />
             </Route>
           </Route>
