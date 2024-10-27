@@ -1,16 +1,39 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function Nav() {
+  // 브레인 스토밍 드롭다운의 열림/닫힘 상태를 관리하는 state
+  const [isBrainstormingOpen, setBrainstormingOpen] = useState(false);
+
+  // 산출물 드롭다운의 열림/닫힘 상태를 관리하는 state
+  const [isResultOpen, setResultOpen] = useState(false);
+
+  // 브레인 스토밍 드롭다운 열림/닫힘 상태를 토글하는 함수
+  const toggleBrainstorming = () => {
+    setBrainstormingOpen((prev) => !prev);
+  };
+
+  // 산출물 드롭다운 열림/닫힘 상태를 토글하는 함수
+  const toggleResult = () => {
+    setResultOpen((prev) => !prev);
+  };
+
   return (
-    <div className="w-64  bg-blue-600 text-white p-4 flex flex-col justify-between rounded-tr-[20px]">
+    <div className="w-64 bg-gradient-to-b from-grayCustom-100 via-grayCustom-200 via-grayCustom-300 to-grayCustom-400 text-white p-4 flex flex-col justify-between rounded-tr-[20px]">
       <div>
-        <h1 className="text-base font-bold mb-4">GOOD IDEA</h1>
+        <div className="flex flex-row justify-between mb-3">
+          <img src="" alt="로고" />
+          <h1 className="text-base font-bold mb-4">GOOD IDEA</h1>
+        </div>
         <nav>
           <ul className="space-y-4">
             <li className="block text-2xl">
               <Link to="projectdetail/:id">기본 정보</Link>
             </li>
-            <li className="block text-2xl">
+            <li
+              className="flex flex-row text-2xl"
+              onClick={toggleBrainstorming}
+            >
               브레인 스토밍
               <svg
                 width="29"
@@ -26,14 +49,21 @@ function Nav() {
                   fill="white"
                 />
               </svg>
-              <li className="text-xl">
-                <Link to="/projectdetail/:id/mindmap">마인드 맵</Link>
-              </li>
-              <li className="text-xl">
-                <Link to="/projectdetail/:id/ideaboard">아이디어 보드</Link>
-              </li>
             </li>
-            <li className="block text-2xl">
+
+            {/* 브레인 스토밍 드롭다운 */}
+            {isBrainstormingOpen && (
+              <ul className="pl-4 space-y-2">
+                <li className="text-xl">
+                  <Link to="/projectdetail/:id/mindmap">마인드 맵</Link>
+                </li>
+                <li className="text-xl">
+                  <Link to="/projectdetail/:id/ideaboard">아이디어 보드</Link>
+                </li>
+              </ul>
+            )}
+
+            <li className="flex flex-row text-2xl" onClick={toggleResult}>
               산출물
               <svg
                 width="29"
@@ -49,28 +79,36 @@ function Nav() {
                   fill="white"
                 />
               </svg>
-              <li className="text-xl">
-                <Link to="/projectdetail/:id/proposal">프로젝트 개요</Link>
-              </li>
-              <li className="text-xl">
-                <Link to="/projectdetail/:id/requirementsspecification">
-                  요구사항 명세서
-                </Link>
-              </li>
-              <li className="text-xl">
-                <Link to="/projectdetail/:id/apispecification">API 명세서</Link>
-              </li>
-              <li className="text-xl">
-                <Link to="/projectdetail/:id/erd">ERD</Link>
-              </li>
-              <li className="text-xl">
-                <Link to="/projectdetail/:id/flowchart">FLOWCHART</Link>
-              </li>
             </li>
+
+            {/* 산출물 드롭다운 */}
+            {isResultOpen && (
+              <ul className="pl-4 space-y-2">
+                <li className="text-xl">
+                  <Link to="/projectdetail/:id/proposal">프로젝트 개요</Link>
+                </li>
+                <li className="text-xl">
+                  <Link to="/projectdetail/:id/requirementsspecification">
+                    요구사항 명세서
+                  </Link>
+                </li>
+                <li className="text-xl">
+                  <Link to="/projectdetail/:id/apispecification">
+                    API 명세서
+                  </Link>
+                </li>
+                <li className="text-xl">
+                  <Link to="/projectdetail/:id/erd">ERD</Link>
+                </li>
+                <li className="text-xl">
+                  <Link to="/projectdetail/:id/flowchart">FLOWCHART</Link>
+                </li>
+              </ul>
+            )}
           </ul>
         </nav>
       </div>
-      <footer className="text-sm">© 2024 My Website</footer>
+      <footer className="text-sm">© 2024 SSAFY 11th FINALPROJECT</footer>
     </div>
   );
 }
