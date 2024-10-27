@@ -8,6 +8,9 @@ function Nav() {
   // 산출물 드롭다운의 열림/닫힘 상태를 관리하는 state
   const [isResultOpen, setResultOpen] = useState(false);
 
+  // 선택된 메뉴
+  const [activeItem, setActiveItem] = useState(null);
+
   // 브레인 스토밍 드롭다운 열림/닫힘 상태를 토글하는 함수
   const toggleBrainstorming = () => {
     setBrainstormingOpen((prev) => !prev);
@@ -18,20 +21,35 @@ function Nav() {
     setResultOpen((prev) => !prev);
   };
 
+  // 선택된 메뉴 세팅
+  const handleItemClick = (item) => {
+    setActiveItem(item);
+  };
+
   return (
     <div className="w-64 bg-gradient-to-b from-grayCustom-100 via-grayCustom-200 via-grayCustom-300 to-grayCustom-400 text-white p-4 flex flex-col justify-between rounded-tr-[20px]">
       <div>
         <div className="flex flex-row justify-between mb-3">
           <img src="" alt="로고" />
-          <h1 className="text-base font-bold mb-4">GOOD IDEA</h1>
+          <h1 className="text-base font-bold mb-4 select-none">GOOD IDEA</h1>
         </div>
         <nav>
           <ul className="space-y-4">
-            <li className="block text-2xl">
+            {/* 기본 정보 */}
+            <li
+              className={`block text-2xl cursor-pointer border border-[#8F8F8F] shadow-md p-2 select-none rounded-lg hover:bg-[#666666] ${
+                activeItem === "기본 정보" ? "bg-[#666666]" : ""
+              }`}
+              onClick={() => handleItemClick("기본 정보")}
+            >
               <Link to="projectdetail/:id">기본 정보</Link>
             </li>
+
+            {/* 브레인 스토밍 메뉴 */}
             <li
-              className="flex flex-row text-2xl"
+              className={`flex flex-row justify-between items-center text-2xl cursor-pointer border border-[#8F8F8F] shadow-md p-2 select-none rounded-lg hover:bg-[#666666] ${
+                isBrainstormingOpen ? "bg-[#666666]" : ""
+              }`}
               onClick={toggleBrainstorming}
             >
               브레인 스토밍
@@ -41,6 +59,9 @@ function Nav() {
                 viewBox="0 0 29 28"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                className={`ml-2 transition-transform duration-300 ${
+                  isBrainstormingOpen ? "rotate-180" : "rotate-0"
+                }`}
               >
                 <path
                   fillRule="evenodd"
@@ -52,18 +73,36 @@ function Nav() {
             </li>
 
             {/* 브레인 스토밍 드롭다운 */}
-            {isBrainstormingOpen && (
-              <ul className="pl-4 space-y-2">
-                <li className="text-xl">
-                  <Link to="/projectdetail/:id/mindmap">마인드 맵</Link>
-                </li>
-                <li className="text-xl">
-                  <Link to="/projectdetail/:id/ideaboard">아이디어 보드</Link>
-                </li>
-              </ul>
-            )}
+            <ul
+              className={`transition-all duration-500 overflow-hidden ${
+                isBrainstormingOpen ? "max-h-40" : "max-h-0"
+              }`}
+            >
+              <li
+                className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  activeItem === "마인드 맵" ? "bg-[#666666]" : ""
+                }`}
+                onClick={() => handleItemClick("마인드 맵")}
+              >
+                <Link to="/projectdetail/:id/mindmap">마인드 맵</Link>
+              </li>
+              <li
+                className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  activeItem === "아이디어 보드" ? "bg-[#666666]" : ""
+                }`}
+                onClick={() => handleItemClick("아이디어 보드")}
+              >
+                <Link to="/projectdetail/:id/ideaboard">아이디어 보드</Link>
+              </li>
+            </ul>
 
-            <li className="flex flex-row text-2xl" onClick={toggleResult}>
+            {/* 산출물 메뉴 */}
+            <li
+              className={`flex flex-row justify-between items-center text-2xl cursor-pointer border border-[#858585] shadow-md p-2 select-none rounded-lg hover:bg-[#666666] ${
+                isResultOpen ? "bg-[#666666]" : ""
+              }`}
+              onClick={toggleResult}
+            >
               산출물
               <svg
                 width="29"
@@ -71,6 +110,9 @@ function Nav() {
                 viewBox="0 0 29 28"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                className={`ml-2 transition-transform duration-300 ${
+                  isResultOpen ? "rotate-180" : "rotate-0"
+                }`}
               >
                 <path
                   fillRule="evenodd"
@@ -82,33 +124,58 @@ function Nav() {
             </li>
 
             {/* 산출물 드롭다운 */}
-            {isResultOpen && (
-              <ul className="pl-4 space-y-2">
-                <li className="text-xl">
-                  <Link to="/projectdetail/:id/proposal">프로젝트 개요</Link>
-                </li>
-                <li className="text-xl">
-                  <Link to="/projectdetail/:id/requirementsspecification">
-                    요구사항 명세서
-                  </Link>
-                </li>
-                <li className="text-xl">
-                  <Link to="/projectdetail/:id/apispecification">
-                    API 명세서
-                  </Link>
-                </li>
-                <li className="text-xl">
-                  <Link to="/projectdetail/:id/erd">ERD</Link>
-                </li>
-                <li className="text-xl">
-                  <Link to="/projectdetail/:id/flowchart">FLOWCHART</Link>
-                </li>
-              </ul>
-            )}
+            <ul
+              className={`transition-all duration-500 overflow-hidden ${
+                isResultOpen ? "max-h-60" : "max-h-0"
+              }`}
+            >
+              <li
+                className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  activeItem === "프로젝트 개요" ? "bg-[#666666]" : ""
+                }`}
+                onClick={() => handleItemClick("프로젝트 개요")}
+              >
+                <Link to="/projectdetail/:id/proposal">프로젝트 개요</Link>
+              </li>
+              <li
+                className={`text-lg mb-1  p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  activeItem === "요구사항 명세서" ? "bg-[#666666]" : ""
+                }`}
+                onClick={() => handleItemClick("요구사항 명세서")}
+              >
+                <Link to="/projectdetail/:id/requirementsspecification">
+                  요구사항 명세서
+                </Link>
+              </li>
+              <li
+                className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  activeItem === "API 명세서" ? "bg-[#666666]" : ""
+                }`}
+                onClick={() => handleItemClick("API 명세서")}
+              >
+                <Link to="/projectdetail/:id/apispecification">API 명세서</Link>
+              </li>
+              <li
+                className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  activeItem === "ERD" ? "bg-[#666666]" : ""
+                }`}
+                onClick={() => handleItemClick("ERD")}
+              >
+                <Link to="/projectdetail/:id/erd">ERD</Link>
+              </li>
+              <li
+                className={`text-lg mb-1  p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  activeItem === "FLOWCHART" ? "bg-[#666666]" : ""
+                }`}
+                onClick={() => handleItemClick("FLOWCHART")}
+              >
+                <Link to="/projectdetail/:id/flowchart">FLOWCHART</Link>
+              </li>
+            </ul>
           </ul>
         </nav>
       </div>
-      <footer className="text-sm">© 2024 SSAFY 11th FINALPROJECT</footer>
+      <footer className="text-sm">©SSAFY 11TH C105</footer>
     </div>
   );
 }
