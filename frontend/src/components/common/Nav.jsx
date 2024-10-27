@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function Nav() {
+  const location = useLocation();
+
   // 브레인 스토밍 드롭다운의 열림/닫힘 상태를 관리하는 state
   const [isBrainstormingOpen, setBrainstormingOpen] = useState(false);
 
@@ -26,6 +28,49 @@ function Nav() {
     setActiveItem(item);
   };
 
+  useEffect(() => {
+    // 현재 경로에 따라 activeItem 설정
+    if (location.pathname === "/projectdetail/:id") {
+      setActiveItem("기본 정보");
+    } else if (
+      ["/projectdetail/:id/mindmap", "/projectdetail/:id/ideaboard"].includes(
+        location.pathname
+      )
+    ) {
+      setBrainstormingOpen(true); // 브레인 스토밍 경로일 경우 드롭다운 열기
+      if (location.pathname === "/projectdetail/:id/mindmap") {
+        setActiveItem("마인드 맵");
+      } else if (location.pathname === "/projectdetail/:id/ideaboard") {
+        setActiveItem("아이디어 보드");
+      }
+    } else if (
+      [
+        "/projectdetail/:id/proposal",
+        "/projectdetail/:id/requirementsspecification",
+        "/projectdetail/:id/apispecification",
+        "/projectdetail/:id/erd",
+        "/projectdetail/:id/flowchart",
+      ].includes(location.pathname)
+    ) {
+      setResultOpen(true);
+      if (location.pathname === "/projectdetail/:id/proposal") {
+        setActiveItem("프로젝트 개요");
+      } else if (
+        location.pathname === "/projectdetail/:id/requirementsspecification"
+      ) {
+        setActiveItem("요구사항 명세서");
+      } else if (location.pathname === "/projectdetail/:id/apispecification") {
+        setActiveItem("API 명세서");
+      } else if (location.pathname === "/projectdetail/:id/erd") {
+        setActiveItem("ERD");
+      } else if (location.pathname === "/projectdetail/:id/flowchart") {
+        setActiveItem("FLOWCHART");
+      }
+    } else {
+      setActiveItem(null); // 경로가 일치하지 않을 경우 초기화
+    }
+  }, [location.pathname]);
+
   return (
     <div className="w-64 bg-gradient-to-b from-grayCustom-100 via-grayCustom-200 via-grayCustom-300 to-grayCustom-400 text-white p-4 flex flex-col justify-between rounded-tr-[20px]">
       <div>
@@ -42,7 +87,9 @@ function Nav() {
               }`}
               onClick={() => handleItemClick("기본 정보")}
             >
-              <Link to="projectdetail/:id">기본 정보</Link>
+              <Link to="projectdetail/:id" className="block w-full h-full">
+                기본 정보
+              </Link>
             </li>
 
             {/* 브레인 스토밍 메뉴 */}
@@ -75,7 +122,7 @@ function Nav() {
             {/* 브레인 스토밍 드롭다운 */}
             <ul
               className={`transition-all duration-500 overflow-hidden ${
-                isBrainstormingOpen ? "max-h-40" : "max-h-0"
+                isBrainstormingOpen ? "max-h-40" : "max-h-0 hidden"
               }`}
             >
               <li
@@ -84,7 +131,12 @@ function Nav() {
                 }`}
                 onClick={() => handleItemClick("마인드 맵")}
               >
-                <Link to="/projectdetail/:id/mindmap">마인드 맵</Link>
+                <Link
+                  to="/projectdetail/:id/mindmap"
+                  className="block w-full h-full"
+                >
+                  마인드 맵
+                </Link>
               </li>
               <li
                 className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
@@ -92,7 +144,12 @@ function Nav() {
                 }`}
                 onClick={() => handleItemClick("아이디어 보드")}
               >
-                <Link to="/projectdetail/:id/ideaboard">아이디어 보드</Link>
+                <Link
+                  to="/projectdetail/:id/ideaboard"
+                  className="block w-full h-full"
+                >
+                  아이디어 보드
+                </Link>
               </li>
             </ul>
 
@@ -126,7 +183,7 @@ function Nav() {
             {/* 산출물 드롭다운 */}
             <ul
               className={`transition-all duration-500 overflow-hidden ${
-                isResultOpen ? "max-h-60" : "max-h-0"
+                isResultOpen ? "max-h-60" : "max-h-0 hidden"
               }`}
             >
               <li
@@ -135,7 +192,12 @@ function Nav() {
                 }`}
                 onClick={() => handleItemClick("프로젝트 개요")}
               >
-                <Link to="/projectdetail/:id/proposal">프로젝트 개요</Link>
+                <Link
+                  to="/projectdetail/:id/proposal"
+                  className="block w-full h-full"
+                >
+                  프로젝트 개요
+                </Link>
               </li>
               <li
                 className={`text-lg mb-1  p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
@@ -143,7 +205,10 @@ function Nav() {
                 }`}
                 onClick={() => handleItemClick("요구사항 명세서")}
               >
-                <Link to="/projectdetail/:id/requirementsspecification">
+                <Link
+                  to="/projectdetail/:id/requirementsspecification"
+                  className="block w-full h-full"
+                >
                   요구사항 명세서
                 </Link>
               </li>
@@ -153,7 +218,12 @@ function Nav() {
                 }`}
                 onClick={() => handleItemClick("API 명세서")}
               >
-                <Link to="/projectdetail/:id/apispecification">API 명세서</Link>
+                <Link
+                  to="/projectdetail/:id/apispecification"
+                  className="block w-full h-full"
+                >
+                  API 명세서
+                </Link>
               </li>
               <li
                 className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
@@ -161,7 +231,12 @@ function Nav() {
                 }`}
                 onClick={() => handleItemClick("ERD")}
               >
-                <Link to="/projectdetail/:id/erd">ERD</Link>
+                <Link
+                  to="/projectdetail/:id/erd"
+                  className="block w-full h-full"
+                >
+                  ERD
+                </Link>
               </li>
               <li
                 className={`text-lg mb-1  p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
@@ -169,7 +244,12 @@ function Nav() {
                 }`}
                 onClick={() => handleItemClick("FLOWCHART")}
               >
-                <Link to="/projectdetail/:id/flowchart">FLOWCHART</Link>
+                <Link
+                  to="/projectdetail/:id/flowchart"
+                  className="block w-full h-full"
+                >
+                  FLOWCHART
+                </Link>
               </li>
             </ul>
           </ul>
