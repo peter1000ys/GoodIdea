@@ -28,22 +28,26 @@ function Nav() {
     setActiveItem(item);
   };
 
-  const paths = [
-    { path: null, item: "기본 정보", setOpen: null },
-    { path: "mindmap", item: "마인드 맵", setOpen: setBrainstormingOpen },
-    { path: "ideaboard", item: "아이디어 보드", setOpen: setBrainstormingOpen },
-    { path: "proposal", item: "프로젝트 개요", setOpen: setResultOpen },
-    {
-      path: "requirementsspecification",
-      item: "요구사항 명세서",
-      setOpen: setResultOpen,
-    },
-    { path: "apispecification", item: "API 명세서", setOpen: setResultOpen },
-    { path: "erd", item: "ERD", setOpen: setResultOpen },
-    { path: "flowchart", item: "FLOWCHART", setOpen: setResultOpen },
-  ];
-
   useEffect(() => {
+    const paths = [
+      { path: null, item: "기본 정보", setOpen: null },
+      { path: "mindmap", item: "마인드 맵", setOpen: setBrainstormingOpen },
+      {
+        path: "ideaboard",
+        item: "아이디어 보드",
+        setOpen: setBrainstormingOpen,
+      },
+      { path: "proposal", item: "프로젝트 개요", setOpen: setResultOpen },
+      {
+        path: "requirementsspecification",
+        item: "요구사항 명세서",
+        setOpen: setResultOpen,
+      },
+      { path: "apispecification", item: "API 명세서", setOpen: setResultOpen },
+      { path: "erd", item: "ERD", setOpen: setResultOpen },
+      { path: "flowchart", item: "FLOWCHART", setOpen: setResultOpen },
+    ];
+
     const lastPath = location.pathname.split("/")[2] ?? null;
 
     const matchedPath = paths.find(
