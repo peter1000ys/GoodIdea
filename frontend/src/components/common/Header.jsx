@@ -5,7 +5,7 @@ function Header({ content }) {
   const navigate = useNavigate();
   const goProjectList = () => {
     // 프로젝트 리스트로 이동
-    navigate("/");
+    navigate("/projectlist");
   };
   return (
     <div className="border-b-2 border-gray-300 flex items-center justify-between p-2">
