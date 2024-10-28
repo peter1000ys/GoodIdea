@@ -28,46 +28,33 @@ function Nav() {
     setActiveItem(item);
   };
 
+  const paths = [
+    { path: null, item: "기본 정보", setOpen: null },
+    { path: "mindmap", item: "마인드 맵", setOpen: setBrainstormingOpen },
+    { path: "ideaboard", item: "아이디어 보드", setOpen: setBrainstormingOpen },
+    { path: "proposal", item: "프로젝트 개요", setOpen: setResultOpen },
+    {
+      path: "requirementsspecification",
+      item: "요구사항 명세서",
+      setOpen: setResultOpen,
+    },
+    { path: "apispecification", item: "API 명세서", setOpen: setResultOpen },
+    { path: "erd", item: "ERD", setOpen: setResultOpen },
+    { path: "flowchart", item: "FLOWCHART", setOpen: setResultOpen },
+  ];
+
   useEffect(() => {
-    // 현재 경로에 따라 activeItem 설정
-    if (location.pathname === "/projectdetail/:id") {
-      setActiveItem("기본 정보");
-    } else if (
-      ["/projectdetail/:id/mindmap", "/projectdetail/:id/ideaboard"].includes(
-        location.pathname
-      )
-    ) {
-      setBrainstormingOpen(true); // 브레인 스토밍 경로일 경우 드롭다운 열기
-      if (location.pathname === "/projectdetail/:id/mindmap") {
-        setActiveItem("마인드 맵");
-      } else if (location.pathname === "/projectdetail/:id/ideaboard") {
-        setActiveItem("아이디어 보드");
-      }
-    } else if (
-      [
-        "/projectdetail/:id/proposal",
-        "/projectdetail/:id/requirementsspecification",
-        "/projectdetail/:id/apispecification",
-        "/projectdetail/:id/erd",
-        "/projectdetail/:id/flowchart",
-      ].includes(location.pathname)
-    ) {
-      setResultOpen(true);
-      if (location.pathname === "/projectdetail/:id/proposal") {
-        setActiveItem("프로젝트 개요");
-      } else if (
-        location.pathname === "/projectdetail/:id/requirementsspecification"
-      ) {
-        setActiveItem("요구사항 명세서");
-      } else if (location.pathname === "/projectdetail/:id/apispecification") {
-        setActiveItem("API 명세서");
-      } else if (location.pathname === "/projectdetail/:id/erd") {
-        setActiveItem("ERD");
-      } else if (location.pathname === "/projectdetail/:id/flowchart") {
-        setActiveItem("FLOWCHART");
-      }
+    const lastPath = location.pathname.split("/")[2] ?? null;
+
+    const matchedPath = paths.find(
+      (p) => lastPath === p.path || location.pathname.includes(p.path)
+    );
+
+    if (matchedPath) {
+      setActiveItem(matchedPath.item);
+      if (matchedPath.setOpen) matchedPath.setOpen(true);
     } else {
-      setActiveItem(null); // 경로가 일치하지 않을 경우 초기화
+      setActiveItem(null);
     }
   }, [location.pathname]);
 

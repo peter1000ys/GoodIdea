@@ -8,7 +8,7 @@ function CommonLayout() {
       <Nav />
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1 ml-64">
         {/* 자식 컴포넌트를 렌더링 */}
         <Outlet />
       </main>
