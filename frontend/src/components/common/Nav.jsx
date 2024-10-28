@@ -80,7 +80,7 @@ function Nav() {
             {/* 브레인 스토밍 메뉴 */}
             <li>
               <div
-                className={`text-2xl flex justify-between items-center cursor-pointer border border-[#8F8F8F] hover:bg-[#666666] shadow-md p-2 rounded-lg ${
+                className={`text-2xl flex justify-between items-center cursor-pointer border border-[#8F8F8F] hover:bg-[#666666] shadow-md select-none p-2 rounded-lg ${
                   isBrainstormingOpen ? "bg-[#666666]" : ""
                 }`}
                 onClick={toggleBrainstorming}
