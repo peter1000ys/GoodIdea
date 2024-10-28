@@ -3,7 +3,18 @@ import DefaultButton from "./DefaultButton";
 function Header({ content }) {
   return (
     <div className="border-b-2 border-gray-300 flex items-center justify-between p-2">
-      {content}
+      <div className="flex items-center">
+        <div className="text-xl">
+          <span className={content ? "" : "font-bold"}>프로젝트 목록</span>
+          {content && (
+            <>
+              {" / "}
+              <span className="font-bold">{content}</span>
+            </>
+          )}
+        </div>
+      </div>
+
       <DefaultButton
         onClick={() => {
           // 로그아웃 로직
