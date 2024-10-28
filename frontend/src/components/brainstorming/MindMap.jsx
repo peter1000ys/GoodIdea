@@ -133,7 +133,7 @@ const MindMap = ({ setSelectedKeyword, mindMapData, mindMapColorData }) => {
       d.fx = null;
       d.fy = null;
     }
-  }, [clickHandle]);
+  }, [clickHandle, mindMapColorData, mindMapData]);
 
   return (
     <div className="flex justify-center items-center w-full h-screen">
