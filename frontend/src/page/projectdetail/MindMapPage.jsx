@@ -6,8 +6,12 @@ import {
   mindMapColorData,
   mindMapData as mmdata,
 } from "../../dummy/brainstorming";
+import AIPlanForm from "../../components/brainstorming/AIPlanForm";
+import PortalModal from "../../components/common/PortalModal";
+import DefaultButton from "../../components/common/DefaultButton";
 
 function MindMapPage() {
+  const [isPlanOpen, setIsPlanOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedKeyword, setSelectedKeyword] = useState(null);
   const [isSearchAnimation, setIsSearchAnimation] = useState(false);
@@ -63,6 +67,7 @@ function MindMapPage() {
       <Helmet>
         <title>마인드맵페이지</title>
       </Helmet>
+
       <div className="h-full w-full flex flex-col">
         <Header content={"관통 프로젝트"} />
 
@@ -134,14 +139,13 @@ function MindMapPage() {
                   <p className="text-gray-500 mb-6">
                     보고 싶은 키워드를 입력해 관련된 뉴스를 확인해보세요!
                   </p>
-                  <button
+                  <DefaultButton
                     onClick={() =>
                       document.getElementById("searchInput").focus()
                     }
-                    className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
-                  >
-                    검색어 입력하기
-                  </button>
+                    theme="bright"
+                    text="검색어 입력하기"
+                  />
                 </div>
               </div>
             ) : (
@@ -187,6 +191,11 @@ function MindMapPage() {
             )}
           </div>
         </div>
+        <DefaultButton text="모달 열기" onClick={() => setIsPlanOpen(true)} />
+
+        <PortalModal isOpen={isPlanOpen} onClose={() => setIsPlanOpen(false)}>
+          <AIPlanForm onClose={() => setIsPlanOpen(false)} />
+        </PortalModal>
       </div>
     </>
   );

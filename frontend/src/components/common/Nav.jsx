@@ -53,8 +53,6 @@ function Nav() {
     if (matchedPath) {
       setActiveItem(matchedPath.item);
       if (matchedPath.setOpen) matchedPath.setOpen(true);
-    } else {
-      setActiveItem(null);
     }
   }, [location.pathname]);
 
