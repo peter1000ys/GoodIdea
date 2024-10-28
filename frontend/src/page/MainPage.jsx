@@ -14,13 +14,9 @@ function MainPage() {
         <title>메인페이지</title>
       </Helmet>
       <div className="h-full w-full flex flex-col">
-        <div>
-          메인페이지
-          {/* 버튼 추가 */}
-          <button onClick={handleGitLabLogin}>GitLab로 로그인</button>
-        </div>
         <Header content="관통 프로젝트" />
         메인페이지
+        <button onClick={handleGitLabLogin}>GitLab로 로그인</button>
       </div>
     </>
   );
