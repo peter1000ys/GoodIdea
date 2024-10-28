@@ -13,9 +13,7 @@ const AIPlanForm = ({ onClose }) => {
 
         {/* 폼 영역 */}
         <div className="p-8 space-y-6">
-          <h2 className="text-blue-900 text-xl font-semibold mb-4">
-            REGISTRATION FORM
-          </h2>
+          <h2 className="text-blue-900 text-xl font-semibold mb-4"></h2>
           <form className="space-y-4">
             <div className="flex items-center">
               <label className="w-1/4 text-gray-700 font-medium">주제</label>
