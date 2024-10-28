@@ -13,6 +13,7 @@ import ProjectEssentialPage from "./page/projectdetail/ProjectEssentialPage";
 import ProposalPage from "./page/projectdetail/ProposalPage";
 import RequirementsSpecificationPage from "./page/projectdetail/RequirementsSpecificationPage";
 import FlowChartPage from "./page/projectdetail/FlowChartPage";
+import ProjectListPage from "./page/ProjectListPage";
 
 function App() {
   return (
@@ -20,7 +21,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="" element={<CommonLayout />}>
+            {/* 메인 페이지 */}
             <Route index element={<MainPage />} />
+            {/* 프로젝트 목록 페이지*/}
+            <Route path="/projectList" element={<ProjectListPage />} />
             <Route path="/login" element={<LoginPage />} />
 
             <Route path="/projectdetail/:id">
