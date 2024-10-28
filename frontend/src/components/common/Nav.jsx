@@ -30,6 +30,7 @@ function Nav() {
 
   useEffect(() => {
     // 현재 경로에 따라 activeItem 설정
+
     if (location.pathname === "/projectdetail/:id") {
       setActiveItem("기본 정보");
     } else if (
