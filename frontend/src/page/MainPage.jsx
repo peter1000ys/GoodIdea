@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import Header from "../components/common/Header";
 
 function MainPage() {
   // 리다이렉트 URL 설정
@@ -12,11 +13,15 @@ function MainPage() {
       <Helmet>
         <title>메인페이지</title>
       </Helmet>
-      <div>
-        메인페이지
-        {/* 버튼 추가 */}
-        <button onClick={handleGitLabLogin}>GitLab로 로그인</button>
+      <div className="h-full w-full flex flex-col">
+        <div>
+          메인페이지
+          {/* 버튼 추가 */}
+          <button onClick={handleGitLabLogin}>GitLab로 로그인</button>
+        </div>
+        <Header content="관통 프로젝트" />
       </div>
+      메인페이지
     </>
   );
 }
