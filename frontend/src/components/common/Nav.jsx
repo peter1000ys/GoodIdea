@@ -71,12 +71,15 @@ function Nav() {
           <ul className="space-y-4">
             {/* 기본 정보 */}
             <li
-              className={`block text-2xl cursor-pointer border border-[#8F8F8F] shadow-md p-2 select-none rounded-lg hover:bg-[#666666] ${
+              className={`block text-2xl border border-[#8F8F8F] shadow-md p-2 select-none rounded-lg hover:bg-[#666666] ${
                 activeItem === "기본 정보" ? "bg-[#666666]" : ""
               }`}
               onClick={() => handleItemClick("기본 정보")}
             >
-              <Link to="projectdetail/:id" className="block w-full h-full">
+              <Link
+                to="projectdetail/:id"
+                className="block w-full h-full cursor-pointer"
+              >
                 기본 정보
               </Link>
             </li>
@@ -118,27 +121,27 @@ function Nav() {
                 }`}
               >
                 <li
-                  className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  className={`text-lg mb-1 p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
                     activeItem === "마인드 맵" ? "bg-[#666666]" : ""
                   }`}
                   onClick={() => handleItemClick("마인드 맵")}
                 >
                   <Link
                     to="/projectdetail/:id/mindmap"
-                    className="block w-full h-full"
+                    className="block w-full h-full cursor-pointer"
                   >
                     마인드 맵
                   </Link>
                 </li>
                 <li
-                  className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  className={`text-lg mb-1 p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
                     activeItem === "아이디어 보드" ? "bg-[#666666]" : ""
                   }`}
                   onClick={() => handleItemClick("아이디어 보드")}
                 >
                   <Link
                     to="/projectdetail/:id/ideaboard"
-                    className="block w-full h-full"
+                    className="block w-full h-full cursor-pointer"
                   >
                     아이디어 보드
                   </Link>
@@ -181,27 +184,27 @@ function Nav() {
                 }`}
               >
                 <li
-                  className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  className={`text-lg mb-1 p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
                     activeItem === "프로젝트 개요" ? "bg-[#666666]" : ""
                   }`}
                   onClick={() => handleItemClick("프로젝트 개요")}
                 >
                   <Link
                     to="/projectdetail/:id/proposal"
-                    className="block w-full h-full"
+                    className="block w-full h-full cursor-pointer"
                   >
                     프로젝트 개요
                   </Link>
                 </li>
                 <li
-                  className={`text-lg mb-1  p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  className={`text-lg mb-1  p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
                     activeItem === "요구사항 명세서" ? "bg-[#666666]" : ""
                   }`}
                   onClick={() => handleItemClick("요구사항 명세서")}
                 >
                   <Link
                     to="/projectdetail/:id/requirementsspecification"
-                    className="block w-full h-full"
+                    className="block w-full h-full cursor-pointer"
                   >
                     요구사항 명세서
                   </Link>
@@ -214,33 +217,33 @@ function Nav() {
                 >
                   <Link
                     to="/projectdetail/:id/apispecification"
-                    className="block w-full h-full"
+                    className="block w-full h-full cursor-pointer"
                   >
                     API 명세서
                   </Link>
                 </li>
                 <li
-                  className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  className={`text-lg mb-1 p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
                     activeItem === "ERD" ? "bg-[#666666]" : ""
                   }`}
                   onClick={() => handleItemClick("ERD")}
                 >
                   <Link
                     to="/projectdetail/:id/erd"
-                    className="block w-full h-full"
+                    className="block w-full h-full cursor-pointer"
                   >
                     ERD
                   </Link>
                 </li>
                 <li
-                  className={`text-lg mb-1  p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
+                  className={`text-lg mb-1  p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
                     activeItem === "FLOWCHART" ? "bg-[#666666]" : ""
                   }`}
                   onClick={() => handleItemClick("FLOWCHART")}
                 >
                   <Link
                     to="/projectdetail/:id/flowchart"
-                    className="block w-full h-full"
+                    className="block w-full h-full cursor-pointer"
                   >
                     FLOWCHART
                   </Link>
