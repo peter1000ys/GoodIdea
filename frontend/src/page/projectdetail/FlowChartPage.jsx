@@ -9,8 +9,8 @@ function ERDPage() {
       </Helmet>
       <div className="h-full w-full flex flex-col">
         <Header content="관통 프로젝트" />
+        FLOWCHART페이지
       </div>
-      FLOWCHART페이지
     </>
   );
 }

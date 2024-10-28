@@ -9,8 +9,9 @@ function ProposalPage() {
       </Helmet>
       <div className="h-full w-full flex flex-col">
         <Header content="관통 프로젝트" />
+
+        <div>프로젝트 개요</div>
       </div>
-      프로젝트 개요
     </>
   );
 }

@@ -9,8 +9,8 @@ function IdeaBoardPage() {
       </Helmet>
       <div className="h-full w-full flex flex-col">
         <Header content="관통 프로젝트" />
+        아이디어보드 페이지
       </div>
-      아이디어보드 페이지
     </>
   );
 }

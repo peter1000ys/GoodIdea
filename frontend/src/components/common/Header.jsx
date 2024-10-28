@@ -1,11 +1,22 @@
+import { useNavigate } from "react-router-dom";
 import DefaultButton from "./DefaultButton";
 
 function Header({ content }) {
+  const navigate = useNavigate();
+  const goProjectList = () => {
+    // 프로젝트 리스트로 이동
+    navigate("/");
+  };
   return (
     <div className="border-b-2 border-gray-300 flex items-center justify-between p-2">
       <div className="flex items-center">
         <div className="text-xl">
-          <span className={content ? "" : "font-bold"}>프로젝트 목록</span>
+          <span
+            onClick={goProjectList}
+            className={`cursor-pointer ${content ? "" : "font-bold"}`}
+          >
+            프로젝트 목록
+          </span>
           {content && (
             <>
               {" / "}

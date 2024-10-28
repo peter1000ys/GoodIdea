@@ -41,7 +41,7 @@ function DefaultButton({
 DefaultButton.propTypes = {
   onClick: PropTypes.func.isRequired,
   type: PropTypes.string,
-  text: PropTypes.string.isRequired,
+  text: PropTypes.node.isRequired,
   className: PropTypes.string,
   theme: PropTypes.oneOf(["default", "bright"]),
 };

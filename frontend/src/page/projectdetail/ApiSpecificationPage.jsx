@@ -9,8 +9,8 @@ function ApiSpecificationPage() {
       </Helmet>
       <div className="h-full w-full flex flex-col">
         <Header content="관통 프로젝트" />
+        api명세서페이지
       </div>
-      api명세서페이지
     </>
   );
 }
