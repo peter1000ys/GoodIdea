@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import DefaultButton from "../common/DefaultButton";
+import Divier from "../common/Divier";
 
 function ProjectListItem({ project }) {
   const navigate = useNavigate();
@@ -9,7 +10,11 @@ function ProjectListItem({ project }) {
   };
   return (
     <>
-      <div key={project.id} className="flex items-center justify-between mb-4">
+      <Divier />
+      <div
+        key={project.id}
+        className="flex items-center justify-between my-2 px-4"
+      >
         {/* 좌측 */}
         <div
           className="flex items-center gap-4 cursor-pointer"
@@ -28,13 +33,13 @@ function ProjectListItem({ project }) {
         </div>
 
         {/* 우측 */}
-        <div className="flex items-center gap-4">
-          <span
-            onClick={() => window.location.replace(project.gitlab_url)}
-            className="text-sm text-gray-500 cursor-pointer hover:underline"
-          >
+        <div
+          onClick={() => window.location.replace(project.gitlab_url)}
+          className="flex items-center h-full hover:underline cursor-pointer"
+        >
+          <strong className="text-sm text-[rgb(59,130,246)]">
             Go to Gitlab
-          </span>
+          </strong>
         </div>
       </div>
     </>

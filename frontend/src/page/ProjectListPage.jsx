@@ -73,13 +73,14 @@ function ProjectListPage() {
           </div>
           {/* filter with two select-box*/}
 
-          <Divier color="gray-200" />
+          {/* <Divier color="gray-200" /> */}
 
           {/* 프로젝트 목록 */}
           <div className="mt-8 gap-y-2 grid px-2">
             {projectListData.map((project) => (
               <ProjectListItem key={project.id} project={project} />
             ))}
+            <Divier />
           </div>
         </div>
       </div>
