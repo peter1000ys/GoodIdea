@@ -26,7 +26,7 @@ const SelectOption = ({ value = "", active = false, updateValue, icon }) => {
 
   return (
     <li
-      className="text-gray-900 cursor-default hover:bg-indigo-500 hover:text-white select-none relative py-2 pl-3 pr-9"
+      className="text-gray-900 cursor-pointer hover:bg-indigo-500 hover:text-white select-none relative py-2 pl-3 pr-9"
       onClick={handleChange}
     >
       <div className="flex items-center">
@@ -55,7 +55,10 @@ const Select = ({
   };
 
   const updateValue = (value) => {
-    if (value === state.value) return;
+    if (value === state.value) {
+      setState((p) => ({ ...p, showOptions: false }));
+      return;
+    }
     setState((p) => ({ ...p, showOptions: false, value }));
   };
 
@@ -80,14 +83,14 @@ const Select = ({
   }
 
   return (
-    <div className="w-32 relative border  rounded-md mt-1">
-      <input type="hidden" name={name} value={state.value} />
+    <div className="w-32 relative border  rounded-md mt-1 ">
+      {/* <input type="hidden" name={name} value={state.value} /> */}
       <button
         type="button"
         className={
           state.showOptions
-            ? "transition-all relative w-full bg-white rounded-md shadow-md pl-2 pr-10 py-2 text-left cursor-default outline-none ring-1 ring-indigo-500 border-indigo-500 sm:text-sm"
-            : "transition-all relative w-full bg-white rounded-md shadow-md pl-2 pr-10 py-2 text-left cursor-default sm:text-sm"
+            ? "transition-all relative w-full bg-white rounded-md shadow-md pl-2 pr-10 py-2 text-left cursor-pointer outline-none ring-1 ring-indigo-500 border-indigo-500 sm:text-sm"
+            : "transition-all relative w-full bg-white rounded-md shadow-md pl-2 pr-10 py-2 text-left cursor-pointer sm:text-sm"
         }
         onClick={handleClick}
       >

@@ -6,11 +6,13 @@ import DefaultButton from "../components/common/DefaultButton";
 import Divier from "../components/common/Divier";
 import ProjectListItem from "../components/projectlist/ProjectLIstItem";
 import Select from "../components/projectlist/Select";
+import PortalModal from "../components/common/PortalModal";
 
 function ProjectListPage() {
   const [projectListData, setProjectListData] = useState([]);
   const [filter1, setFilter1] = useState({ value: "ALL", showOptions: false });
   const [filter2, setFilter2] = useState({ value: "ALL", showOptions: false });
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     // 프로젝트 목록 가져오는 곳
@@ -40,7 +42,11 @@ function ProjectListPage() {
               <DefaultButton
                 className="px-2 py-[4px] rounded-md"
                 theme="bright"
-                onClick={() => {}}
+                onClick={() =>
+                  setIsCreateModalOpen((p) => {
+                    return !p;
+                  })
+                }
                 text={<span className="text-sm">New project</span>}
               />
             </div>
@@ -79,6 +85,19 @@ function ProjectListPage() {
           </div>
         </div>
       </div>
+      {/* createProject Modal */}
+      <PortalModal
+        isOpen={isCreateModalOpen}
+        onClose={() => {
+          setIsCreateModalOpen(false);
+        }}
+      >
+        <div className="w-full h-full flex flex-col">
+          <div className="flex items-center self-center mb-8">
+            <h1 className="font-bold text-3xl ">Create new project</h1>
+          </div>
+        </div>
+      </PortalModal>
     </>
   );
 }
