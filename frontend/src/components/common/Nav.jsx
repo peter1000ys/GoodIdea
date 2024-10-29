@@ -70,15 +70,13 @@ function Nav() {
         <nav>
           <ul className="space-y-4">
             {/* 기본 정보 */}
-            <li
-              className={`block text-2xl border border-[#8F8F8F] shadow-md p-2 select-none rounded-lg hover:bg-[#666666] ${
-                activeItem === "기본 정보" ? "bg-[#666666]" : ""
-              }`}
-              onClick={() => handleItemClick("기본 정보")}
-            >
+            <li>
               <Link
                 to="projectdetail/:id"
-                className="block w-full h-full cursor-pointer"
+                className={`block w-full h-full p-2 cursor-pointer border border-[#8F8F8F] text-2xl shadow-md rounded-lg hover:bg-[#666666] select-none ${
+                  activeItem === "기본 정보" ? "bg-[#666666]" : ""
+                }`}
+                onClick={() => handleItemClick("기본 정보")}
               >
                 기본 정보
               </Link>
@@ -100,7 +98,7 @@ function Nav() {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   className={`ml-2 transition-transform duration-500 ${
-                    isBrainstormingOpen ? "rotate-[540deg]" : "rotate-0"
+                    isBrainstormingOpen ? "rotate-[540deg]" : ""
                   }`}
                 >
                   <path
@@ -120,28 +118,24 @@ function Nav() {
                     : "max-h-0 opacity-0"
                 }`}
               >
-                <li
-                  className={`text-lg mb-1 p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
-                    activeItem === "마인드 맵" ? "bg-[#666666]" : ""
-                  }`}
-                  onClick={() => handleItemClick("마인드 맵")}
-                >
+                <li className="mt-5">
                   <Link
                     to="/projectdetail/:id/mindmap"
-                    className="block w-full h-full cursor-pointer"
+                    className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
+                      activeItem === "마인드 맵" ? "bg-[#666666]" : ""
+                    }`}
+                    onClick={() => handleItemClick("마인드 맵")}
                   >
                     마인드 맵
                   </Link>
                 </li>
-                <li
-                  className={`text-lg mb-1 p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
-                    activeItem === "아이디어 보드" ? "bg-[#666666]" : ""
-                  }`}
-                  onClick={() => handleItemClick("아이디어 보드")}
-                >
+                <li>
                   <Link
                     to="/projectdetail/:id/ideaboard"
-                    className="block w-full h-full cursor-pointer"
+                    className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
+                      activeItem === "아이디어 보드" ? "bg-[#666666]" : ""
+                    }`}
+                    onClick={() => handleItemClick("아이디어 보드")}
                   >
                     아이디어 보드
                   </Link>
@@ -165,7 +159,7 @@ function Nav() {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   className={`ml-2 transition-transform duration-500 ${
-                    isResultOpen ? "rotate-[540deg]" : "rotate-0"
+                    isResultOpen ? "rotate-[540deg]" : ""
                   }`}
                 >
                   <path
@@ -183,67 +177,57 @@ function Nav() {
                   isResultOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
                 }`}
               >
-                <li
-                  className={`text-lg mb-1 p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
-                    activeItem === "프로젝트 개요" ? "bg-[#666666]" : ""
-                  }`}
-                  onClick={() => handleItemClick("프로젝트 개요")}
-                >
+                <li className="mt-5">
                   <Link
                     to="/projectdetail/:id/proposal"
-                    className="block w-full h-full cursor-pointer"
+                    className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
+                      activeItem === "프로젝트 개요" ? "bg-[#666666]" : ""
+                    }`}
+                    onClick={() => handleItemClick("프로젝트 개요")}
                   >
                     프로젝트 개요
                   </Link>
                 </li>
-                <li
-                  className={`text-lg mb-1  p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
-                    activeItem === "요구사항 명세서" ? "bg-[#666666]" : ""
-                  }`}
-                  onClick={() => handleItemClick("요구사항 명세서")}
-                >
+                <li>
                   <Link
                     to="/projectdetail/:id/requirementsspecification"
-                    className="block w-full h-full cursor-pointer"
+                    className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
+                      activeItem === "요구사항 명세서" ? "bg-[#666666]" : ""
+                    }`}
+                    onClick={() => handleItemClick("요구사항 명세서")}
                   >
                     요구사항 명세서
                   </Link>
                 </li>
-                <li
-                  className={`text-lg mb-1 p-1 pl-4 cursor-pointer select-none rounded-lg hover:bg-[#666666] ${
-                    activeItem === "API 명세서" ? "bg-[#666666]" : ""
-                  }`}
-                  onClick={() => handleItemClick("API 명세서")}
-                >
+                <li>
                   <Link
                     to="/projectdetail/:id/apispecification"
-                    className="block w-full h-full cursor-pointer"
+                    className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
+                      activeItem === "API 명세서" ? "bg-[#666666]" : ""
+                    }`}
+                    onClick={() => handleItemClick("API 명세서")}
                   >
                     API 명세서
                   </Link>
                 </li>
-                <li
-                  className={`text-lg mb-1 p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
-                    activeItem === "ERD" ? "bg-[#666666]" : ""
-                  }`}
-                  onClick={() => handleItemClick("ERD")}
-                >
+                <li>
                   <Link
                     to="/projectdetail/:id/erd"
-                    className="block w-full h-full cursor-pointer"
+                    className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
+                      activeItem === "ERD" ? "bg-[#666666]" : ""
+                    }`}
+                    onClick={() => handleItemClick("ERD")}
                   >
                     ERD
                   </Link>
                 </li>
-                <li
-                  className={`text-lg mb-1  p-1 pl-4 select-none rounded-lg hover:bg-[#666666] ${
-                    activeItem === "FLOWCHART" ? "bg-[#666666]" : ""
-                  }`}
-                  onClick={() => handleItemClick("FLOWCHART")}
-                >
+                <li>
                   <Link
                     to="/projectdetail/:id/flowchart"
-                    className="block w-full h-full cursor-pointer"
+                    className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
+                      activeItem === "FLOWCHART" ? "bg-[#666666]" : ""
+                    }`}
+                    onClick={() => handleItemClick("FLOWCHART")}
                   >
                     FLOWCHART
                   </Link>
