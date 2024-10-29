@@ -11,35 +11,15 @@ function IdeaBoardPage() {
       <div className="h-full w-full flex flex-col space-y-10">
         <Header content="관통 프로젝트" />
         <div className="flex justify-center items-center flex-row space-x-10">
-          <Sticker delay={100} />
+          <Sticker delay={0} />
           <Sticker delay={200} />
-          <Sticker delay={300} />
+          <Sticker delay={400} />
         </div>
         <div className="flex justify-center items-center flex-row space-x-10">
-          <Sticker delay={400} />
-          <Sticker delay={500} />
           <Sticker delay={600} />
+          <Sticker delay={800} />
+          <Sticker delay={1000} />
         </div>
-        <div
-          class="tenor-gif-embed"
-          data-postid="14883618"
-          data-share-method="host"
-          data-aspect-ratio="0.75"
-          data-width="100%"
-        >
-          <a href="https://tenor.com/view/konoshuba-aqua-dance-gif-14883618">
-            Konoshuba Aqua Sticker
-          </a>
-          from{" "}
-          <a href="https://tenor.com/search/konoshuba-stickers">
-            Konoshuba Stickers
-          </a>
-        </div>{" "}
-        <script
-          type="text/javascript"
-          async
-          src="https://tenor.com/embed.js"
-        ></script>
       </div>
     </>
   );

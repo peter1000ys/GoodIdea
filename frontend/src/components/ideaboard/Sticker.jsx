@@ -1,6 +1,20 @@
-const Sticker = () => {
+import { useEffect, useState } from "react";
+
+const Sticker = ({ delay }) => {
+  const [animate, setAnimate] = useState(false);
+  useEffect(() => {
+    // delay 시간 후에 애니메이션 활성화
+    const timer = setTimeout(() => setAnimate(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
+
   return (
-    <div className="relative w-72 h-72">
+    <div
+      className={`relative w-72 h-72 transform transition-transform duration-500 ${
+        animate ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
+      }`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
       {/* 상단 메모 부분 */}
       <div className="w-72 h-60 bg-blue-100 rounded-tr-[30px] rounded-tl-[30px]">
         <div className="p-4">
@@ -9,7 +23,7 @@ const Sticker = () => {
       </div>
 
       {/* 하단 바 부분 */}
-      <div className="absolute bottom-0 right-0 w-60 h-12 bg-blue-100 ml-auto mr-0"></div>
+      <div className="left-0 w-60 h-12 bg-blue-100 ml-auto mr-0"></div>
 
       {/* 왼쪽 하단 접힌 부분 */}
       <div
