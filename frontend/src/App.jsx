@@ -2,7 +2,6 @@ import "./App.css";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MainPage from "./page/MainPage";
-import LoginPage from "./page/LoginPage";
 import NotFoundPage from "./page/NotFoundPage";
 import CommonLayout from "./components/CommonLayout";
 import ApiSpecificationPage from "./page/projectdetail/ApiSpecificationPage";
@@ -25,7 +24,6 @@ function App() {
             <Route index element={<MainPage />} />
             {/* 프로젝트 목록 페이지*/}
             <Route path="/projectList" element={<ProjectListPage />} />
-            <Route path="/login" element={<LoginPage />} />
 
             <Route path="/projectdetail/:id">
               {/* 프로젝트 기본 정보 페이지 */}

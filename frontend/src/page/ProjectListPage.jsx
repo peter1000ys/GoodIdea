@@ -45,6 +45,7 @@ function ProjectListPage() {
 
           {/* 필터 영역 */}
           <div className="flex items-center gap-4">
+            {/* 옵션1 : 기수 */}
             <select
               onChange={(e) => {
                 setFilter1(e.target.value);
@@ -53,10 +54,12 @@ function ProjectListPage() {
               name="filter1"
               id="filter1"
             >
-              <option value="all">All</option>
-              <option value="mine">Mine</option>
+              <option value="all">전 기수</option>
+              <option value="mine">1~12기</option>
               <option value="starred">Starred</option>
             </select>
+
+            {/* 옵션2 : 지역 */}
             <select
               onChange={(e) => {
                 setFilter2(e.target.value);
@@ -66,14 +69,11 @@ function ProjectListPage() {
               name="filter2"
               id="filter2"
             >
-              <option value="all">All</option>
-              <option value="mine">Mine</option>
+              <option value="all">전 지역</option>
+              <option value="mine">서울대전대구부산찍고</option>
               <option value="starred">Starred</option>
             </select>
           </div>
-          {/* filter with two select-box*/}
-
-          {/* <Divier color="gray-200" /> */}
 
           {/* 프로젝트 목록 */}
           <div className="mt-8 gap-y-2 grid px-2">
