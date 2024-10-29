@@ -37,22 +37,10 @@ function ProjectListPage() {
         <div className="p-6">
           {/* 상단 바 */}
           <div className="flex items-center mb-8">
-            <h1 className="font-bold text-3xl">Projects</h1>
-            <div className="flex items-center gap-5 ml-auto">
-              <DefaultButton
-                className="px-2 py-[4px] rounded-md"
-                theme="bright"
-                onClick={() =>
-                  setIsCreateModalOpen((p) => {
-                    return !p;
-                  })
-                }
-                text={<span className="text-sm">New project</span>}
-              />
-            </div>
+            <h1 className="font-bold text-3xl text-blue-800">Projects</h1>
           </div>
           {/* 필터 영역 */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 ps-2 pe-1">
             {/* 옵션1 : 기수 */}
             <Select
               name="전 기수"
@@ -74,6 +62,18 @@ function ProjectListPage() {
               }}
               options={["ALL", "서울", "부산"]}
             />
+            <div className="flex items-center gap-5 ml-auto">
+              <DefaultButton
+                className="px-2 py-[4px] rounded-md"
+                theme="bright"
+                onClick={() =>
+                  setIsCreateModalOpen((p) => {
+                    return !p;
+                  })
+                }
+                text={<span className="text-sm">New project</span>}
+              />
+            </div>
           </div>
 
           {/* 프로젝트 목록 */}
