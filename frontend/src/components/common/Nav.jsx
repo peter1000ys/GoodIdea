@@ -74,7 +74,9 @@ function Nav() {
               <Link
                 to="projectdetail/:id"
                 className={`block w-full h-full p-2 cursor-pointer border border-[#8F8F8F] text-2xl shadow-md rounded-lg hover:bg-[#666666] select-none ${
-                  activeItem === "기본 정보" ? "bg-[#666666]" : ""
+                  activeItem === "기본 정보"
+                    ? "bg-[#666666] cursor-default"
+                    : ""
                 }`}
                 onClick={() => handleItemClick("기본 정보")}
               >
@@ -122,7 +124,9 @@ function Nav() {
                   <Link
                     to="/projectdetail/:id/mindmap"
                     className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
-                      activeItem === "마인드 맵" ? "bg-[#666666]" : ""
+                      activeItem === "마인드 맵"
+                        ? "bg-[#666666] cursor-default"
+                        : ""
                     }`}
                     onClick={() => handleItemClick("마인드 맵")}
                   >
@@ -133,7 +137,9 @@ function Nav() {
                   <Link
                     to="/projectdetail/:id/ideaboard"
                     className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
-                      activeItem === "아이디어 보드" ? "bg-[#666666]" : ""
+                      activeItem === "아이디어 보드"
+                        ? "bg-[#666666] cursor-default"
+                        : ""
                     }`}
                     onClick={() => handleItemClick("아이디어 보드")}
                   >
@@ -181,7 +187,9 @@ function Nav() {
                   <Link
                     to="/projectdetail/:id/proposal"
                     className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
-                      activeItem === "프로젝트 개요" ? "bg-[#666666]" : ""
+                      activeItem === "프로젝트 개요"
+                        ? "bg-[#666666] cursor-default"
+                        : ""
                     }`}
                     onClick={() => handleItemClick("프로젝트 개요")}
                   >
@@ -192,7 +200,9 @@ function Nav() {
                   <Link
                     to="/projectdetail/:id/requirementsspecification"
                     className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
-                      activeItem === "요구사항 명세서" ? "bg-[#666666]" : ""
+                      activeItem === "요구사항 명세서"
+                        ? "bg-[#666666] cursor-default"
+                        : ""
                     }`}
                     onClick={() => handleItemClick("요구사항 명세서")}
                   >
@@ -203,7 +213,9 @@ function Nav() {
                   <Link
                     to="/projectdetail/:id/apispecification"
                     className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
-                      activeItem === "API 명세서" ? "bg-[#666666]" : ""
+                      activeItem === "API 명세서"
+                        ? "bg-[#666666] cursor-default"
+                        : ""
                     }`}
                     onClick={() => handleItemClick("API 명세서")}
                   >
@@ -214,7 +226,7 @@ function Nav() {
                   <Link
                     to="/projectdetail/:id/erd"
                     className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
-                      activeItem === "ERD" ? "bg-[#666666]" : ""
+                      activeItem === "ERD" ? "bg-[#666666] cursor-default" : ""
                     }`}
                     onClick={() => handleItemClick("ERD")}
                   >
@@ -225,7 +237,9 @@ function Nav() {
                   <Link
                     to="/projectdetail/:id/flowchart"
                     className={`block w-full h-full cursor-pointer text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
-                      activeItem === "FLOWCHART" ? "bg-[#666666]" : ""
+                      activeItem === "FLOWCHART"
+                        ? "bg-[#666666] cursor-default"
+                        : ""
                     }`}
                     onClick={() => handleItemClick("FLOWCHART")}
                   >
