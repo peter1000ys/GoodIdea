@@ -193,7 +193,11 @@ function MindMapPage() {
         </div>
         <DefaultButton text="모달 열기" onClick={() => setIsPlanOpen(true)} />
 
-        <PortalModal isOpen={isPlanOpen} onClose={() => setIsPlanOpen(false)}>
+        <PortalModal
+          className="max-w-4xl"
+          isOpen={isPlanOpen}
+          onClose={() => setIsPlanOpen(false)}
+        >
           <AIPlanForm onClose={() => setIsPlanOpen(false)} />
         </PortalModal>
       </div>
