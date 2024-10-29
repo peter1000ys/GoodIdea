@@ -5,11 +5,12 @@ import { projectListResponse } from "../dummy/projectlist";
 import DefaultButton from "../components/common/DefaultButton";
 import Divier from "../components/common/Divier";
 import ProjectListItem from "../components/projectlist/ProjectLIstItem";
+import Select from "../components/projectlist/Select";
 
 function ProjectListPage() {
   const [projectListData, setProjectListData] = useState([]);
-  const [filter1, setFilter1] = useState("all");
-  const [filter2, setFilter2] = useState("all");
+  const [filter1, setFilter1] = useState({ value: "ALL", showOptions: false });
+  const [filter2, setFilter2] = useState({ value: "ALL", showOptions: false });
 
   useEffect(() => {
     // 프로젝트 목록 가져오는 곳
@@ -18,8 +19,10 @@ function ProjectListPage() {
 
   useEffect(() => {
     // filter1, filter2 변경 시 프로젝트 목록 가져오는 곳
+    // fetch 위치?
+    console.log(filter1.value, filter2.value);
     setProjectListData(projectListResponse.data);
-  }, [filter1, filter2]);
+  }, [filter1.value, filter2.value]);
 
   return (
     <>
@@ -42,43 +45,35 @@ function ProjectListPage() {
               />
             </div>
           </div>
-
           {/* 필터 영역 */}
           <div className="flex items-center gap-4">
             {/* 옵션1 : 기수 */}
-            <select
+            <Select
+              name="전 기수"
+              state={filter1}
+              setState={setFilter1}
               onChange={(e) => {
                 setFilter1(e.target.value);
               }}
-              className="w-32 h-8 border border-gray-300 rounded-md px-2 py-1"
-              name="filter1"
-              id="filter1"
-            >
-              <option value="all">전 기수</option>
-              <option value="mine">1~12기</option>
-              <option value="starred">Starred</option>
-            </select>
+              options={["ALL", "12", "11"]}
+            />
 
             {/* 옵션2 : 지역 */}
-            <select
+            <Select
+              name="전 지역"
+              state={filter2}
+              setState={setFilter2}
               onChange={(e) => {
                 setFilter2(e.target.value);
               }}
-              value={filter2}
-              className="w-32 h-8 border border-gray-300 rounded-md px-2 py-1"
-              name="filter2"
-              id="filter2"
-            >
-              <option value="all">전 지역</option>
-              <option value="mine">서울대전대구부산찍고</option>
-              <option value="starred">Starred</option>
-            </select>
+              options={["ALL", "서울", "부산"]}
+            />
           </div>
 
           {/* 프로젝트 목록 */}
           <div className="mt-8 gap-y-2 grid px-2">
             {projectListData.map((project) => (
-              <ProjectListItem key={project.id} project={project} />
+              <ProjectListItem key={project.project_id} project={project} />
             ))}
             <Divier />
           </div>

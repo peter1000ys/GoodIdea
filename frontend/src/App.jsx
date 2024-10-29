@@ -22,6 +22,7 @@ function App() {
           <Route path="" element={<CommonLayout />}>
             {/* 메인 페이지 */}
             <Route index element={<MainPage />} />
+
             {/* 프로젝트 목록 페이지*/}
             <Route path="/projectList" element={<ProjectListPage />} />
 
