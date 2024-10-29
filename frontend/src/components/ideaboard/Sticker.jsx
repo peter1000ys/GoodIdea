@@ -10,8 +10,8 @@ const Sticker = ({ delay }) => {
 
   return (
     <div
-      className={`relative w-72 h-72 transform transition-transform duration-500 ${
-        animate ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
+      className={`relative w-72 h-72 transform transition-transform duration-700 ${
+        animate ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"
       }`}
       style={{ transitionDelay: `${delay}ms` }}
     >

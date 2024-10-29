@@ -8,14 +8,14 @@ function IdeaBoardPage() {
       <Helmet>
         <title> 아이디어보드 페이지</title>
       </Helmet>
-      <div className="h-full w-full flex flex-col space-y-10">
+      <div className="h-full w-full flex flex-col space-y-20">
         <Header content="관통 프로젝트" />
-        <div className="flex justify-center items-center flex-row space-x-10">
+        <div className="flex justify-center items-center flex-row space-x-20">
           <Sticker delay={0} />
           <Sticker delay={200} />
           <Sticker delay={400} />
         </div>
-        <div className="flex justify-center items-center flex-row space-x-10">
+        <div className="flex justify-center items-center flex-row space-x-20">
           <Sticker delay={600} />
           <Sticker delay={800} />
           <Sticker delay={1000} />
