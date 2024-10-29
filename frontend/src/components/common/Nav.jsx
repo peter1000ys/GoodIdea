@@ -136,7 +136,7 @@ function Nav() {
                 <li>
                   <Link
                     to="/projectdetail/:id/ideaboard"
-                    className={`block w-full h-fulltext-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
+                    className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "아이디어 보드"
                         ? "bg-[#666666] cursor-default"
                         : "cursor-pointer"
