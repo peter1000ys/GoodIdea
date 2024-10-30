@@ -3,6 +3,17 @@ import { useEffect, useState } from "react";
 const Sticker = ({ delay, x, y, color, darkColor }) => {
   const [animate, setAnimate] = useState(false);
 
+  // 애니메이션 클래스 리스트 중 하나를 무작위로 선택
+  const animations = [
+    "animate-tinDownIn",
+    "animate-tinUpIn",
+    "animate-tinRightIn",
+    "animate-tinLeftIn",
+  ];
+
+  const randomAnimation =
+    animations[Math.floor(Math.random() * animations.length)];
+
   useEffect(() => {
     // delay 시간 후에 애니메이션 활성화
     const timer = setTimeout(() => setAnimate(true), delay);
@@ -12,7 +23,7 @@ const Sticker = ({ delay, x, y, color, darkColor }) => {
   return (
     <div
       className={`absolute w-72 h-72 ${
-        animate ? "animate-tinDownIn" : "opacity-0"
+        animate ? randomAnimation : "opacity-0"
       }`}
       style={{
         left: x,
