@@ -14,8 +14,8 @@ function ProposalPage() {
         <div className="flex-1 items-center justify-center flex">CRDT 영역</div>
         <div>
           <div className="float-end space-x-3 p-2">
-            <DefaultButton text="팀명 수정" />
-            <DefaultButton text="저장" />
+            <DefaultButton onClick={() => {}} text="팀명 수정" />
+            <DefaultButton onClick={() => {}} text="저장" />
           </div>
         </div>
       </div>

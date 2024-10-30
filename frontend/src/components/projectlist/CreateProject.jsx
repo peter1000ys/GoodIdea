@@ -2,17 +2,20 @@ import React, { useState } from "react";
 
 const ProjectCard = ({ title, onSelect }) => {
   return (
-    <div
-      onClick={onSelect}
-      className="bg-gray-100 rounded-xl shadow-lg p-6 flex flex-col items-center justify-between cursor-pointer"
-    >
+    <div className="bg-gray-100 rounded-xl shadow-lg p-6 flex flex-col items-center justify-between min-h-full">
       <h2 className="text-lg font-semibold">{title}</h2>
       <hr className="w-full border-gray-300 my-2" />
       <div className="flex flex-col space-y-4 mt-4 w-full">
-        <button className="px-4 py-2 bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 transition">
+        <button
+          onClick={onSelect}
+          className="px-4 py-2 bg-gray-200 rounded-full cursor-pointer text-gray-700 hover:bg-gray-300 transition"
+        >
           팀장으로 시작하기
         </button>
-        <button className="px-4 py-2 bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 transition">
+        <button
+          onClick={onSelect}
+          className="px-4 py-2 bg-gray-200 rounded-full cursor-pointer text-gray-700 hover:bg-gray-300 transition"
+        >
           팀원으로 시작하기
         </button>
       </div>
@@ -34,13 +37,13 @@ const WritePage = ({ onBack }) => (
 );
 
 const CreateProject = () => {
-  const [page, setPage] = useState("project"); // 현재 페이지: 'project' 또는 'write'
-  const [isAnimating, setIsAnimating] = useState(false); // 애니메이션 상태 관리
+  const [page, setPage] = useState("project");
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleSelect = () => {
     setIsAnimating(true);
     setTimeout(() => {
-      setPage("write"); // 'write' 페이지로 전환
+      setPage("write");
       setIsAnimating(false);
     }, 500);
   };
@@ -48,13 +51,13 @@ const CreateProject = () => {
   const handleBack = () => {
     setIsAnimating(true);
     setTimeout(() => {
-      setPage("project"); // 'project' 페이지로 전환
+      setPage("project");
       setIsAnimating(false);
     }, 500);
   };
 
   return (
-    <div className="flex justify-center items-center h-screen overflow-hidden">
+    <div className="flex justify-center items-center h-full overflow-hidden">
       {/* 첫 번째 컴포넌트 (카드 목록) */}
       {page === "project" && (
         <div
@@ -66,7 +69,7 @@ const CreateProject = () => {
             "관통 프로젝트",
             "공통 프로젝트",
             "특화 프로젝트",
-            "공통 프로젝트",
+            "자율 프로젝트",
           ].map((title, index) => (
             <ProjectCard key={index} title={title} onSelect={handleSelect} />
           ))}
