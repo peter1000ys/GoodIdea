@@ -26,9 +26,15 @@ export function ERDDrawing() {
     }
     if (!editor) return;
 
+    // CSS 스타일로 크기 조정
+    editor.style.width = "100%";
+    editor.style.height = "100%";
+    editor.style.display = "block";
+    editor.systemDarkMode = false;
+
     container.appendChild(editor);
     editor.systemDarkMode = false;
   };
 
-  return <div className="w-full h-[700px]" id="app-erd" />;
+  return <div className="relative w-full h-full" id="app-erd" />;
 }

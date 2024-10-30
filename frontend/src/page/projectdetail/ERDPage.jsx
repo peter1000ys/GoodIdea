@@ -10,9 +10,9 @@ function ERDPage() {
       </Helmet>
       <div className="h-full w-full flex flex-col">
         <Header content="관통 프로젝트" />
-      </div>
-      <div className="w-full h-[700px]">
-        <ERDDrawing />
+        <div className="flex-1">
+          <ERDDrawing />
+        </div>
       </div>
     </>
   );
