@@ -3,21 +3,44 @@ import Header from "../../components/common/Header";
 import Sticker from "../../components/ideaboard/sticker";
 
 function IdeaBoardPage() {
+  // 첫 6개 좌표를 각 섹션 범위 내에서 랜덤으로 생성
+  const generateSectionCoordinates = () => {
+    const coordinates = [
+      { xRange: [0, 14], yRange: [5, 28] },
+      { xRange: [28, 43], yRange: [5, 28] },
+      { xRange: [57, 86], yRange: [5, 28] },
+      { xRange: [0, 14], yRange: [41, 77] },
+      { xRange: [28, 43], yRange: [41, 77] },
+      { xRange: [57, 86], yRange: [41, 77] },
+    ];
+
+    return coordinates.map(({ xRange, yRange }, index) => ({
+      x: `${xRange[0] + Math.random() * (xRange[1] - xRange[0])}%`,
+      y: `${yRange[0] + Math.random() * (yRange[1] - yRange[0])}%`,
+      delay: index * 100,
+    }));
+  };
+
+  // 나머지 좌표는 전체 범위에서 랜덤으로 생성
+  const generateRandomCoordinates = (count) => {
+    const coordinates = [];
+    for (let i = 0; i < count; i++) {
+      coordinates.push({
+        x: `${Math.random() * 86}%`, // x 범위 0% ~ 86%
+        y: `${5 + Math.random() * 72}%`, // y 범위 5% ~ 77%
+        delay: (i + 6) * 100,
+      });
+    }
+    return coordinates;
+  };
+
+  // 첫 6개의 섹션 랜덤 좌표 + 나머지 전체 범위 랜덤 좌표
   const coordinates = [
-    { x: "0%", y: "5%", delay: 0 },
-    { x: "27%", y: "64%", delay: 100 },
-    { x: "80%", y: "56%", delay: 200 },
-    { x: "34%", y: "48%", delay: 300 },
-    { x: "67%", y: "12%", delay: 400 },
-    { x: "48%", y: "77%", delay: 500 },
-    { x: "3%", y: "56%", delay: 600 },
-    { x: "50%", y: "24%", delay: 700 },
-    { x: "77%", y: "34%", delay: 800 },
-    { x: "18%", y: "16%", delay: 900 },
-    { x: "29%", y: "23%", delay: 1000 },
-    { x: "67%", y: "7%", delay: 1100 },
+    ...generateSectionCoordinates(),
+    ...generateRandomCoordinates(10),
   ];
 
+  // 색상 배열 정의
   const colors = [
     "#FFF8B7",
     "#CFF3FF",
