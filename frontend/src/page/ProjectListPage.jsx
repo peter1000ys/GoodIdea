@@ -7,6 +7,7 @@ import Divier from "../components/common/Divier";
 import ProjectListItem from "../components/projectlist/ProjectLIstItem";
 import Select from "../components/projectlist/Select";
 import PortalModal from "../components/common/PortalModal";
+import CreateProject from "../components/projectlist/CreateProject";
 
 function ProjectListPage() {
   const [projectListData, setProjectListData] = useState([]);
@@ -93,9 +94,7 @@ function ProjectListPage() {
         }}
       >
         <div className="w-full h-full flex flex-col">
-          <div className="flex items-center self-center mb-8">
-            <h1 className="font-bold text-3xl ">Create new project</h1>
-          </div>
+          <CreateProject />
         </div>
       </PortalModal>
     </>
