@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import Header from "../../components/common/Header";
+import RequirementsTable from "../../components/requirementsspecification/RequirementsTable";
 
 function RequirementsSpecificationPage() {
   return (
@@ -9,7 +10,7 @@ function RequirementsSpecificationPage() {
       </Helmet>
       <div className="h-full w-full flex flex-col">
         <Header content="관통 프로젝트" />
-        요구사항명세서페이지
+        <RequirementsTable />
       </div>
     </>
   );
