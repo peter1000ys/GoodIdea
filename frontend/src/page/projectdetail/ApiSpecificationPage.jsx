@@ -3,8 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { useEffect, useState } from "react";
 import { useFormStore } from "../../store/useAPIStore";
 import TableRow from "../../components/apispecification/TableRow";
-import PortalModal from "../../components/common/PortalModal";
-import ReactMarkdown from "react-markdown";
+import EnhancedModal from "../../components/apispecification/EnhancedModal";
 
 function ApiSpecificationPage() {
   const { apiSpecifications, addRow, updateSpec } = useFormStore();
@@ -77,83 +76,14 @@ function ApiSpecificationPage() {
           </button>
         </div>
       </div>
-      <PortalModal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-        <div className="w-full p-6">
-          <h2 className="text-xl mb-4">API 명세 수정 - {selectedSpec?.uri}</h2>
-          <div className="mb-4">
-            <label className="block mb-2">URI</label>
-            <input
-              type="text"
-              name="uri"
-              value={formData.uri || ""}
-              onChange={handleChange}
-              className="w-full p-2 border"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2">
-              Request Header (Markdown 사용 가능)
-            </label>
-            <textarea
-              name="requestHeader"
-              value={formData.requestHeader || ""}
-              onChange={handleChange}
-              className="w-full p-2 border"
-            />
-            <ReactMarkdown>{formData.requestHeader || ""}</ReactMarkdown>
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2">
-              Request Params (Markdown 사용 가능)
-            </label>
-            <textarea
-              name="requestParams"
-              value={formData.requestParams || ""}
-              onChange={handleChange}
-              className="w-full p-2 border"
-            />
-            <ReactMarkdown>{formData.requestParams || ""}</ReactMarkdown>
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2">
-              Request Body (Markdown 사용 가능)
-            </label>
-            <textarea
-              name="requestBody"
-              value={formData.requestBody || ""}
-              onChange={handleChange}
-              className="w-full p-2 border"
-            />
-            <ReactMarkdown>{formData.requestBody || ""}</ReactMarkdown>
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2">
-              Response Body (Markdown 사용 가능)
-            </label>
-            <textarea
-              name="responseBody"
-              value={formData.responseBody || ""}
-              onChange={handleChange}
-              className="w-full p-2 border"
-            />
-            <ReactMarkdown>{formData.responseBody || ""}</ReactMarkdown>
-          </div>
-          <div className="flex justify-end">
-            <button
-              onClick={() => setModalOpen(false)}
-              className="p-2 mr-2 bg-gray-300 rounded"
-            >
-              취소
-            </button>
-            <button
-              onClick={handleSubmit}
-              className="p-2 bg-blue-500 text-white rounded"
-            >
-              저장
-            </button>
-          </div>
-        </div>
-      </PortalModal>
+      <EnhancedModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        selectedSpec={selectedSpec}
+        formData={formData}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+      />
     </>
   );
 }
