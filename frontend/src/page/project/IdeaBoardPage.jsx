@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import Header from "../../components/common/Header";
-import Sticker from "../../components/ideaboard/sticker";
+import Sticker from "../../components/ideaboard/Sticker";
 import { useState } from "react";
 import StickerModal from "../../components/ideaboard/StickerModal";
 
