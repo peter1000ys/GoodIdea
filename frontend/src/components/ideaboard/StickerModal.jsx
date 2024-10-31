@@ -109,7 +109,7 @@ const StickerModal = ({ closeModal, selectedSticker }) => {
           {renderContent()}
         </div>
         <button
-          className="absolute text-3xl top-16 right-7 text-gray-500 hover:text-gray-700"
+          className="absolute text-3xl top-16 right-7 text-gray-500 hover:text-gray-700 z-[100]"
           onClick={closeModal}
         >
           <big>&times;</big>
