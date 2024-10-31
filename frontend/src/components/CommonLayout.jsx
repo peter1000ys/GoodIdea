@@ -5,8 +5,10 @@ import Nav from "./common/Nav";
 function CommonLayout() {
   const [isproject, setisproject] = useState(false);
   const params = useParams();
+
   useEffect(() => {
     if (params?.id) setisproject(true);
+    else setisproject(false);
   }, [params]);
 
   return (

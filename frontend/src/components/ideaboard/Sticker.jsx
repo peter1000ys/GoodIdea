@@ -44,11 +44,9 @@ const Sticker = ({ delay, x, y, color, darkColor, onClick }) => {
 
       {/* 하단 바 부분 */}
       <div
-        className="left-0 w-60 h-12 ml-auto mr-0 flex flex-row-reverse items-center"
+        className="left-0 w-60 h-12 ml-auto mr-0"
         style={{ backgroundColor: color }}
-      >
-        <p className="mr-2">좋아요</p>
-      </div>
+      ></div>
 
       {/* 왼쪽 하단 접힌 부분 */}
       <div
