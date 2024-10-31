@@ -9,40 +9,49 @@ function IdeaBoardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
 
   // 첫 6개 좌표를 각 섹션 범위 내에서 랜덤으로 생성
-  const generateSectionCoordinates = () => {
-    const coordinates = [
-      { xRange: [0, 14], yRange: [5, 28] },
-      { xRange: [28, 43], yRange: [5, 28] },
-      { xRange: [57, 86], yRange: [5, 28] },
-      { xRange: [0, 14], yRange: [41, 77] },
-      { xRange: [28, 43], yRange: [41, 77] },
-      { xRange: [57, 86], yRange: [41, 77] },
-    ];
+  // const generateSectionCoordinates = () => {
+  //   const coordinates = [
+  //     { xRange: [0, 14], yRange: [5, 28] },
+  //     { xRange: [28, 43], yRange: [5, 28] },
+  //     { xRange: [57, 86], yRange: [5, 28] },
+  //     { xRange: [0, 14], yRange: [41, 77] },
+  //     { xRange: [28, 43], yRange: [41, 77] },
+  //     { xRange: [57, 86], yRange: [41, 77] },
+  //   ];
 
-    return coordinates.map(({ xRange, yRange }, index) => ({
-      x: `${xRange[0] + Math.random() * (xRange[1] - xRange[0])}%`,
-      y: `${yRange[0] + Math.random() * (yRange[1] - yRange[0])}%`,
-      delay: index * 100,
-    }));
-  };
+  //   return coordinates.map(({ xRange, yRange }, index) => ({
+  //     x: `${xRange[0] + Math.random() * (xRange[1] - xRange[0])}%`,
+  //     y: `${yRange[0] + Math.random() * (yRange[1] - yRange[0])}%`,
+  //     delay: index * 100,
+  //   }));
+  // };
 
   // 나머지 좌표는 전체 범위에서 랜덤으로 생성
-  const generateRandomCoordinates = (count) => {
-    const coordinates = [];
-    for (let i = 0; i < count; i++) {
-      coordinates.push({
-        x: `${Math.random() * 86}%`, // x 범위 0% ~ 86%
-        y: `${5 + Math.random() * 72}%`, // y 범위 5% ~ 77%
-        delay: (i + 6) * 100,
-      });
-    }
-    return coordinates;
-  };
+  // const generateRandomCoordinates = (count) => {
+  //   const coordinates = [];
+  //   for (let i = 0; i < count; i++) {
+  //     coordinates.push({
+  //       x: `${Math.random() * 86}%`, // x 범위 0% ~ 86%
+  //       y: `${5 + Math.random() * 72}%`, // y 범위 5% ~ 77%
+  //       delay: (i + 6) * 100,
+  //     });
+  //   }
+  //   return coordinates;
+  // };
 
   // 첫 6개의 섹션 랜덤 좌표 + 나머지 전체 범위 랜덤 좌표
   const coordinates = [
-    ...generateSectionCoordinates(),
-    ...generateRandomCoordinates(2),
+    // ...generateSectionCoordinates(),
+    // ...generateRandomCoordinates(2),
+    { x: "5%", y: "13%", delay: 0 },
+    { x: "30%", y: "8%", delay: 100 },
+    { x: "67%", y: "20%", delay: 200 },
+    { x: "8%", y: "70%", delay: 300 },
+    { x: "33%", y: "55%", delay: 400 },
+    { x: "80%", y: "41%", delay: 500 },
+    { x: "56%", y: "54%", delay: 600 },
+    { x: "12%", y: "38%", delay: 700 },
+    { x: "34%", y: "77%", delay: 800 },
   ];
 
   // 색상 배열 정의
