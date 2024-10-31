@@ -4,9 +4,9 @@ import DefaultButton from "../components/common/DefaultButton";
 
 function MainPage() {
   // 리다이렉트 URL 설정
+  const REDIRECT_URI = "oracle1.mypjt.xyz/api/v1/auth/callback";
   const handleGitLabLogin = () => {
-    window.location.href =
-      "https://lab.ssafy.com/oauth/authorize?client_id=423f3efe4f264ff88416dc5ad049498edfaeaf5a68dcdb835ee4ce5b0bf48f32&redirect_uri=https://oracle1.mypjt.xyz/api/v1/auth/callback&response_type=code&scope=read_user%20api&state=random_state_string";
+    window.location.href = `https://lab.ssafy.com/oauth/authorize?client_id=423f3efe4f264ff88416dc5ad049498edfaeaf5a68dcdb835ee4ce5b0bf48f32&redirect_uri=${REDIRECT_URI}&response_type=code&scope=read_user%20api&state=random_state_string`;
   };
 
   return (

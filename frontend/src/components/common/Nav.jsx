@@ -70,7 +70,12 @@ function Nav() {
     <div className="fixed w-64 min-h-screen bg-gradient-to-b from-[#999999] to-[#333333] text-white p-4 flex flex-col justify-between rounded-tr-[20px]">
       <div>
         <div className="flex flex-row justify-between mb-3">
-          <img src="" alt="로고" onClick={goHome} className="cursor-pointer" />
+          <img
+            src="/public/logo.png"
+            alt="로고"
+            onClick={goHome}
+            className="cursor-pointer w-8 h-8"
+          />
           <h1 className="text-base font-bold mb-4 select-none">GOOD IDEA</h1>
         </div>
         <nav>
