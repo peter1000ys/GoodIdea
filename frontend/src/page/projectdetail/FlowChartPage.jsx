@@ -75,14 +75,13 @@ export default function FLOWCHARTPage() {
       <div className="h-full w-full flex flex-col">
         <Header content="관통 프로젝트" />
         <div className="flex-1 w-full h-full p-4 bg-gray-100">
-          <h1 className="text-2xl font-bold mb-4">Flowchart Editor</h1>
           <MDEditor
             value={markdown}
             onChange={setMarkdown}
             textareaProps={{
               placeholder: "Mermaid 문법을 사용해 Flowchart를 작성하세요.",
             }}
-            height={635}
+            height={675}
             previewOptions={{
               components: {
                 code: Code,
