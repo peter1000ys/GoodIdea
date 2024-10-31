@@ -25,7 +25,6 @@ public class AuthController {
 
     // GitLab OAuth callback endpoint
     @GetMapping("/callback")
-    @ResponseBody
     public ApiResponse<AuthTokens> gitLabCallback(
             @RequestParam("code") String authorizationCode,
             @RequestParam("state") String state) {

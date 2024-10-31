@@ -17,7 +17,4 @@ public class APIDocs extends BaseTime {
     @Column(name = "apidocs_id")
     Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "api_id")
-    API api;
 }
