@@ -83,7 +83,7 @@ function MindMapPage() {
             value={searchKeyword}
             autoComplete="off"
             placeholder="여기에 검색어를 입력하세요"
-            className="w-full max-w-2xl p-3 border border-gray-300 rounded-full text-center shadow-sm focus:outline-none"
+            className="w-full max-w-2xl p-3 pl-5 border border-gray-300 rounded-full shadow-sm focus:outline-none"
           />
 
           {/* 돋보기 아이콘 */}

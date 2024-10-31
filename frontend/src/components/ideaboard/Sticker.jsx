@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const Sticker = ({ delay, x, y, color, darkColor }) => {
+const Sticker = ({ delay, x, y, color, darkColor, onClick }) => {
   const [animate, setAnimate] = useState(false);
 
   // 애니메이션 클래스 리스트 중 하나를 무작위로 선택
@@ -22,9 +22,9 @@ const Sticker = ({ delay, x, y, color, darkColor }) => {
 
   return (
     <div
-      className={`absolute w-72 h-72 ${
+      className={`absolute w-72 h-72 cursor-pointer ${
         animate ? randomAnimation : "opacity-0"
-      }`}
+      } `}
       style={{
         left: x,
         top: y,
@@ -33,8 +33,9 @@ const Sticker = ({ delay, x, y, color, darkColor }) => {
     >
       {/* 상단 메모 부분 */}
       <div
-        className="w-72 h-60 rounded-tr-[30px] rounded-tl-[30px]"
+        className="w-72 h-60"
         style={{ backgroundColor: color }}
+        onClick={onClick}
       >
         <div className="p-4">
           <p className="text-gray-700">메모 내용을 입력하세요...</p>
@@ -43,9 +44,11 @@ const Sticker = ({ delay, x, y, color, darkColor }) => {
 
       {/* 하단 바 부분 */}
       <div
-        className="left-0 w-60 h-12 ml-auto mr-0"
+        className="left-0 w-60 h-12 ml-auto mr-0 flex flex-row-reverse items-center"
         style={{ backgroundColor: color }}
-      ></div>
+      >
+        <p className="mr-2">좋아요</p>
+      </div>
 
       {/* 왼쪽 하단 접힌 부분 */}
       <div

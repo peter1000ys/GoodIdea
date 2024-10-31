@@ -37,7 +37,7 @@ function Nav() {
         item: "아이디어 보드",
         setOpen: setBrainstormingOpen,
       },
-      { path: "proposal", item: "프로젝트 개요", setOpen: setResultOpen },
+      { path: "proposal", item: "기획서", setOpen: setResultOpen },
       {
         path: "requirementsspecification",
         item: "요구사항 명세서",
@@ -72,8 +72,8 @@ function Nav() {
             {/* 기본 정보 */}
             <li>
               <Link
-                to="projectdetail/:id"
-                className={`block w-full h-full p-2 border border-[#8F8F8F] text-2xl shadow-md rounded-lg hover:bg-[#666666] select-none ${
+                to="project/:id"
+                className={`text-xl block w-full h-full p-2 border border-[#8F8F8F] shadow-md rounded-lg hover:bg-[#666666] select-none ${
                   activeItem === "기본 정보"
                     ? "bg-[#666666] cursor-default"
                     : "cursor-pointer"
@@ -87,7 +87,7 @@ function Nav() {
             {/* 브레인 스토밍 메뉴 */}
             <li>
               <div
-                className={`text-2xl flex justify-between items-center cursor-pointer border border-[#8F8F8F] hover:bg-[#666666] shadow-md select-none p-2 rounded-lg ${
+                className={`text-xl flex justify-between items-center cursor-pointer border border-[#8F8F8F] hover:bg-[#666666] shadow-md select-none p-2 rounded-lg ${
                   isBrainstormingOpen ? "bg-[#666666]" : ""
                 }`}
                 onClick={toggleBrainstorming}
@@ -122,7 +122,7 @@ function Nav() {
               >
                 <li className="mt-5">
                   <Link
-                    to="/projectdetail/:id/mindmap"
+                    to="/project/:id/mindmap"
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "마인드 맵"
                         ? "bg-[#666666] cursor-default"
@@ -135,7 +135,7 @@ function Nav() {
                 </li>
                 <li>
                   <Link
-                    to="/projectdetail/:id/ideaboard"
+                    to="/project/:id/ideaboard"
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "아이디어 보드"
                         ? "bg-[#666666] cursor-default"
@@ -152,12 +152,12 @@ function Nav() {
             {/* 산출물 메뉴 */}
             <li>
               <div
-                className={` text-2xl  flex flex-row justify-between items-center cursor-pointer border border-[#858585] shadow-md p-2 select-none rounded-lg hover:bg-[#666666] ${
+                className={` text-xl flex flex-row justify-between items-center cursor-pointer border border-[#858585] shadow-md p-2 select-none rounded-lg hover:bg-[#666666] ${
                   isResultOpen ? "bg-[#666666]" : ""
                 }`}
                 onClick={toggleResult}
               >
-                산출물
+                채택 아이디어
                 <svg
                   width="29"
                   height="28"
@@ -185,20 +185,20 @@ function Nav() {
               >
                 <li className="mt-5">
                   <Link
-                    to="/projectdetail/:id/proposal"
+                    to="/project/:id/idea/:ideaid/proposal"
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
-                      activeItem === "프로젝트 개요"
+                      activeItem === "기획서"
                         ? "bg-[#666666] cursor-default"
                         : "cursor-pointer"
                     }`}
-                    onClick={() => handleItemClick("프로젝트 개요")}
+                    onClick={() => handleItemClick("기획서")}
                   >
-                    프로젝트 개요
+                    기획서
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/projectdetail/:id/requirementsspecification"
+                    to="/project/:id/idea/:ideaid/requirementsspecification"
                     className={`block w-full h-fullx text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "요구사항 명세서"
                         ? "bg-[#666666] cursor-default"
@@ -211,7 +211,7 @@ function Nav() {
                 </li>
                 <li>
                   <Link
-                    to="/projectdetail/:id/apispecification"
+                    to="/project/:id/idea/:ideaid/apispecification"
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "API 명세서"
                         ? "bg-[#666666] cursor-default"
@@ -224,7 +224,7 @@ function Nav() {
                 </li>
                 <li>
                   <Link
-                    to="/projectdetail/:id/erd"
+                    to="/project/:id/idea/:ideaid/erd"
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "ERD"
                         ? "bg-[#666666] cursor-default"
@@ -237,7 +237,7 @@ function Nav() {
                 </li>
                 <li>
                   <Link
-                    to="/projectdetail/:id/flowchart"
+                    to="/project/:id/idea/:ideaid/flowchart"
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "FLOWCHART"
                         ? "bg-[#666666] cursor-default"

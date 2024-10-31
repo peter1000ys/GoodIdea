@@ -6,7 +6,7 @@ function ProjectListItem({ project }) {
   const navigate = useNavigate();
   const navigateDetail = () => {
     // navigate to detail page
-    navigate(`/projectdetail/${project.project_id}`);
+    navigate(`/project/${project.project_id}`);
   };
   return (
     <>

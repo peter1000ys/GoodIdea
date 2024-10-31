@@ -1,8 +1,12 @@
 import { Helmet } from "react-helmet-async";
 import Header from "../../components/common/Header";
 import Sticker from "../../components/ideaboard/sticker";
+import { useState } from "react";
 
 function IdeaBoardPage() {
+  const [selectedSticker, setSelectedSticker] = useState(null); // 선택된 스티커
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+
   // 첫 6개 좌표를 각 섹션 범위 내에서 랜덤으로 생성
   const generateSectionCoordinates = () => {
     const coordinates = [
@@ -37,7 +41,7 @@ function IdeaBoardPage() {
   // 첫 6개의 섹션 랜덤 좌표 + 나머지 전체 범위 랜덤 좌표
   const coordinates = [
     ...generateSectionCoordinates(),
-    ...generateRandomCoordinates(10),
+    ...generateRandomCoordinates(2),
   ];
 
   // 색상 배열 정의
@@ -59,6 +63,16 @@ function IdeaBoardPage() {
     "#B1B1EE",
   ];
 
+  const openModal = (sticker) => {
+    setSelectedSticker(sticker);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedSticker(null);
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <Helmet>
@@ -76,9 +90,53 @@ function IdeaBoardPage() {
             delay={delay}
             color={colors[index % colors.length]}
             darkColor={darkColors[index % darkColors.length]}
+            onClick={() =>
+              openModal({
+                x,
+                y,
+                color: colors[index % colors.length],
+                darkColor: darkColors[index % darkColors.length],
+              })
+            }
           />
         ))}
       </div>
+      {/* 모달 */}
+      {isModalOpen && selectedSticker && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          onClick={closeModal}
+        >
+          <div
+            className="w-11/12 h-11/12 p-4 relative bg-white rounded-lg flex flex-col justify-between"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="w-full h-full"
+              style={{
+                backgroundColor: selectedSticker.color,
+              }}
+            >
+              <p className="text-gray-700 p-4">
+                이곳에 메모 내용을 입력하세요...
+              </p>
+            </div>
+            <div
+              className="absolute bottom-0 left-0 w-12 h-12"
+              style={{
+                backgroundColor: selectedSticker.darkColor,
+                clipPath: "polygon(100% 100%, 100% 0, 0 0)",
+              }}
+            ></div>
+            <button
+              className="absolute text-2xl top-5 right-5 text-gray-500 hover:text-gray-700"
+              onClick={closeModal}
+            >
+              <big>&times;</big>
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
