@@ -1,0 +1,2 @@
+const ModalFlowChart = () => <p className="p-4">FlowChart 내용입니다...</p>;
+export default ModalFlowChart;
