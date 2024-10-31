@@ -1,25 +1,64 @@
-function Header() {
+import { useNavigate } from "react-router-dom";
+import DefaultButton from "./DefaultButton";
+import { useUserStore } from "../../store/useUserStore";
+
+function Header({ content }) {
+  const navigate = useNavigate();
+  const goProjectList = () => {
+    // 프로젝트 리스트로 이동
+    navigate("/projectlist");
+  };
+  const { isLogin } = useUserStore();
+
   return (
-    <header className="w-64 h-screen bg-blue-600 text-white p-4 flex flex-col justify-between">
-      <div>
-        <h1 className="text-2xl font-bold mb-4">사이트 이름</h1>
-        <nav>
-          <ul className="space-y-4">
-            <li>
-              <a href="/" className="block">
-                홈
-              </a>
-            </li>
-            <li>
-              <a href="/about" className="block">
-                소개
-              </a>
-            </li>
-          </ul>
-        </nav>
+    <div className="border-b-2 border-gray-300 flex items-center justify-between p-2">
+      <div className="flex items-center">
+        <div className="text-xl">
+          <span
+            onClick={goProjectList}
+            className={`cursor-pointer ${content ? "" : "font-bold"}`}
+          >
+            프로젝트 목록
+          </span>
+          {content && (
+            <>
+              {" / "}
+              <span className="font-bold">{content}</span>
+            </>
+          )}
+        </div>
       </div>
-      <footer className="text-sm">© 2024 My Website</footer>
-    </header>
+
+      <DefaultButton
+        onClick={() => {
+          // 로그아웃 로직
+        }}
+        theme="bright"
+        className="hover:bg-blue-700 py-2 px-4 rounded m-0 text-sm"
+        text={
+          isLogin ? (
+            <div className="flex items-center">
+              사용자 이름
+              {/* logout */}
+              <svg
+                fill="none"
+                viewBox="0 0 15 15"
+                height="1em"
+                width="1em"
+                // {...props}
+              >
+                <path
+                  stroke="currentColor"
+                  d="M13.5 7.5l-3 3.25m3-3.25l-3-3m3 3H4m4 6H1.5v-12H8"
+                />
+              </svg>
+            </div>
+          ) : (
+            "로그인"
+          )
+        }
+      />
+    </div>
   );
 }
 
