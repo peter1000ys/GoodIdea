@@ -89,7 +89,7 @@ async def fetch_repo_info(client, repo):
     }
 
 # /kafka/test 엔드포인트
-@app.post("api/v1/kafka/test")
+@app.post("/api/v1/kafka/test")
 async def send_messages_to_kafka():
     results = {}
     
