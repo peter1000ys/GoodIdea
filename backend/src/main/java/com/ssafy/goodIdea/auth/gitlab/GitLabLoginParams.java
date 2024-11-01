@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+@Setter
 @Getter
 @NoArgsConstructor
 public class GitLabLoginParams implements OAuthLoginParams {
@@ -26,7 +27,4 @@ public class GitLabLoginParams implements OAuthLoginParams {
         return body;
     }
 
-    public void setAuthorizationCode(String authorizationCode) {
-        this.authorizationCode = authorizationCode;
-    }
 }

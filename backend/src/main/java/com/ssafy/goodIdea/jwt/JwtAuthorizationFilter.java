@@ -62,7 +62,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             validateAndAuthenticateUser(username);
             chain.doFilter(request, response);
         } catch (BaseException e) {
-            if (e.getMessage().equals(ErrorType.NO_AVAILABLE_CHARGER.toString())) {
+            if (e.getMessage().equals(ErrorType.INVALID_TOKEN.toString())) {
 //                System.out.println("유효하지 않음");
                 handleInvalidToken(request, response, chain);
             } else {
@@ -74,7 +74,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private void validateAndAuthenticateUser(String username) throws IOException, ServletException {
         if (username != null) {
-            User userEntity = userRepository.findByUsername(username).orElseThrow( () -> new BaseException(ErrorType.CAR_NOT_FOUND));
+            User userEntity = userRepository.findByUsername(username).orElseThrow( () -> new BaseException(ErrorType.NOT_FOUND_USER));
             if (userEntity != null) {
                 PrincipalDetails principalDetails = new PrincipalDetails(userEntity);
                 Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
@@ -97,7 +97,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     Optional<User> userEntity = userRepository.findByUsername(username);
                     if (userEntity.isPresent()) {
                         long now = (new Date()).getTime();
-                        Date accessTokenExpiredAt = new Date(now + 1000 * 60);
+                        Date accessTokenExpiredAt = new Date(now + 1000 * 60 * 600);
                         String accessToken = jwtTokenProvider.generate(username, accessTokenExpiredAt);
                         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + accessToken);
                         validateAndAuthenticateUser(username);

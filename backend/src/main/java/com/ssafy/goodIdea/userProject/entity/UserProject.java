@@ -5,6 +5,7 @@ import com.ssafy.goodIdea.project.entity.Project;
 import com.ssafy.goodIdea.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,4 +25,10 @@ public class UserProject extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     Project project;
+
+    @Builder
+    public UserProject(User user, Project project) {
+        this.user = user;
+        this.project = project;
+    }
 }

@@ -14,7 +14,7 @@ public class HelloService {
     private final HelloRepository helloRepository;
 
     public HelloResponseDto getHello(Long helloId) {
-        Hello hello = helloRepository.findById(helloId).orElseThrow( () -> new BaseException(ErrorType.CAR_NOT_FOUND));
+        Hello hello = helloRepository.findById(helloId).orElseThrow( () -> new BaseException(ErrorType.NOT_FOUND_USER));
         return HelloResponseDto.builder()
                 .hello_id(hello.getId())
                 .content(hello.getContent())

@@ -30,6 +30,12 @@ public class SecurityConfig {
     private final AuthTokensGenerator authTokensGenerator;
     private final RedisService redisService;
 
+    // AuthenticationManager 빈 설정
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
