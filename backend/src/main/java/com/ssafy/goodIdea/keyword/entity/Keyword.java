@@ -15,14 +15,13 @@ public class Keyword extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "keyword_id")
-    Long id;
+    private Long id;
 
-//    내용
-    String content;
+    private String content; // 내용
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mindMap_id")
-    MindMap mindMap;
+    private MindMap mindMap;
 
     @Builder
     public Keyword(String content, MindMap mindMap) {

@@ -22,7 +22,7 @@ public class ProjectResponseDto {
     //    프로젝트 설명
     String description;
     //    깃랩 이름
-    String gitlab_name;
+    String gitlabName;
     //    깃랩 주소
     String gitlab_url;
     //    프로젝트 멤버

@@ -39,11 +39,8 @@ public class AuthController {
 
         // Authorization Code를 사용해 Access Token을 요청
         AuthTokens authTokens = oAuthLoginService.login(params);
-
-        // JWT 토큰을 Authorization 헤더에 설정
-        response.setHeader("Authorization", "Bearer " + authTokens.getAccessToken());
-
-        // 프론트엔드 페이지로 리다이렉트
-        response.sendRedirect("https://oracle1.mypjt.xyz");
+        // 프론트엔드의 /login 페이지로 Access Token을 쿼리 파라미터로 포함하여 리다이렉트
+        String redirectUrl = String.format("https://oracle1.mypjt.xyz/login?accessToken=%s&refreshToken=%s", authTokens.getAccessToken(), authTokens.getRefreshToken());
+        response.sendRedirect(redirectUrl);
     }
 }
