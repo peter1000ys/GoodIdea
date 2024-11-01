@@ -14,14 +14,8 @@ public class GitLabInfoResponse implements OAuthInfoResponse {
 
     private String id;
     private String username;
-    private String email;
     private String name;
     private RoleType roleType;
-
-    @Override
-    public String getEmail() {
-        return email;
-    }
 
     @Override
     public String getUsername() {
