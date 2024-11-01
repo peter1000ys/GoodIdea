@@ -43,9 +43,9 @@ function Header({ content }) {
         theme="bright"
         className="hover:bg-blue-700 py-2 px-4 rounded m-0 text-sm"
         text={
-          isLogin ? (
+          isLogin && userInfo ? (
             <div className="flex items-center">
-              {userInfo}
+              {userInfo.username}
               {/* logout */}
               <svg
                 fill="none"
