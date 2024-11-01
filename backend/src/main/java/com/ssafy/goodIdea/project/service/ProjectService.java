@@ -54,7 +54,7 @@ public class ProjectService {
                     .name(dto.getName())
                     .projectType(dto.getProjectType())
                     .description(dto.getDescription())
-                    .gitlab_name(myProject.getName())
+                    .gitlabName(myProject.getName())
                     .gitlab_url(myProject.getWebUrl())
                     .gitLabProjectId(myProject.getProject_id())
                 .build()
@@ -80,7 +80,7 @@ public class ProjectService {
                 .projectType(project.getProjectType())
                 .name(project.getName())
                 .description(project.getDescription())
-                .gitlab_name(project.getGitlab_name())
+                .gitlabName(project.getGitlabName())
                 .gitlab_url(project.getGitlab_url())
                 .members(
                         userProjectRepository.findAllByProjectId(project.getId())
@@ -113,7 +113,7 @@ public class ProjectService {
                     .projectType(project.getProjectType())
                     .name(project.getName())
                     .description(project.getDescription())
-                    .gitlab_name(project.getGitlab_name())
+                    .gitlabName(project.getGitlabName())
                     .gitlab_url(project.getGitlab_url())
                     .members(
                             userProjectRepository.findAllByProjectId(projectId)
@@ -157,7 +157,7 @@ public class ProjectService {
                             .project_id(project.getId())
                             .name(project.getName())
                             .description(project.getDescription())
-                            .gitlab_name(project.getGitlab_name())
+                            .gitlabName(project.getGitlabName())
                             .gitlab_url(project.getGitlab_url())
                             .projectType(project.getProjectType())
                         .build();
@@ -192,7 +192,7 @@ public class ProjectService {
                 .projectType(project.getProjectType())
                 .name(project.getName())
                 .description(project.getDescription())
-                .gitlab_name(project.getGitlab_name())
+                .gitlabName(project.getGitlabName())
                 .gitlab_url(project.getGitlab_url())
                 .build();
     }
