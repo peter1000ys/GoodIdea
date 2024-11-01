@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+// const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = "https://oracle1.mypjt.xyz/";
 const REFRESH_URL = BASE_URL + "/main/jwt/refresh";
 
 let authAxiosInstance = null; // 초기값은 null
@@ -67,7 +68,7 @@ export const createAuthAxiosInstance = () => {
 // 로그아웃 또는 필요 시 인스턴스 제거
 export const clearAuthAxiosInstance = () => {
   authAxiosInstance = null;
-  clearAuthData()
+  clearAuthData();
 };
 
 // 토큰 재발행 함수
