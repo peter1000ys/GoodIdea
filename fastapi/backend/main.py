@@ -16,7 +16,7 @@ origins = [
 ]
 
 # Kafka 설정
-KAFKA_BROKER_URL = "localhost:9092"  # Kafka 브로커 URL
+KAFKA_BROKER_URL = "Kafka00Service:9092"  # Kafka 브로커 URL
 TOPICS = ["test_topic_1", "test_topic_2", "test_topic_3"]
 
 # Kafka Producer 생성
