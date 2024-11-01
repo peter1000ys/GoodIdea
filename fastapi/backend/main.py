@@ -6,11 +6,24 @@ from dotenv import load_dotenv
 import os
 import httpx
 from pathlib import Path
+from kafka import KafkaProducer
+from kafka.errors import KafkaError
+import json
 
 app = FastAPI()
 origins = [
     "*"
 ]
+
+# Kafka 설정
+KAFKA_BROKER_URL = "localhost:9092"  # Kafka 브로커 URL
+TOPICS = ["test_topic_1", "test_topic_2", "test_topic_3"]
+
+# Kafka Producer 생성
+producer = KafkaProducer(
+    bootstrap_servers=KAFKA_BROKER_URL,
+    value_serializer=lambda v: json.dumps(v).encode("utf-8")
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,6 +32,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# .env 불러오기
 env_path = Path(__file__).resolve().parent.parent / '.env'
 load_dotenv(dotenv_path=env_path)
 GITHUB_ACCESS_TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
@@ -73,3 +87,29 @@ async def fetch_repo_info(client, repo):
         'stargazers_count': repo.stargazers_count,
         'forks_count': repo.forks_count,
     }
+
+# /kafka/test 엔드포인트
+@app.post("/kafka/test")
+async def send_messages_to_kafka():
+    results = {}
+    
+    for topic in TOPICS:
+        results[topic] = []
+        try:
+            # 10개의 메시지를 생성하여 각 토픽에 전송
+            for i in range(1, 11):
+                message = {"message_number": i, "content": f"This is message {i} for {topic}"}
+                future = producer.send(topic, message)
+                
+                # 메시지 전송 결과 확인
+                result = future.get(timeout=10)
+                results[topic].append({
+                    "partition": result.partition,
+                    "offset": result.offset,
+                    "message": message
+                })
+
+        except KafkaError as e:
+            raise HTTPException(status_code=500, detail=f"Kafka Error: {str(e)}")
+
+    return {"status": "Messages sent successfully", "results": results}
