@@ -19,34 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class HelloController {
 
     private final HelloService helloService;
-    private final OAuthLoginService oAuthLoginService;
 
     @GetMapping("/{helloId}")
+    @ResponseBody
     public ApiResponse<HelloResponseDto> getHello(@PathVariable("helloId") Long helloId){
         return ApiResponse.ok(helloService.getHello(helloId));
-    }
-
-    // GitLab OAuth callback endpoint
-    @GetMapping("/callback")
-    public ResponseEntity<String> gitLabCallback(
-            @RequestParam("code") String authorizationCode,
-            @RequestParam("state") String state) {
-
-        System.out.println("code: "+authorizationCode);
-        // GitLabLoginParams 객체 생성 및 Authorization Code 설정
-        GitLabLoginParams params = new GitLabLoginParams();
-        params.setAuthorizationCode(authorizationCode);
-        params.makeBody().add("code", authorizationCode);
-
-        System.out.println(params.makeBody().toString());
-
-        // Authorization Code를 사용해 Access Token을 요청
-        AuthTokens authTokens = oAuthLoginService.login(params);
-
-        // Access Token 출력
-        return ResponseEntity.ok()
-                .contentType(MediaType.TEXT_HTML)
-                .body("Access Token<br>" + authTokens.getAccessToken());
     }
 
     @GetMapping("")

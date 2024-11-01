@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.goodIdea.auth.AuthTokens;
 import com.ssafy.goodIdea.auth.AuthTokensGenerator;
 import com.ssafy.goodIdea.auth.PrincipalDetails;
-import com.ssafy.goodIdea.user.dto.LoginRequestDto;
+import com.ssafy.goodIdea.user.dto.request.LoginRequestDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -76,7 +76,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //        System.out.println("successfulAuthentication 실행됨 : 인증 완료");
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
-        AuthTokens authTokens = authTokensGenerator.generate(principalDetails.getUser().getEmail());
+        AuthTokens authTokens = authTokensGenerator.generate(principalDetails.getUser().getUsername());
 
 
 //        String jwtToken = JWT.create()

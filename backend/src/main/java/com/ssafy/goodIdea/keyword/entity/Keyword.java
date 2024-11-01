@@ -4,6 +4,7 @@ import com.ssafy.goodIdea.common.entity.BaseTime;
 import com.ssafy.goodIdea.mindMap.entity.MindMap;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,16 @@ public class Keyword extends BaseTime {
     @Column(name = "keyword_id")
     Long id;
 
+//    내용
+    String content;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mindmap_id")
+    @JoinColumn(name = "mindMap_id")
     MindMap mindMap;
+
+    @Builder
+    public Keyword(String content, MindMap mindMap) {
+        this.content = content;
+        this.mindMap = mindMap;
+    }
 }

@@ -1,10 +1,5 @@
 package com.ssafy.goodIdea.auth.controller;
 
-//import back.shoppingMart.common.auth.AuthTokens;
-//import back.shoppingMart.common.auth.service.OAuthLoginService;
-//import back.shoppingMart.common.response.MsgType;
-//import back.shoppingMart.common.response.ResponseEntityDto;
-//import back.shoppingMart.common.response.ResponseUtils;
 import com.ssafy.goodIdea.auth.AuthTokens;
 import com.ssafy.goodIdea.auth.gitlab.GitLabLoginParams;
 import com.ssafy.goodIdea.auth.service.OAuthLoginService;
@@ -25,6 +20,25 @@ public class AuthController {
         AuthTokens authTokens = oAuthLoginService.login(params);
         response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authTokens.getAccessToken());
         response.addHeader("Refresh-Token", "Bearer " + authTokens.getRefreshToken());
+        return ApiResponse.ok(authTokens);
+    }
+
+    // GitLab OAuth callback endpoint
+    @GetMapping("/callback")
+    @ResponseBody
+    public ApiResponse<AuthTokens> gitLabCallback(
+            @RequestParam("code") String authorizationCode,
+            @RequestParam("state") String state) {
+
+        // GitLabLoginParams 객체 생성 및 Authorization Code 설정
+        GitLabLoginParams params = new GitLabLoginParams();
+        params.setAuthorizationCode(authorizationCode);
+        params.makeBody().add("code", authorizationCode);
+
+        // Authorization Code를 사용해 Access Token을 요청
+        AuthTokens authTokens = oAuthLoginService.login(params);
+
+        // Access Token 출력
         return ApiResponse.ok(authTokens);
     }
 }
