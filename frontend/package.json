@@ -11,11 +11,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dineug/erd-editor": "^3.2.5",
+    "@liveblocks/client": "^2.10.2",
+    "@uiw/react-md-editor": "^4.0.4",
     "axios": "^1.7.7",
     "d3": "^7.9.0",
+    "mermaid": "^11.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.27.0",
     "zustand": "^5.0.0"
   },
