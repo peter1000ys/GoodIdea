@@ -13,6 +13,7 @@
   "dependencies": {
     "@dineug/erd-editor": "^3.2.5",
     "@liveblocks/client": "^2.10.2",
+    "@tippyjs/react": "^4.2.6",
     "@uiw/react-md-editor": "^4.0.4",
     "axios": "^1.7.7",
     "d3": "^7.9.0",
@@ -22,6 +23,7 @@
     "react-helmet-async": "^2.0.5",
     "react-markdown": "^9.0.1",
     "react-router-dom": "^6.27.0",
+    "tippy.js": "^6.3.7",
     "zustand": "^5.0.0"
   },
   "devDependencies": {
