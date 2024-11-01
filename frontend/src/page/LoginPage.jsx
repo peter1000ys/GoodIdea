@@ -32,7 +32,7 @@ const LoginPage = () => {
               },
             }
           );
-          console.log("정보:", profileResponse.data);
+          console.log("정보:", profileResponse.data.data);
           const userInfo = profileResponse.data.data;
           setLogin(userInfo); // userInfo 저장
 
