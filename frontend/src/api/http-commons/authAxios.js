@@ -1,62 +1,74 @@
 import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
-
 const REFRESH_URL = BASE_URL + "/main/jwt/refresh";
 
-const authAxios = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000, // 10초
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-});
+let authAxiosInstance = null; // 초기값은 null
 
-// 요청 인터셉터
-authAxios.interceptors.request.use(
-  async (config) => {
-    const token = localStorage.getItem("accessToken");
+// 로그인 시 호출되는 함수에서 axios 인스턴스 생성
+export const createAuthAxiosInstance = () => {
+  if (!authAxiosInstance) {
+    authAxiosInstance = axios.create({
+      baseURL: BASE_URL,
+      timeout: 10000, // 10초
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
 
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
+    // 요청 인터셉터
+    authAxiosInstance.interceptors.request.use(
+      async (config) => {
+        const token = localStorage.getItem("accessToken");
 
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+        if (token) {
+          config.headers["Authorization"] = `Bearer ${token}`;
+        }
 
-// 응답 인터셉터
-authAxios.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    // 응답 인터셉터
+    authAxiosInstance.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config;
 
-      try {
-        const newToken = await refreshToken();
-        authAxios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${newToken}`;
-        return authAxios(originalRequest); // 원래의 요청을 새로운 토큰으로 재전송
-      } catch (refreshError) {
-        // 리프레시 토큰 실패 처리
-        console.error("Failed to refresh token:", refreshError);
-        // 로그아웃 처리나 리다이렉트 등 추가적인 처리를 여기에 구현
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("userStore");
-        window.location.href = "/login";
-        return Promise.reject(refreshError);
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+
+          try {
+            const newToken = await refreshToken();
+            authAxiosInstance.defaults.headers.common[
+              "Authorization"
+            ] = `Bearer ${newToken}`;
+            return authAxiosInstance(originalRequest); // 원래의 요청을 새로운 토큰으로 재전송
+          } catch (refreshError) {
+            // 리프레시 토큰 실패 처리
+            console.error("Failed to refresh token:", refreshError);
+            // 로그아웃 처리나 리다이렉트 등 추가적인 처리를 여기에 구현
+            clearAuthData();
+            window.location.href = "/login";
+            return Promise.reject(refreshError);
+          }
+        }
+
+        return Promise.reject(error);
       }
-    }
-
-    return Promise.reject(error);
+    );
   }
-);
+
+  return authAxiosInstance;
+};
+
+// 로그아웃 또는 필요 시 인스턴스 제거
+export const clearAuthAxiosInstance = () => {
+  authAxiosInstance = null;
+  clearAuthData()
+};
 
 // 토큰 재발행 함수
 const refreshToken = async () => {
@@ -78,8 +90,6 @@ const refreshToken = async () => {
     );
     const { accessToken } = response.data;
 
-    // let accessToken = response.headers["authorization"];
-    // let refreshToken = response.headers["refreshtoken"];
     if (accessToken) {
       // 새로운 토큰 로컬 스토리지에 저장
       localStorage.setItem("accessToken", accessToken);
@@ -92,4 +102,9 @@ const refreshToken = async () => {
   }
 };
 
-export default authAxios;
+// 로그인 상태 초기화
+const clearAuthData = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("userStore");
+};

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
@@ -25,10 +27,10 @@ public class AuthController {
 
     // GitLab OAuth callback endpoint
     @GetMapping("/callback")
-    @ResponseBody
-    public ApiResponse<AuthTokens> gitLabCallback(
+    public void gitLabCallback(
             @RequestParam("code") String authorizationCode,
-            @RequestParam("state") String state) {
+            @RequestParam("state") String state,
+            HttpServletResponse response) throws IOException {
 
         // GitLabLoginParams 객체 생성 및 Authorization Code 설정
         GitLabLoginParams params = new GitLabLoginParams();
@@ -38,7 +40,10 @@ public class AuthController {
         // Authorization Code를 사용해 Access Token을 요청
         AuthTokens authTokens = oAuthLoginService.login(params);
 
-        // Access Token 출력
-        return ApiResponse.ok(authTokens);
+        // JWT 토큰을 Authorization 헤더에 설정
+        response.setHeader("Authorization", "Bearer " + authTokens.getAccessToken());
+
+        // 프론트엔드 페이지로 리다이렉트
+        response.sendRedirect("https://oracle1.mypjt.xyz");
     }
 }
