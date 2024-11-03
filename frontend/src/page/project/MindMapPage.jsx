@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet-async";
 import MindMap from "../../components/brainstorming/MindMap";
-import Header from "../../components/common/Header";
 import { useEffect, useState } from "react";
 import {
   mindMapColorData,
@@ -69,8 +68,6 @@ function MindMapPage() {
       </Helmet>
 
       <div className="h-full w-full flex flex-col">
-        <Header content={"관통 프로젝트"} />
-
         {/* 검색창 */}
         <div className="flex justify-center my-8">
           <input

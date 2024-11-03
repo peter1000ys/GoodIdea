@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet-async";
-import Header from "../components/common/Header";
 import DefaultButton from "../components/common/DefaultButton";
 
 function MainPage() {
@@ -15,7 +14,6 @@ function MainPage() {
         <title>메인페이지</title>
       </Helmet>
       <div className="h-full w-full flex flex-col">
-        <Header content="관통 프로젝트" />
         <div className="min-h-screen bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100">
           {/* Header Section */}
           <header className="py-10 text-center">

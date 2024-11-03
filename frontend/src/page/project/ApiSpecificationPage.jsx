@@ -1,4 +1,3 @@
-import Header from "../../components/common/Header";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useState } from "react";
 import { useFormStore } from "../../store/useAPIStore";
@@ -47,7 +46,6 @@ function ApiSpecificationPage() {
         <title>API 명세서 페이지</title>
       </Helmet>
       <div className="h-full w-full flex flex-col">
-        <Header content="관통 프로젝트" />
         <div className="overflow-x-auto p-4">
           <table className="w-full border-collapse border border-gray-300">
             <thead>
