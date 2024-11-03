@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet-async";
-import Header from "../../components/common/Header";
 import Sticker from "../../components/ideaboard/Sticker";
 import { useState } from "react";
 import StickerModal from "../../components/ideaboard/StickerModal";
@@ -89,8 +88,6 @@ function IdeaBoardPage() {
         <title>아이디어보드 페이지</title>
       </Helmet>
       <div className="h-full w-full relative overflow-hidden">
-        <Header content="관통 프로젝트" />
-
         {/* Sticker 컴포넌트 좌표화 렌더링 */}
         {coordinates.map(({ x, y, delay }, index) => (
           <Sticker
