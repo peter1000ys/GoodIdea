@@ -126,7 +126,7 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
         "X-Naver-Client-Secret": NAVER_API_SECRET
     }
     print(f"Query Parameter: {query}")  # 기존 print 구문
-    print(f"{NAVER_API_ID, NAVER_API_SECRET}")
+    print(f"{NAVER_API_ID, NAVER_API_SECRET, GITHUB_ACCESS_TOKEN}")
     # Naver API에 요청
     response = requests.get(url, headers=headers)
     
