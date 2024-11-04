@@ -32,7 +32,7 @@ app.add_middleware(
 )
 
 # .env 불러오기
-env_path = '../.env'
+env_path = Path(__file__).parent / ".env"
 load_dotenv(dotenv_path=env_path)
 GITHUB_ACCESS_TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
 
