@@ -120,7 +120,7 @@ async def send_messages_to_kafka() -> Dict[str, Any]:
 @app.get("/api/v1/news")
 async def get_news(query: str = Query(..., description="검색할 키워드를 입력하세요")) -> Any:
     print("API 호출 성공")  # 추가된 print 구문
-    url = f"https://openapi.naver.com/v1/search/news.json?query={query}&sort=date&display=40"
+    url = f"https://openapi.naver.com/v1/search/news.json?query=title:{query}&sort=date&display=40"
     headers = {
         "X-Naver-Client-Id": NAVER_API_ID,
         "X-Naver-Client-Secret": NAVER_API_SECRET
