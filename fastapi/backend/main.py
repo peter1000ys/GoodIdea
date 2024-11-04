@@ -2,13 +2,14 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from github import Github, GithubException
 import asyncio
+from confluent_kafka import Producer, KafkaError
 from dotenv import load_dotenv
 import os
 import httpx
 from pathlib import Path
-from kafka import KafkaProducer
-from kafka.errors import KafkaError
+import requests
 import json
+from typing import Any, Dict, List
 
 app = FastAPI()
 origins = [
@@ -20,10 +21,8 @@ KAFKA_BROKER_URL = "Kafka00Service:9092"  # Kafka 브로커 URL
 TOPICS = ["test_topic_1", "test_topic_2", "test_topic_3"]
 
 # Kafka Producer 생성
-producer = KafkaProducer(
-    bootstrap_servers=KAFKA_BROKER_URL,
-    value_serializer=lambda v: json.dumps(v).encode("utf-8")
-)
+conf = {'bootstrap.servers': KAFKA_BROKER_URL}
+producer = Producer(conf)
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,6 +35,10 @@ app.add_middleware(
 env_path = Path(__file__).resolve().parent.parent / '.env'
 load_dotenv(dotenv_path=env_path)
 GITHUB_ACCESS_TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
+
+# Naver API 접근 설정
+NAVER_API_ID = os.getenv("NAVER_API_ID")
+NAVER_API_SECRET = os.getenv("NAVER_API_SECRET")
 
 @app.get("/api/v1/hello")
 async def read_root():
@@ -88,28 +91,47 @@ async def fetch_repo_info(client, repo):
         'forks_count': repo.forks_count,
     }
 
+# Kafka 메시지 전송 함수
+async def send_message(topic: str, message: Dict[str, Any]) -> Dict[str, Any]:
+    def delivery_report(err, msg):
+        if err is not None:
+            raise HTTPException(status_code=500, detail=f"Kafka Error: {str(err)}")
+
+    # 메시지 비동기 전송
+    producer.produce(topic, json.dumps(message).encode("utf-8"), callback=delivery_report)
+    producer.flush()  # 모든 메시지가 전송될 때까지 대기
+    return {"topic": topic, "message": message}
+
 # /kafka/test 엔드포인트
 @app.post("/api/v1/kafka/test")
-async def send_messages_to_kafka():
+async def send_messages_to_kafka() -> Dict[str, Any]:
     results = {}
-    
     for topic in TOPICS:
         results[topic] = []
-        try:
-            # 10개의 메시지를 생성하여 각 토픽에 전송
-            for i in range(1, 11):
-                message = {"message_number": i, "content": f"This is message {i} for {topic}"}
-                future = producer.send(topic, message)
-                
-                # 메시지 전송 결과 확인
-                result = future.get(timeout=10)
-                results[topic].append({
-                    "partition": result.partition,
-                    "offset": result.offset,
-                    "message": message
-                })
-
-        except KafkaError as e:
-            raise HTTPException(status_code=500, detail=f"Kafka Error: {str(e)}")
-
+        for i in range(1, 11):
+            message = {"message_number": i, "content": f"This is message {i} for {topic}"}
+            try:
+                result = await send_message(topic, message)
+                results[topic].append(result)
+            except KafkaError as e:
+                raise HTTPException(status_code=500, detail=f"Kafka Error: {str(e)}")
     return {"status": "Messages sent successfully", "results": results}
+
+@app.get("/api/v1/news")
+async def get_news(query: str = Query(..., description="검색할 키워드를 입력하세요")) -> Any:
+    print("API 호출 성공")  # 추가된 print 구문
+    url = f"https://openapi.naver.com/v1/search/news.json?query={query}&sort=date&display=40"
+    headers = {
+        "X-Naver-Client-Id": NAVER_API_ID,
+        "X-Naver-Client-Secret": NAVER_API_SECRET
+    }
+    print(f"Query Parameter: {query}")  # 기존 print 구문
+    # Naver API에 요청
+    response = requests.get(url, headers=headers)
+    
+    # 요청이 성공적이지 않은 경우 예외 처리
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail="Naver API 요청 실패")
+
+    # JSON 형태로 결과 반환
+    return response.json()
