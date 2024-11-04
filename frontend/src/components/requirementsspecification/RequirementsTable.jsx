@@ -65,7 +65,7 @@ function RequirementsTable() {
                 {column === "author" && "작성자"}
                 <span
                   onMouseDown={(e) => handleResize(column, e)}
-                  className="absolute right-0 top-1 h-full cursor-col-resize px-1"
+                  className="absolute right-0 top-1 h-full cursor-col-resize px-1 text-slate-200"
                   title="너비 조정 가능"
                 >
                   &#x22EE;
