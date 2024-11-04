@@ -1,8 +1,14 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 function Nav() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const goHome = () => {
+    // 프로젝트 리스트로 이동
+    navigate("/");
+  };
 
   // 브레인 스토밍 드롭다운의 열림/닫힘 상태를 관리하는 state
   const [isBrainstormingOpen, setBrainstormingOpen] = useState(false);
@@ -64,7 +70,12 @@ function Nav() {
     <div className="fixed w-64 min-h-screen bg-gradient-to-b from-[#999999] to-[#333333] text-white p-4 flex flex-col justify-between rounded-tr-[20px]">
       <div>
         <div className="flex flex-row justify-between mb-3">
-          <img src="" alt="로고" />
+          <img
+            src="/public/logo.png"
+            alt="로고"
+            onClick={goHome}
+            className="cursor-pointer w-8 h-8"
+          />
           <h1 className="text-base font-bold mb-4 select-none">GOOD IDEA</h1>
         </div>
         <nav>

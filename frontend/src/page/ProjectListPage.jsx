@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import Header from "../components/common/Header";
 import { projectListResponse } from "../dummy/projectlist";
 import DefaultButton from "../components/common/DefaultButton";
 import Divier from "../components/common/Divier";
@@ -33,8 +32,6 @@ function ProjectListPage() {
         <title>프로젝트 목록 페이지</title>
       </Helmet>
       <div className="h-full w-full flex flex-col">
-        <Header />
-
         <div className="p-6">
           {/* 상단 바 */}
           <div className="flex items-center mb-8">

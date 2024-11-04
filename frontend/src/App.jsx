@@ -13,6 +13,7 @@ import ProposalPage from "./page/project/ProposalPage";
 import RequirementsSpecificationPage from "./page/project/RequirementsSpecificationPage";
 import FlowChartPage from "./page/project/FlowChartPage";
 import ProjectListPage from "./page/ProjectListPage";
+import LoginPage from "./page/LoginPage";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="" element={<CommonLayout />}>
             {/* 메인 페이지 */}
             <Route index element={<MainPage />} />
+            <Route path="/login" element={<LoginPage />} />
 
             {/* 프로젝트 목록 페이지*/}
             <Route path="/projectList" element={<ProjectListPage />} />

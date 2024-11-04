@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Divier from "../common/Divier";
 import ModalPlanning from "./ModalPlanning";
-import ModalAPISpec from "./ModalRequirementSpec";
+import ModalAPISpec from "./ModalAPISpec";
 import ModalERD from "./ModalERD";
 import ModalFlowChart from "./ModalFlowChart";
 import ModalRequirementSpec from "./ModalRequirementSpec";
@@ -103,13 +103,13 @@ const StickerModal = ({ closeModal, selectedSticker }) => {
         <Divier />
         {/* 선택된 메뉴 내용 */}
         <div
-          className="w-full h-full overflow-auto"
+          className="w-full h-full overflow-hidden"
           style={{ backgroundColor: selectedSticker.color }}
         >
           {renderContent()}
         </div>
         <button
-          className="absolute text-3xl top-16 right-7 text-gray-500 hover:text-gray-700"
+          className="absolute text-3xl top-16 right-7 text-gray-500 hover:text-gray-700 z-[100]"
           onClick={closeModal}
         >
           <big>&times;</big>

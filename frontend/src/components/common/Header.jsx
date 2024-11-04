@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import DefaultButton from "./DefaultButton";
 import { useUserStore } from "../../store/useUserStore";
+import { clearAuthAxiosInstance } from "../../api/http-commons/authAxios";
+import { useEffect } from "react";
 
 function Header({ content }) {
   const navigate = useNavigate();
@@ -8,7 +10,12 @@ function Header({ content }) {
     // 프로젝트 리스트로 이동
     navigate("/projectlist");
   };
-  const { isLogin } = useUserStore();
+  const { userInfo, isLogin, setLogout } = useUserStore();
+
+  useEffect(() => {
+    console.log("isLogin", isLogin);
+    console.log("userInfo", userInfo);
+  }, [isLogin, userInfo]);
 
   return (
     <div className="border-b-2 border-gray-300 flex items-center justify-between p-2">
@@ -32,20 +39,23 @@ function Header({ content }) {
       <DefaultButton
         onClick={() => {
           // 로그아웃 로직
+          clearAuthAxiosInstance();
+          setLogout();
+          navigate("/");
         }}
         theme="bright"
         className="hover:bg-blue-700 py-2 px-4 rounded m-0 text-sm"
         text={
-          isLogin ? (
+          isLogin && userInfo ? (
             <div className="flex items-center">
-              사용자 이름
+              {userInfo.username}
               {/* logout */}
               <svg
                 fill="none"
                 viewBox="0 0 15 15"
                 height="1em"
                 width="1em"
-                // {...props}
+                className="ml-2"
               >
                 <path
                   stroke="currentColor"

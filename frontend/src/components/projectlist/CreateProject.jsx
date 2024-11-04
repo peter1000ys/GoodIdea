@@ -1,19 +1,19 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-const ProjectCard = ({ title, onSelect }) => {
+const ProjectCard = ({ title, handleReader, handleFollower }) => {
   return (
     <div className="bg-gray-100 rounded-xl shadow-lg p-6 flex flex-col items-center justify-between min-h-full">
       <h2 className="text-lg font-semibold">{title}</h2>
       <hr className="w-full border-gray-300 my-2" />
       <div className="flex flex-col space-y-4 mt-4 w-full">
         <button
-          onClick={onSelect}
+          onClick={() => handleReader(title)}
           className="px-4 py-2 bg-gray-200 rounded-full cursor-pointer text-gray-700 hover:bg-gray-300 transition"
         >
           팀장으로 시작하기
         </button>
         <button
-          onClick={onSelect}
+          onClick={() => handleFollower(title)}
           className="px-4 py-2 bg-gray-200 rounded-full cursor-pointer text-gray-700 hover:bg-gray-300 transition"
         >
           팀원으로 시작하기
@@ -23,15 +23,90 @@ const ProjectCard = ({ title, onSelect }) => {
   );
 };
 
-const WritePage = ({ onBack }) => (
-  <div className="bg-white rounded-lg shadow-lg p-10 max-w-lg mx-auto text-center">
-    <h2 className="text-2xl font-bold mb-4">작성 페이지</h2>
-    <p>이 페이지에서 프로젝트의 상세 내용을 작성하세요.</p>
-    <button
-      onClick={onBack}
-      className="mt-6 px-4 py-2 bg-blue-900 text-white rounded-md"
-    >
-      뒤로가기
+const ReaderWritePage = ({ title }) => (
+  <div className="bg-gray-100 rounded-xl shadow-lg p-6 flex flex-col items-center justify-between min-h-full space-y-4 w-full">
+    <h2 className="text-lg font-semibold">{title}</h2>
+    <hr className="w-full border-gray-300 my-2" />
+
+    <div className="w-full space-y-4">
+      <label className="flex flex-col text-left w-full">
+        팀 전체 코드 :
+        <input
+          type="text"
+          placeholder="S11P31C105"
+          className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+        />
+      </label>
+
+      <label className="flex flex-col text-left w-full">
+        팀원 초대 링크 :
+        <button className="mt-1 p-2 border rounded w-full text-blue-500 hover:bg-gray-200 transition">
+          링크 복사하기
+        </button>
+      </label>
+
+      <label className="flex flex-col text-left w-full">
+        팀 이름 :
+        <input
+          type="text"
+          placeholder="팀 이름을 입력하세요."
+          className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+        />
+      </label>
+
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" />
+        <span className="text-gray-600">정보가 정확한가요?</span>
+      </label>
+    </div>
+
+    <button className="px-6 py-3 bg-gray-200 rounded-lg cursor-pointer text-gray-700 hover:bg-gray-300 transition text-lg w-full">
+      팀장으로 시작하기
+    </button>
+  </div>
+);
+
+const FollowerWritePage = ({ title }) => (
+  <div className="bg-gray-100 rounded-xl shadow-lg p-6 flex flex-col items-center justify-between min-h-full space-y-4 w-full">
+    <h2 className="text-lg font-semibold">{title}</h2>
+    <hr className="w-full border-gray-300 my-2" />
+
+    <div className="w-full space-y-4">
+      <label className="flex flex-col text-left w-full">
+        URL :
+        <input
+          type="text"
+          placeholder="URL을 입력하세요."
+          className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+        />
+      </label>
+
+      <label className="flex flex-col text-left w-full">
+        팀 전체 코드 :
+        <input
+          type="text"
+          placeholder="S11P31C105"
+          className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+        />
+      </label>
+
+      <label className="flex flex-col text-left w-full">
+        팀 이름 :
+        <input
+          type="text"
+          placeholder="팀 이름을 입력하세요."
+          className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+        />
+      </label>
+
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" />
+        <span className="text-gray-600">정보가 정확한가요?</span>
+      </label>
+    </div>
+
+    <button className="px-6 py-3 bg-gray-200 rounded-lg cursor-pointer text-gray-700 hover:bg-gray-300 transition text-lg w-full">
+      팀원으로 시작하기
     </button>
   </div>
 );
@@ -39,19 +114,22 @@ const WritePage = ({ onBack }) => (
 const CreateProject = () => {
   const [page, setPage] = useState("project");
   const [isAnimating, setIsAnimating] = useState(false);
+  const [selectedTitle, setSelectedTitle] = useState("");
 
-  const handleSelect = () => {
+  const handleReader = (title) => {
     setIsAnimating(true);
     setTimeout(() => {
-      setPage("write");
+      setSelectedTitle(title);
+      setPage("readerWrite");
       setIsAnimating(false);
     }, 500);
   };
 
-  const handleBack = () => {
+  const handleFollower = (title) => {
     setIsAnimating(true);
     setTimeout(() => {
-      setPage("project");
+      setSelectedTitle(title);
+      setPage("followerWrite");
       setIsAnimating(false);
     }, 500);
   };
@@ -71,19 +149,34 @@ const CreateProject = () => {
             "특화 프로젝트",
             "자율 프로젝트",
           ].map((title, index) => (
-            <ProjectCard key={index} title={title} onSelect={handleSelect} />
+            <ProjectCard
+              key={index}
+              title={title}
+              handleReader={handleReader}
+              handleFollower={handleFollower}
+            />
           ))}
         </div>
       )}
 
       {/* 두 번째 컴포넌트 (작성 페이지) */}
-      {page === "write" && (
+      {page === "readerWrite" && (
         <div
-          className={`transition-all duration-500 transform ${
+          className={`transition-all duration-500 transform w-full ${
             isAnimating ? "opacity-0 blur-sm" : "opacity-100 blur-0"
           }`}
         >
-          <WritePage onBack={handleBack} />
+          <ReaderWritePage title={selectedTitle} />
+        </div>
+      )}
+
+      {page === "followerWrite" && (
+        <div
+          className={`transition-all duration-500 transform w-full ${
+            isAnimating ? "opacity-0 blur-sm" : "opacity-100 blur-0"
+          }`}
+        >
+          <FollowerWritePage title={selectedTitle} />
         </div>
       )}
     </div>
