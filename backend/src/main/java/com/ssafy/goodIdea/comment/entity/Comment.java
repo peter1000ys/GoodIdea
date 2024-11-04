@@ -1,5 +1,7 @@
 package com.ssafy.goodIdea.comment.entity;
 
+import java.time.LocalDateTime;
+
 import com.ssafy.goodIdea.common.entity.BaseTime;
 import com.ssafy.goodIdea.idea.entity.Idea;
 import com.ssafy.goodIdea.user.entity.User;
@@ -30,7 +32,10 @@ public class Comment extends BaseTime {
     private String commentContent; // 댓글 내용
 
     @Column(name = "rating", nullable = false)
-    private float rating; // 별점
+    private Float rating; // 별점
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
     @Builder
     public Comment(Idea idea, User user, String commentContent, float rating) {
@@ -41,5 +46,6 @@ public class Comment extends BaseTime {
         this.user = user;
         this.commentContent = commentContent;
         this.rating = rating;
+        this.createdAt = LocalDateTime.now();
     }
 }
