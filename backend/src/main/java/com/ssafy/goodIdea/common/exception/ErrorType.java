@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorType {
+    
     // Common
     SERVER_ERROR(500, HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러가 발생하였습니다."),
     GITLAB_TOKEN_ERROR(401, HttpStatus.INTERNAL_SERVER_ERROR, "GitLab Token Error 발생."),
@@ -32,7 +33,12 @@ public enum ErrorType {
     PROJECT_ALREADY_EXIST(404, HttpStatus.BAD_REQUEST, "이미 존재하는 프로젝트 타입입니다."),
     // MindMap
     MINDMAP_NOT_FOUND(404, HttpStatus.BAD_REQUEST, "존재하지 않는 마인드맵입니다."),
+    
+    // Idea
+    IDEA_NOT_FOUND(404, HttpStatus.BAD_REQUEST, "존재하지 않는 아이디어입니다."),
+    
     ;
+
     private final int code;
     private final HttpStatus status;
     private final String message;
