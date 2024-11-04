@@ -83,7 +83,7 @@ function RequirementsTable() {
                   onChange={(e) =>
                     handleChange(req.id, "status", e.target.value)
                   }
-                  className="w-full p-1 rounded border"
+                  className="w-full p-1 rounded border focus:outline-none"
                 >
                   <option value="미진행">미진행</option>
                   <option value="진행중">진행중</option>
@@ -97,7 +97,7 @@ function RequirementsTable() {
                   onChange={(e) =>
                     handleChange(req.id, "relatedPage", e.target.value)
                   }
-                  className="w-full p-1 rounded border-b"
+                  className="w-full p-1 rounded border-b focus:outline-none"
                 />
               </td>
               <td className="p-2" style={{ width: columnWidths.isRequired }}>
@@ -106,7 +106,7 @@ function RequirementsTable() {
                   onChange={(e) =>
                     handleChange(req.id, "isRequired", e.target.value)
                   }
-                  className="w-full p-1 rounded border"
+                  className="w-full p-1 rounded border focus:outline-none"
                 >
                   <option value="필수 기능">필수 기능</option>
                   <option value="부가 기능">부가 기능</option>
@@ -117,7 +117,7 @@ function RequirementsTable() {
                   type="text"
                   value={req.name}
                   onChange={(e) => handleChange(req.id, "name", e.target.value)}
-                  className="w-full p-1 rounded border-b"
+                  className="w-full p-1 rounded border-b focus:outline-none"
                 />
               </td>
               <td className="p-2" style={{ width: columnWidths.description }}>
@@ -127,7 +127,7 @@ function RequirementsTable() {
                   onChange={(e) =>
                     handleChange(req.id, "description", e.target.value)
                   }
-                  className="w-full p-1 rounded border-b"
+                  className="w-full p-1 rounded border-b focus:outline-none"
                 />
               </td>
               <td className="p-2" style={{ width: columnWidths.author }}>
@@ -137,7 +137,7 @@ function RequirementsTable() {
                   onChange={(e) =>
                     handleChange(req.id, "author", e.target.value)
                   }
-                  className="w-full p-1 rounded border-b"
+                  className="w-full p-1 rounded border-b focus:outline-none"
                 />
               </td>
             </tr>
