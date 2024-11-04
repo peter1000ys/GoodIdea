@@ -5,6 +5,16 @@ export const useFormStore = create(
   persist(
     (set) => ({
       apiSpecifications: [],
+      columnWidths: {
+        feature: 150,
+        domain: 150,
+        method: 100,
+        uri: 150,
+        importance: 100,
+        backendOwner: 150,
+        frontendOwner: 150,
+        memo: 200,
+      },
       addRow: () => {
         console.log("Adding a new specification row");
         set((state) => ({
@@ -29,6 +39,15 @@ export const useFormStore = create(
           apiSpecifications: state.apiSpecifications.map((spec) =>
             spec.id === id ? { ...spec, ...updatedFields } : spec
           ),
+        }));
+      },
+      updateColumnWidth: (column, width) => {
+        console.log(`Updating column width for ${column}:`, width);
+        set((state) => ({
+          columnWidths: {
+            ...state.columnWidths,
+            [column]: width,
+          },
         }));
       },
     }),
