@@ -13,8 +13,6 @@
   "dependencies": {
     "@dineug/erd-editor": "^3.2.5",
     "@hocuspocus/provider": "^2.13.7",
-    "@liveblocks/client": "^2.10.2",
-    "@tippyjs/react": "^4.2.6",
     "@tiptap/extension-collaboration": "^2.9.1",
     "@tiptap/react": "^2.9.1",
     "@tiptap/starter-kit": "^2.9.1",
