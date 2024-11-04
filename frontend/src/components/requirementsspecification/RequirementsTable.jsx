@@ -76,14 +76,14 @@ function RequirementsTable() {
         </thead>
         <tbody>
           {localRequirements.map((req) => (
-            <tr key={req.id}>
+            <tr key={req.id} className="hover:bg-gray-50">
               <td className="p-2" style={{ width: columnWidths.status }}>
                 <select
                   value={req.status}
                   onChange={(e) =>
                     handleChange(req.id, "status", e.target.value)
                   }
-                  className="w-full p-1 rounded border focus:outline-none"
+                  className="w-full p-1 rounded border-b focus:outline-none"
                 >
                   <option value="미진행">미진행</option>
                   <option value="진행중">진행중</option>
@@ -106,7 +106,7 @@ function RequirementsTable() {
                   onChange={(e) =>
                     handleChange(req.id, "isRequired", e.target.value)
                   }
-                  className="w-full p-1 rounded border focus:outline-none"
+                  className="w-full p-1 rounded border-b focus:outline-none"
                 >
                   <option value="필수 기능">필수 기능</option>
                   <option value="부가 기능">부가 기능</option>
