@@ -71,7 +71,7 @@ function Nav() {
       <div>
         <div className="flex flex-row justify-between mb-3">
           <img
-            src="/public/logo.png"
+            src="/logo.png"
             alt="로고"
             onClick={goHome}
             className="cursor-pointer w-8 h-8"

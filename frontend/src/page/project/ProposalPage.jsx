@@ -5,53 +5,61 @@ import "./ProposalPage.css";
 import * as Y from "yjs";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Document from "@tiptap/extension-document";
-import Paragraph from "@tiptap/extension-paragraph";
-import Text from "@tiptap/extension-text";
 import Collaboration from "@tiptap/extension-collaboration";
-import { useEffect } from "react";
-import { TiptapCollabProvider } from "@hocuspocus/provider";
+import { useEffect, useRef, useState } from "react";
+import { HocuspocusProvider, TiptapCollabProvider } from "@hocuspocus/provider";
 
-const doc = new Y.Doc();
-
+const ydoc = new Y.Doc();
 function ProposalPage() {
+  // useRef를 사용하여 provider를 저장할 공간을 만듭니다.
+  const providerRef = useRef(null);
+  const [isProviderReady, setIsProviderReady] = useState(false);
+  // useEditor를 최상위에서 호출하여 editor 인스턴스를 생성합니다.
   const editor = useEditor({
     extensions: [
-      Document,
       StarterKit,
-      Paragraph,
-      Text,
+      // Collaboration은 일단 document 없이 초기화
       Collaboration.configure({
-        document: doc,
+        document: ydoc,
       }),
     ],
-    // Remove the automatic content addition on editor initialization.
   });
 
   useEffect(() => {
-    const provider = new TiptapCollabProvider({
-      url: "ws://192.168.100.129:3000", // Your Websocket URL
-      name: "document.name", // Unique document identifier for syncing. This is your document name.
-      appId: "7j9y6m10", // Your Cloud Dashboard AppID or `baseURL` for on-premises
-      token: "notoken", // Your JWT token
-      document: doc,
-
-      // The onSynced callback ensures initial content is set only once using editor.setContent(), preventing repetitive content loading on editor syncs.
-      onSynced() {
-        if (!doc.getMap("config").get("initialContentLoaded") && editor) {
-          doc.getMap("config").set("initialContentLoaded", true);
-
-          editor.commands.setContent(`
-          <p>This is a radically reduced version of Tiptap. It has support for a document, with paragraphs and text. That’s it. It’s probably too much for real minimalists though.</p>
-          <p>The paragraph extension is not really required, but you need at least one node. Sure, that node can be something different.</p>
-          `);
-        }
+    // HocuspocusProvider 생성 및 연결
+    providerRef.current = new HocuspocusProvider({
+      url: "ws://192.168.100.129:3001", // WebSocket URL
+      name: "document-name2", // 동기화할 문서 식별자
+      document: ydoc, // Y.js 문서 객체 생성
+      onSynced: () => {
+        console.log("Synced with server");
       },
     });
+
+    // provider가 초기화되면 상태를 업데이트
+    providerRef.current.on("sync", () => {
+      setIsProviderReady(true);
+    });
+
+    // 컴포넌트 언마운트 시 provider 해제
     return () => {
-      provider.destroy();
+      providerRef.current?.destroy();
     };
-  }, [editor]);
+  }, []);
+
+  // useEffect(() => {
+  //   if (editor && isProviderReady && providerRef.current) {
+  //     // provider의 문서 객체를 editor에 설정합니다.
+  //     editor.setOptions({
+  //       extensions: [
+  //         StarterKit,
+  //         Collaboration.configure({
+  //           document: providerRef.current.document, // provider의 문서를 사용
+  //         }),
+  //       ],
+  //     });
+  //   }
+  // }, [editor, isProviderReady]);
 
   return (
     <>
@@ -62,7 +70,9 @@ function ProposalPage() {
         <Header content="관통 프로젝트" />
 
         <div className="flex-1 items-center justify-center flex">
-          <EditorContent className="w-full h-full" editor={editor} />
+          {providerRef.current && (
+            <EditorContent className="w-full h-full" editor={editor} />
+          )}
         </div>
       </div>
     </>
