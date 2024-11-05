@@ -42,5 +42,4 @@ public class ApiResponse<T> {
         }
         return of(HttpStatus.OK, data);
     }
-
 }
