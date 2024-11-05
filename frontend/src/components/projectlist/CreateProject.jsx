@@ -41,6 +41,7 @@ const ReaderWritePage = ({ title, setIsCreateModalOpen }) => {
   };
 
   const handleButtonClick = () => {
+    console.log(projectData);
     createProject(projectData);
     setIsCreateModalOpen(true);
   };
