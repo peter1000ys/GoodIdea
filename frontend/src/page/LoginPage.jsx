@@ -34,7 +34,7 @@ const LoginPage = () => {
           setLogin(userInfo); // userInfo 저장
 
           // 메인 페이지로 리디렉트
-          navigate("/");
+          navigate("/projectlist");
         } catch (error) {
           console.error("프로필 정보 가져오기 실패:", error);
         }
