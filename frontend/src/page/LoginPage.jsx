@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { createAuthAxiosInstance } from "../api/http-commons/authAxios";
 import { useUserStore } from "../store/useUserStore";
 import axios from "axios";
 
@@ -18,7 +17,6 @@ const LoginPage = () => {
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
         // 인증된 axios 인스턴스 생성
-        createAuthAxiosInstance();
         try {
           // 프로필 정보 요청
           const profileResponse = await axios.get(
