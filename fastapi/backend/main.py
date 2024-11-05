@@ -9,6 +9,7 @@ import httpx
 from pathlib import Path
 import requests
 import json
+from utils import crawl_daum_news
 from typing import Any, Dict, List
 # from kafka import send_message
 
@@ -106,3 +107,11 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
 
     # JSON 형태로 결과 반환
     return response.json()
+
+@app.get("/api/v1/crawling/news")
+async def start_news_crawling():
+    try:
+        articles = crawl_daum_news()
+        return {"status": "success", "message": f"{len(articles)}개의 기사가 성공적으로 전송되었습니다.", "data": articles}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
