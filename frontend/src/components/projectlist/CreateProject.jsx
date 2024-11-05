@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createProject } from "../../api/axios";
 
 const ProjectCard = ({ title, handleReader, handleFollower }) => {
   return (
@@ -23,48 +24,72 @@ const ProjectCard = ({ title, handleReader, handleFollower }) => {
   );
 };
 
-const ReaderWritePage = ({ title }) => (
-  <div className="bg-gray-100 rounded-xl shadow-lg p-6 flex flex-col items-center justify-between min-h-full space-y-4 w-full">
-    <h2 className="text-lg font-semibold">{title}</h2>
-    <hr className="w-full border-gray-300 my-2" />
+const ReaderWritePage = ({ title, setIsCreateModalOpen }) => {
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [projectData, setProjectData] = useState({
+    projectId: "", // GITLAB Respository 입력 값을 저장할 필드
+    teamName: "", // 팀 이름 입력 값을 저장할 필드
+    projectType: title.split(" ")[0], // title에서 첫 단어 추출하여 저장
+  });
 
-    <div className="w-full space-y-4">
-      <label className="flex flex-col text-left w-full">
-        팀 전체 코드 :
-        <input
-          type="text"
-          placeholder="S11P31C105"
-          className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
-        />
-      </label>
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProjectData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-      <label className="flex flex-col text-left w-full">
-        팀원 초대 링크 :
-        <button className="mt-1 p-2 border rounded w-full text-blue-500 hover:bg-gray-200 transition">
-          링크 복사하기
-        </button>
-      </label>
+  const handleButtonClick = () => {
+    createProject(projectData);
+    setIsCreateModalOpen(true);
+  };
 
-      <label className="flex flex-col text-left w-full">
-        팀 이름 :
-        <input
-          type="text"
-          placeholder="팀 이름을 입력하세요."
-          className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
-        />
-      </label>
+  return (
+    <div className="bg-gray-100 rounded-xl shadow-lg p-6 flex flex-col items-center justify-between min-h-full space-y-4 w-full">
+      <h2 className="text-lg font-semibold">{title}</h2>
+      <hr className="w-full border-gray-300 my-2" />
 
-      <label className="flex items-center space-x-2">
-        <input type="checkbox" />
-        <span className="text-gray-600">정보가 정확한가요?</span>
-      </label>
+      <div className="w-full space-y-4">
+        <label className="flex flex-col text-left w-full">
+          GITLAB Respository:
+          <input
+            type="text"
+            placeholder="S11P31C105"
+            name="projectId"
+            value={projectData.projectId}
+            onChange={handleInputChange}
+            className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+          />
+        </label>
+
+        <label className="flex flex-col text-left w-full">
+          팀 이름 :
+          <input
+            type="text"
+            placeholder="팀 이름을 입력하세요."
+            name="teamName"
+            value={projectData.teamName}
+            onChange={handleInputChange}
+            className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+          />
+        </label>
+
+        <label className="flex items-center space-x-2">
+          <input type="checkbox" />
+          <span className="text-gray-600">정보가 정확한가요?</span>
+        </label>
+      </div>
+
+      <button
+        className="px-6 py-3 bg-gray-200 rounded-lg cursor-pointer text-gray-700 hover:bg-gray-300 transition text-lg w-full"
+        onClick={handleButtonClick}
+      >
+        팀장으로 시작하기
+      </button>
     </div>
-
-    <button className="px-6 py-3 bg-gray-200 rounded-lg cursor-pointer text-gray-700 hover:bg-gray-300 transition text-lg w-full">
-      팀장으로 시작하기
-    </button>
-  </div>
-);
+  );
+};
 
 const FollowerWritePage = ({ title }) => (
   <div className="bg-gray-100 rounded-xl shadow-lg p-6 flex flex-col items-center justify-between min-h-full space-y-4 w-full">
@@ -111,7 +136,7 @@ const FollowerWritePage = ({ title }) => (
   </div>
 );
 
-const CreateProject = () => {
+const CreateProject = ({ setIsCreateModalOpen }) => {
   const [page, setPage] = useState("project");
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
@@ -166,7 +191,10 @@ const CreateProject = () => {
             isAnimating ? "opacity-0 blur-sm" : "opacity-100 blur-0"
           }`}
         >
-          <ReaderWritePage title={selectedTitle} />
+          <ReaderWritePage
+            title={selectedTitle}
+            setIsCreateModalOpen={setIsCreateModalOpen}
+          />
         </div>
       )}
 

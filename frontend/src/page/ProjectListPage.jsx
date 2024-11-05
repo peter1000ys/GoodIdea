@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import DefaultButton from "../components/common/DefaultButton";
 import Divier from "../components/common/Divier";
@@ -7,12 +7,17 @@ import Select from "../components/projectlist/Select";
 import PortalModal from "../components/common/PortalModal";
 import CreateProject from "../components/projectlist/CreateProject";
 import { useProjectStore } from "../store/useProjectStore";
+import { fetchGitlabProjectList } from "../api/axios";
 
 function ProjectListPage() {
   const [filter1, setFilter1] = useState({ value: "ALL", showOptions: false });
   const [filter2, setFilter2] = useState({ value: "ALL", showOptions: false });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const { projects } = useProjectStore();
+
+  useEffect(() => {
+    fetchGitlabProjectList();
+  }, []);
 
   // 프로젝트가 없을 시 이거
   const noProject = (
@@ -93,7 +98,7 @@ function ProjectListPage() {
         }}
       >
         <div className="w-full h-full flex flex-col">
-          <CreateProject />
+          <CreateProject setIsCreateModalOpen={setIsCreateModalOpen} />
         </div>
       </PortalModal>
     </>
