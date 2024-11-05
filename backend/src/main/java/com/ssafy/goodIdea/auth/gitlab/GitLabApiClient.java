@@ -125,7 +125,7 @@ public class GitLabApiClient implements OAuthApiClient {
         if (response.getStatusCode() == HttpStatus.OK) {
             List<GitLabGroupResponse> groups = Arrays.asList(response.getBody());
 
-            // name 필드에 'coach' 또는 'consultants'가 포함된 그룹 찾기
+            // serviceName 필드에 'coach' 또는 'consultants'가 포함된 그룹 찾기
             boolean isConsultant = groups.stream().anyMatch(group ->
                     group.getName().toLowerCase().contains("consultants") ||
                             group.getName().toLowerCase().contains("coach"));

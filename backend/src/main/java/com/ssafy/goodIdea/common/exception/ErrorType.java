@@ -31,6 +31,7 @@ public enum ErrorType {
     // Project
     PROJECT_NOT_FOUND(404, HttpStatus.BAD_REQUEST, "존재하지 않는 프로젝트입니다."),
     PROJECT_ALREADY_EXIST(404, HttpStatus.BAD_REQUEST, "이미 존재하는 프로젝트 타입입니다."),
+    NOT_TEAM_LEADER(404, HttpStatus.BAD_REQUEST, "프로젝트 팀장이 아닙니다."),
     // MindMap
     MINDMAP_NOT_FOUND(404, HttpStatus.BAD_REQUEST, "존재하지 않는 마인드맵입니다."),
     

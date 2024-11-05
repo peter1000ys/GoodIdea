@@ -1,12 +1,17 @@
 package com.ssafy.goodIdea.project.entity;
 
+import com.ssafy.goodIdea.common.entity.BaseTime;
+import com.ssafy.goodIdea.idea.entity.Idea;
+import com.ssafy.goodIdea.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Project {
+public class Project extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
@@ -15,18 +20,22 @@ public class Project {
 //    GitLab projectId
     private Long gitLabProjectId;
 
-//    프로젝트 이름
+    //    팀 이름
     @Setter
-    private String name;
+    private String teamName;
+
+    //    메인 아이디어
+    @Setter
+    private Long mainIdeaId;
+
+    //    팀 리더
+    @Setter
+    private Long leader;
 
 //    프로젝트 분류 ( 관통, 공통, 특화, 자율 )
     @Enumerated(value = EnumType.STRING)
     @Setter
     private ProjectType projectType;
-
-//    프로젝트 설명
-    @Setter
-    private String description;
 
 //    깃랩 이름
     private String gitlabName;
@@ -35,12 +44,31 @@ public class Project {
     private String gitlab_url;
 
     @Builder
-    public Project(String name, ProjectType projectType, String description, String gitlabName, String gitlab_url, Long gitLabProjectId) {
-        this.name = name;
+    public Project(ProjectType projectType, String gitlabName, String gitlab_url, Long gitLabProjectId, String teamName, Long leader, Long mainIdeaId) {
+        this.teamName = teamName;
         this.projectType = projectType;
-        this.description = description;
+        this.leader = leader;
+        this.mainIdeaId = mainIdeaId;
         this.gitlabName = gitlabName;
         this.gitlab_url = gitlab_url;
         this.gitLabProjectId = gitLabProjectId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(id, project.id) &&
+                Objects.equals(gitLabProjectId, project.gitLabProjectId) &&
+                Objects.equals(teamName, project.teamName) &&
+                projectType == project.projectType &&
+                Objects.equals(gitlabName, project.gitlabName) &&
+                Objects.equals(gitlab_url, project.gitlab_url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, gitLabProjectId, teamName);
     }
 }
