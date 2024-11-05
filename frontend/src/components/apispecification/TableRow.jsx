@@ -1,7 +1,7 @@
 import { useFormStore } from "../../store/useAPIStore";
 import { useProjectStore } from "../../store/useProjectStore";
 
-function TableRow({ spec, onUriClick }) {
+function TableRow({ spec, onUriClick, columnWidths }) {
   const { updateSpec } = useFormStore();
   const { methods, importanceLevels } = useProjectStore();
 
@@ -12,31 +12,31 @@ function TableRow({ spec, onUriClick }) {
   };
 
   return (
-    <tr>
-      <td className="border p-2">
+    <tr className="hover:bg-gray-50">
+      <td style={{ width: columnWidths[0] }} className="p-2">
         <input
           type="text"
           name="feature"
           value={spec.feature}
           onChange={handleChange}
-          className="w-full p-1 border"
+          className="w-full p-1 focus:outline-none rounded border-b"
         />
       </td>
-      <td className="border p-2">
+      <td style={{ width: columnWidths[1] }} className="p-2">
         <input
           type="text"
           name="domain"
           value={spec.domain}
           onChange={handleChange}
-          className="w-full p-1 border"
+          className="w-full p-1 focus:outline-none rounded border-b"
         />
       </td>
-      <td className="border p-2">
+      <td style={{ width: columnWidths[2] }} className="p-2">
         <select
           name="method"
           value={spec.method}
           onChange={handleChange}
-          className="w-full p-1 border"
+          className="w-full p-1 focus:outline-none rounded border-b bg-transparent"
         >
           {methods.map((method) => (
             <option key={method} value={method}>
@@ -46,17 +46,18 @@ function TableRow({ spec, onUriClick }) {
         </select>
       </td>
       <td
-        className="border p-2 text-blue-500 cursor-pointer"
+        style={{ width: columnWidths[3] }}
+        className="p-2 text-blue-200 cursor-pointer focus:outline-none"
         onClick={() => onUriClick(spec)}
       >
         {spec.uri}
       </td>
-      <td className="border p-2">
+      <td style={{ width: columnWidths[4] }} className="p-2">
         <select
           name="importance"
           value={spec.importance}
           onChange={handleChange}
-          className="w-full p-1 border"
+          className="w-full p-1 focus:outline-none rounded border-b bg-transparent"
         >
           {importanceLevels.map((level) => (
             <option key={level} value={level}>
@@ -65,30 +66,30 @@ function TableRow({ spec, onUriClick }) {
           ))}
         </select>
       </td>
-      <td className="border p-2">
+      <td style={{ width: columnWidths[5] }} className="p-2">
         <input
           type="text"
           name="backendOwner"
           value={spec.backendOwner}
           onChange={handleChange}
-          className="w-full p-1 border"
+          className="w-full p-1 focus:outline-none rounded border-b"
         />
       </td>
-      <td className="border p-2">
+      <td style={{ width: columnWidths[6] }} className="p-2">
         <input
           type="text"
           name="frontendOwner"
           value={spec.frontendOwner}
           onChange={handleChange}
-          className="w-full p-1 border"
+          className="w-full p-1 focus:outline-none rounded border-b"
         />
       </td>
-      <td className="border p-2">
-        <textarea
+      <td style={{ width: columnWidths[7] }} className="p-2">
+        <input
           name="memo"
           value={spec.memo}
           onChange={handleChange}
-          className="w-full p-1 border"
+          className="w-full p-1 focus:outline-none rounded border-b"
         />
       </td>
     </tr>

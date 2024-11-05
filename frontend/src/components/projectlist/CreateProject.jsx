@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { createProject } from "../../api/axios";
 
 const ProjectCard = ({ title, handleReader, handleFollower }) => {
   return (
@@ -7,13 +8,13 @@ const ProjectCard = ({ title, handleReader, handleFollower }) => {
       <hr className="w-full border-gray-300 my-2" />
       <div className="flex flex-col space-y-4 mt-4 w-full">
         <button
-          onClick={handleReader}
+          onClick={() => handleReader(title)}
           className="px-4 py-2 bg-gray-200 rounded-full cursor-pointer text-gray-700 hover:bg-gray-300 transition"
         >
           팀장으로 시작하기
         </button>
         <button
-          onClick={handleFollower}
+          onClick={() => handleFollower(title)}
           className="px-4 py-2 bg-gray-200 rounded-full cursor-pointer text-gray-700 hover:bg-gray-300 transition"
         >
           팀원으로 시작하기
@@ -23,56 +24,137 @@ const ProjectCard = ({ title, handleReader, handleFollower }) => {
   );
 };
 
-const ReaderWritePage = ({ onBack }) => (
-  <div className="bg-white rounded-lg shadow-lg p-10 max-w-lg mx-auto text-center">
-    <h2 className="text-2xl font-bold mb-4">팀장 작성 페이지</h2>
-    <p>이 페이지에서 프로젝트의 상세 내용을 작성하세요.</p>
-    <button
-      onClick={onBack}
-      className="mt-6 px-4 py-2 bg-blue-900 text-white rounded-md"
-    >
-      뒤로가기
+const ReaderWritePage = ({ title, setIsCreateModalOpen }) => {
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [projectData, setProjectData] = useState({
+    projectId: "", // GITLAB Respository 입력 값을 저장할 필드
+    teamName: "", // 팀 이름 입력 값을 저장할 필드
+    projectType: title.split(" ")[0], // title에서 첫 단어 추출하여 저장
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProjectData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleButtonClick = () => {
+    createProject(projectData);
+    setIsCreateModalOpen(true);
+  };
+
+  return (
+    <div className="bg-gray-100 rounded-xl shadow-lg p-6 flex flex-col items-center justify-between min-h-full space-y-4 w-full">
+      <h2 className="text-lg font-semibold">{title}</h2>
+      <hr className="w-full border-gray-300 my-2" />
+
+      <div className="w-full space-y-4">
+        <label className="flex flex-col text-left w-full">
+          GITLAB Respository:
+          <input
+            type="text"
+            placeholder="S11P31C105"
+            name="projectId"
+            value={projectData.projectId}
+            onChange={handleInputChange}
+            className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+          />
+        </label>
+
+        <label className="flex flex-col text-left w-full">
+          팀 이름 :
+          <input
+            type="text"
+            placeholder="팀 이름을 입력하세요."
+            name="teamName"
+            value={projectData.teamName}
+            onChange={handleInputChange}
+            className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+          />
+        </label>
+
+        <label className="flex items-center space-x-2">
+          <input type="checkbox" />
+          <span className="text-gray-600">정보가 정확한가요?</span>
+        </label>
+      </div>
+
+      <button
+        className="px-6 py-3 bg-gray-200 rounded-lg cursor-pointer text-gray-700 hover:bg-gray-300 transition text-lg w-full"
+        onClick={handleButtonClick}
+      >
+        팀장으로 시작하기
+      </button>
+    </div>
+  );
+};
+
+const FollowerWritePage = ({ title }) => (
+  <div className="bg-gray-100 rounded-xl shadow-lg p-6 flex flex-col items-center justify-between min-h-full space-y-4 w-full">
+    <h2 className="text-lg font-semibold">{title}</h2>
+    <hr className="w-full border-gray-300 my-2" />
+
+    <div className="w-full space-y-4">
+      <label className="flex flex-col text-left w-full">
+        URL :
+        <input
+          type="text"
+          placeholder="URL을 입력하세요."
+          className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+        />
+      </label>
+
+      <label className="flex flex-col text-left w-full">
+        팀 전체 코드 :
+        <input
+          type="text"
+          placeholder="S11P31C105"
+          className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+        />
+      </label>
+
+      <label className="flex flex-col text-left w-full">
+        팀 이름 :
+        <input
+          type="text"
+          placeholder="팀 이름을 입력하세요."
+          className="mt-1 p-2 border rounded w-full text-gray-700 bg-gray-50"
+        />
+      </label>
+
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" />
+        <span className="text-gray-600">정보가 정확한가요?</span>
+      </label>
+    </div>
+
+    <button className="px-6 py-3 bg-gray-200 rounded-lg cursor-pointer text-gray-700 hover:bg-gray-300 transition text-lg w-full">
+      팀원으로 시작하기
     </button>
   </div>
 );
 
-const FollowerWritePage = ({ onBack }) => (
-  <div className="bg-white rounded-lg shadow-lg p-10 max-w-lg mx-auto text-center">
-    <h2 className="text-2xl font-bold mb-4">팀원 작성 페이지</h2>
-    <p>이 페이지에서 프로젝트의 상세 내용을 작성하세요.</p>
-    <button
-      onClick={onBack}
-      className="mt-6 px-4 py-2 bg-blue-900 text-white rounded-md"
-    >
-      뒤로가기
-    </button>
-  </div>
-);
-
-const CreateProject = () => {
+const CreateProject = ({ setIsCreateModalOpen }) => {
   const [page, setPage] = useState("project");
   const [isAnimating, setIsAnimating] = useState(false);
+  const [selectedTitle, setSelectedTitle] = useState("");
 
-  const handleReader = () => {
+  const handleReader = (title) => {
     setIsAnimating(true);
     setTimeout(() => {
+      setSelectedTitle(title);
       setPage("readerWrite");
       setIsAnimating(false);
     }, 500);
   };
 
-  const handleFollower = () => {
+  const handleFollower = (title) => {
     setIsAnimating(true);
     setTimeout(() => {
+      setSelectedTitle(title);
       setPage("followerWrite");
-      setIsAnimating(false);
-    }, 500);
-  };
-
-  const handleBack = () => {
-    setIsAnimating(true);
-    setTimeout(() => {
-      setPage("project");
       setIsAnimating(false);
     }, 500);
   };
@@ -105,21 +187,24 @@ const CreateProject = () => {
       {/* 두 번째 컴포넌트 (작성 페이지) */}
       {page === "readerWrite" && (
         <div
-          className={`transition-all duration-500 transform ${
+          className={`transition-all duration-500 transform w-full ${
             isAnimating ? "opacity-0 blur-sm" : "opacity-100 blur-0"
           }`}
         >
-          <ReaderWritePage onBack={handleBack} />
+          <ReaderWritePage
+            title={selectedTitle}
+            setIsCreateModalOpen={setIsCreateModalOpen}
+          />
         </div>
       )}
 
       {page === "followerWrite" && (
         <div
-          className={`transition-all duration-500 transform ${
+          className={`transition-all duration-500 transform w-full ${
             isAnimating ? "opacity-0 blur-sm" : "opacity-100 blur-0"
           }`}
         >
-          <FollowerWritePage onBack={handleBack} />
+          <FollowerWritePage title={selectedTitle} />
         </div>
       )}
     </div>
