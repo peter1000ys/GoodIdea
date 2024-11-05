@@ -16,8 +16,19 @@ function ProjectListPage() {
   const { projects } = useProjectStore();
 
   useEffect(() => {
-    fetchGitlabProjectList();
-    fetchProjectList();
+    const init = async () => {
+      const gitlabProjectList = await fetchGitlabProjectList();
+      const projectList = await fetchProjectList();
+      console.log(projectList, "gitlabProjectlist");
+      console.log(gitlabProjectList, "gitlabProjectlist");
+      if (gitlabProjectList && projectList) {
+        useProjectStore.setState({
+          projects: [...projectList],
+        });
+      }
+    };
+
+    init();
   }, []);
 
   // 프로젝트가 없을 시 이거

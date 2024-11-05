@@ -1,58 +1,48 @@
-import axios from "axios";
+import authAxiosInstance from "./http-commons/authAxios";
 
-const accessToken = localStorage.getItem("accessToken");
+/**
+ * try-catch helper func
+ * 트라이-캐치를 수행하는 함수
+ * @param {import("axios").AxiosInstance} cbFunc
+ * @returns
+ */
+const helper = async (cbFunc, type = "미입력") => {
+  if (!cbFunc) return { ok: false };
+  try {
+    return { ok: true, data: (await cbFunc()).data }; // 비동기 호출에 await 추가
+  } catch (error) {
+    console.error("에러: ", type, "/ status: ", error); // 에러를 한 줄로 처리
+    return { ok: false };
+  }
+};
 
 export const fetchGitlabProjectList = async () => {
-  try {
-    console.log("토큰", accessToken);
-    const response = await axios.get(
-      "https://oracle1.mypjt.xyz/api/v1/project/gitlab",
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    console.log("gitlab 프로젝트 목록", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("gitlab 프로젝트 목록 조회 에러:", error); // 에러를 한 줄로 처리
-  }
+  const response = await helper(
+    () => authAxiosInstance.get("api/v1/project/gitlab"),
+    "gitlab 프로젝트 목록"
+  );
+  if (!response.ok) return;
+  // console.log(response.data.data);
+  return response?.data?.data;
 };
 
 export const fetchProjectList = async () => {
-  try {
-    console.log("토큰", accessToken);
-    const response = await axios.get(
-      "https://oracle1.mypjt.xyz/api/v1/project",
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    console.log("유저 프로젝트 목록", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("유저 프로젝트 목록 조회 에러:", error); // 에러를 한 줄로 처리
-  }
+  const response = await helper(
+    () => authAxiosInstance.get("api/v1/project"),
+    "프로젝트 목록"
+  );
+  if (!response.ok) return;
+  // console.log(response.data);
+  return response?.data?.data;
 };
 
 export const createProject = async (projectData) => {
-  try {
-    console.log("데이터", projectData);
-    const response = await axios.post(
-      "https://oracle1.mypjt.xyz/api/v1/project/create",
-      projectData,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    console.log("프로젝트 생성", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("프로젝트 생성 에러:", error); // 에러를 한 줄로 처리
-  }
+  const response = await helper(
+    () => authAxiosInstance.post("api/v1/project/create", projectData),
+    "프로젝트 생성"
+  );
+  if (!response.ok) return;
+
+  console.log("프로젝트 생성", response.data);
+  return response?.data?.data;
 };

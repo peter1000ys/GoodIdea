@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Divier from "../common/Divier";
 
 function ProjectListItem({ project }) {
+  console.log(project);
   const navigate = useNavigate();
   const navigateDetail = () => {
     // navigate to detail page
@@ -20,14 +21,14 @@ function ProjectListItem({ project }) {
           onClick={navigateDetail}
         >
           <div className="w-10 h-10 rounded-md bg-gray-200 items-center justify-center flex font-bold text-2xl">
-            {project?.name[0]}
+            {project?.gitlabName[0]}
           </div>
           <div className="flex flex-col hover:underline">
             <span className="font-thin text-lg">
-              {project.name} /{" "}
-              <span className="font-medium"> {project.gitlab_name}</span>
+              {project.gitlabName} /{" "}
+              <span className="font-medium"> {project.teamName}</span>
             </span>
-            <span className="text-sm text-gray-500">{project.description}</span>
+            <span className="text-sm text-gray-500">{project.projectType}</span>
           </div>
         </div>
 
