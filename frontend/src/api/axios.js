@@ -4,6 +4,7 @@ const accessToken = localStorage.getItem("accessToken");
 
 export const fetchGitlabProjectList = async () => {
   try {
+    console.log("토큰", accessToken);
     const response = await axios.get(
       "https://oracle1.mypjt.xyz/api/v1/project/gitlab",
       {
@@ -21,6 +22,7 @@ export const fetchGitlabProjectList = async () => {
 
 export const fetchProjectList = async () => {
   try {
+    console.log("토큰", accessToken);
     const response = await axios.get(
       "https://oracle1.mypjt.xyz/api/v1/project",
       {
