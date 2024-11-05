@@ -31,7 +31,7 @@ const ReaderWritePage = ({ title, setIsCreateModalOpen }) => {
     teamName: "", // 팀 이름 입력 값을 저장할 필드
     projectType: title.split(" ")[0], // title에서 첫 단어 추출하여 저장
   });
-
+  console.log(title.split(" ")[0]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProjectData((prevData) => ({
