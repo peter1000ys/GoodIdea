@@ -40,10 +40,11 @@ export const fetchProjectList = async () => {
 
 export const createProject = async ({ projectData }) => {
   try {
+    console.log("데이터", projectData);
     const response = await axios.post(
       "https://oracle1.mypjt.xyz/api/v1/project/create",
-      projectData,
       {
+        projectData,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
