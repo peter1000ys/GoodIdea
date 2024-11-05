@@ -108,7 +108,7 @@ tasks.register('openapi3-security') {
 		def securitySchemesContent = "  securitySchemes:\n" +         \
                                              "    APIKey:\n" +         \
                                              "      type: apiKey\n" +         \
-                                             "      name: Authorization\n" +         \
+                                             "      serviceName: Authorization\n" +         \
                                              "      in: header\n" +        \
                                              "security:\n" +
 				"  - APIKey: []  # Apply the security scheme here"
