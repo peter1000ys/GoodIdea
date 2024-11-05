@@ -7,7 +7,7 @@ import Select from "../components/projectlist/Select";
 import PortalModal from "../components/common/PortalModal";
 import CreateProject from "../components/projectlist/CreateProject";
 import { useProjectStore } from "../store/useProjectStore";
-import { fetchGitlabProjectList } from "../api/axios";
+import { fetchGitlabProjectList, fetchProjectList } from "../api/axios";
 
 function ProjectListPage() {
   const [filter1, setFilter1] = useState({ value: "ALL", showOptions: false });
@@ -17,6 +17,7 @@ function ProjectListPage() {
 
   useEffect(() => {
     fetchGitlabProjectList();
+    fetchProjectList();
   }, []);
 
   // 프로젝트가 없을 시 이거
