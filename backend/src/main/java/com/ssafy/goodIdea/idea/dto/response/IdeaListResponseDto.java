@@ -9,5 +9,6 @@ public class IdeaListResponseDto {
     private Long ideaId;
     private String serviceName;
     private String introduction;
+    private float averageRating;
 }
 

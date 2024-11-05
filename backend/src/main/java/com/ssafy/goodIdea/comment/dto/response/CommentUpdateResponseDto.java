@@ -7,10 +7,10 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CommentCreateResponseDto {
+public class CommentUpdateResponseDto {
     private Long commentId;
-    private String userName;
     private String commentContent;
-    private float rating;
-    private LocalDateTime createdAt;
+    private Float rating;
+    private String userName;
+    private LocalDateTime updatedAt;
 }
