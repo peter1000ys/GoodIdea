@@ -15,12 +15,6 @@ const LoginPage = () => {
       const accessToken = urlParams.get("accessToken");
       const refreshToken = urlParams.get("refreshToken");
       if (accessToken && refreshToken) {
-        // 토큰을 세션 스토리지에 저장
-        sessionStorage.setItem("accessToken", accessToken);
-        sessionStorage.setItem("refreshToken", refreshToken);
-        console.log("Access Token:", accessToken);
-        console.log("Refresh Token:", refreshToken);
-
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
         // 인증된 axios 인스턴스 생성
