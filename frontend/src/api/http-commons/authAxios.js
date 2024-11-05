@@ -109,3 +109,9 @@ const clearAuthData = () => {
   localStorage.removeItem("refreshToken");
   localStorage.removeItem("userStore");
 };
+if (import.meta.env.VITE_APP_MODE === "DEV") {
+  console.log("DEV MODE");
+  authAxiosInstance = createAuthAxiosInstance();
+}
+
+export default authAxiosInstance;
