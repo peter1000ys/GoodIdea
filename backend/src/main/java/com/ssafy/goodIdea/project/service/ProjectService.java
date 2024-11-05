@@ -127,7 +127,7 @@ public class ProjectService {
                     .projectType(project.getProjectType())
                     .teamName(project.getTeamName())
                     .mainIdea(IdeaCreateResponseDto.builder()
-                            .id(mainIdea.getId())
+                            .ideaId(mainIdea.getId())
                             .serviceName(mainIdea.getServiceName())
                             .background(mainIdea.getBackground())
                             .expectedEffect(mainIdea.getExpectedEffect())
@@ -199,6 +199,10 @@ public class ProjectService {
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow( ()-> new BaseException(ErrorType.PROJECT_NOT_FOUND));
+
+        // System.out.println(dto.getMainIdeaId());
+        // System.out.println(dto.getProjectType());
+        // System.out.println(dto.getTeamName());
 
         if ( dto.getProjectType() != null)
             project.setProjectType(dto.getProjectType());

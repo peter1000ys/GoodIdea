@@ -26,5 +26,7 @@ public interface UserProjectRepository extends JpaRepository<UserProject, Long> 
     List<UserProject> findByUserIdAndProjectType(@Param("userId") Long userId, @Param("projectType") ProjectType projectType);
 
     @Query("SELECT up FROM UserProject up JOIN up.user u JOIN up.project p WHERE u.id = :userId")
-    List<UserProject> findByUserId(@Param("userId") Long userId);
+    List<UserProject> findByUserId(@Param("userId") Long userId);   
+
+    boolean existsByUserIdAndProjectId(Long userId, Long projectId);
 }

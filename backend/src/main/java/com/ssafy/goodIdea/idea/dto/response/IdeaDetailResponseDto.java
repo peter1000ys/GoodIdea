@@ -19,7 +19,7 @@ public class IdeaDetailResponseDto {
     private String introduction; 
     private String target;
     private String expectedEffect;
-    private float commentsRating;
+    private float averageRating;
     private List<CommentDto> comments;
 
     @Getter

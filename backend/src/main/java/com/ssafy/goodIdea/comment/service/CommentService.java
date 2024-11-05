@@ -1,13 +1,14 @@
 package com.ssafy.goodIdea.comment.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.ssafy.goodIdea.comment.dto.request.CommentCreateRequestDto;
+import com.ssafy.goodIdea.comment.dto.request.CommentUpdateRequestDto;
 import com.ssafy.goodIdea.comment.dto.response.CommentCreateResponseDto;
+import com.ssafy.goodIdea.comment.dto.response.CommentUpdateResponseDto;
 import com.ssafy.goodIdea.comment.entity.Comment;
 import com.ssafy.goodIdea.comment.repository.CommentRepository;
 import com.ssafy.goodIdea.common.exception.BaseException;
@@ -52,17 +53,76 @@ public class CommentService {
         Comment comment = Comment.builder()
             .user(user)
             .idea(idea)
-            .commentContent(dto.getContent())
+            .commentContent(dto.getCommentContent())
             .rating(dto.getRating().floatValue())
             .build();
 
-        comment = commentRepository.save(comment);
+        comment = commentRepository.saveAndFlush(comment);
 
         return CommentCreateResponseDto.builder()
+            .commentId(comment.getId())
             .userName(user.getUsername())
             .commentContent(comment.getCommentContent())
             .rating(comment.getRating().floatValue())
             .createdAt(comment.getCreatedAt())
             .build();
+    }
+
+    /*
+     * 댓글 수정
+     * @param commentId 댓글 ID
+     * @param user 현재 로그인한 사용자 정보
+     * @param dto 댓글 수정 요청 DTO
+     * @return 수정된 댓글 정보
+     */
+    public CommentUpdateResponseDto updateComment(Long commentId, User user, CommentUpdateRequestDto dto) {
+        
+        Comment comment = commentRepository.findByIdAndUserId(commentId, user.getId())
+            .orElseThrow(() -> new BaseException(ErrorType.COMMENT_NOT_FOUND));
+
+        comment.updateComment(dto.getCommentContent(), dto.getRating().floatValue());
+
+        // 아이디어에 달린 댓글들 가져오기
+        List<Comment> comments = commentRepository.findByIdeaId(comment.getIdea().getId());
+        
+        // 댓글 평균 평점 계산 (소수점 둘째자리까지)
+        float avgRating = (float) (Math.round(comments.stream()
+            .mapToDouble(Comment::getRating)
+            .average()
+            .orElse(0.0) * 100) / 100.0);
+
+        comment.getIdea().updateAverageRating(avgRating);
+        
+        return CommentUpdateResponseDto.builder()
+            .commentId(comment.getId())
+            .commentContent(dto.getCommentContent())
+            .rating(dto.getRating())
+            .userName(user.getUsername())
+            .updatedAt(comment.getUpdatedAt())
+            .build();
+    }
+
+    /*
+     * 댓글 삭제
+     * @param commentId 댓글 ID
+     * @param user 현재 로그인한 사용자 정보
+     * 댓글 삭제 후 해당 아이디어의 평균 평점 업데이트
+     */
+    public void deleteComment(Long commentId, User user) {
+
+        Comment comment = commentRepository.findByIdAndUserId(commentId, user.getId())
+            .orElseThrow(() -> new BaseException(ErrorType.COMMENT_NOT_FOUND));
+
+        commentRepository.delete(comment);
+        // 아이디어에 달린 댓글들 가져오기
+        List<Comment> comments = commentRepository.findByIdeaId(comment.getIdea().getId());
+        
+        // 댓글 평균 평점 계산 (소수점 둘째자리까지)
+        float avgRating = (float) (Math.round(comments.stream()
+            .mapToDouble(Comment::getRating)
+            .average()
+            .orElse(0.0) * 100) / 100.0);
+
+        comment.getIdea().updateAverageRating(avgRating);
     }
 }
