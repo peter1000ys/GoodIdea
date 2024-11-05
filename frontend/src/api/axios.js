@@ -38,7 +38,7 @@ export const fetchProjectList = async () => {
   }
 };
 
-export const createProject = async ({ projectData }) => {
+export const createProject = async (projectData) => {
   try {
     console.log("데이터", projectData);
     const response = await axios.post(
