@@ -1,8 +1,66 @@
 import { Helmet } from "react-helmet-async";
 import Header from "../../components/common/Header";
-import DefaultButton from "../../components/common/DefaultButton";
+import "./ProposalPage.css";
 
+import * as Y from "yjs";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Collaboration from "@tiptap/extension-collaboration";
+import { useEffect, useRef, useState } from "react";
+import { HocuspocusProvider, TiptapCollabProvider } from "@hocuspocus/provider";
+
+const ydoc = new Y.Doc();
 function ProposalPage() {
+  // useRef를 사용하여 provider를 저장할 공간을 만듭니다.
+  const providerRef = useRef(null);
+  const [isProviderReady, setIsProviderReady] = useState(false);
+  // useEditor를 최상위에서 호출하여 editor 인스턴스를 생성합니다.
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      // Collaboration은 일단 document 없이 초기화
+      Collaboration.configure({
+        document: ydoc,
+      }),
+    ],
+  });
+
+  useEffect(() => {
+    // HocuspocusProvider 생성 및 연결
+    providerRef.current = new HocuspocusProvider({
+      url: "ws://192.168.100.129:3001", // WebSocket URL
+      name: "document-name2", // 동기화할 문서 식별자
+      document: ydoc, // Y.js 문서 객체 생성
+      onSynced: () => {
+        console.log("Synced with server");
+      },
+    });
+
+    // provider가 초기화되면 상태를 업데이트
+    providerRef.current.on("sync", () => {
+      setIsProviderReady(true);
+    });
+
+    // 컴포넌트 언마운트 시 provider 해제
+    return () => {
+      providerRef.current?.destroy();
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   if (editor && isProviderReady && providerRef.current) {
+  //     // provider의 문서 객체를 editor에 설정합니다.
+  //     editor.setOptions({
+  //       extensions: [
+  //         StarterKit,
+  //         Collaboration.configure({
+  //           document: providerRef.current.document, // provider의 문서를 사용
+  //         }),
+  //       ],
+  //     });
+  //   }
+  // }, [editor, isProviderReady]);
+
   return (
     <>
       <Helmet>
@@ -11,12 +69,10 @@ function ProposalPage() {
       <div className="h-full w-full flex flex-col">
         <Header content="관통 프로젝트" />
 
-        <div className="flex-1 items-center justify-center flex">CRDT 영역</div>
-        <div>
-          <div className="float-end space-x-3 p-2">
-            <DefaultButton onClick={() => {}} text="팀명 수정" />
-            <DefaultButton onClick={() => {}} text="저장" />
-          </div>
+        <div className="flex-1 items-center justify-center flex">
+          {providerRef.current && (
+            <EditorContent className="w-full h-full" editor={editor} />
+          )}
         </div>
       </div>
     </>

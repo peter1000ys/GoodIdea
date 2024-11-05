@@ -1,4 +1,3 @@
-import Header from "../../components/common/Header";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useState } from "react";
 import { useFormStore } from "../../store/useAPIStore";
@@ -6,15 +5,35 @@ import TableRow from "../../components/apispecification/TableRow";
 import EnhancedModal from "../../components/apispecification/EnhancedModal";
 
 function ApiSpecificationPage() {
-  const { apiSpecifications, addRow, updateSpec } = useFormStore();
+  const {
+    apiSpecifications,
+    addRow,
+    updateSpec,
+    columnWidths,
+    updateColumnWidth,
+  } = useFormStore();
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedSpec, setSelectedSpec] = useState(null);
   const [formData, setFormData] = useState({});
 
-  useEffect(() => {
-    console.log("ApiSpecificationPage mounted");
-    // Load initial data from backend if required
-  }, []);
+  const handleResize = (column, e) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startWidth = columnWidths[column];
+
+    const onMouseMove = (e) => {
+      const newWidth = Math.max(startWidth + e.clientX - startX, 50); // 최소 너비 설정
+      updateColumnWidth(column, newWidth);
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  };
 
   const handleNewRow = () => {
     console.log("Adding new row");
@@ -47,32 +66,53 @@ function ApiSpecificationPage() {
         <title>API 명세서 페이지</title>
       </Helmet>
       <div className="h-full w-full flex flex-col">
-        <Header content="관통 프로젝트" />
         <div className="overflow-x-auto p-4">
-          <table className="w-full border-collapse border border-gray-300">
+          <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th className="border p-2">기능</th>
-                <th className="border p-2">도메인</th>
-                <th className="border p-2">Method</th>
-                <th className="border p-2">URI</th>
-                <th className="border p-2">중요도</th>
-                <th className="border p-2">백엔드 담당</th>
-                <th className="border p-2">프론트 담당</th>
-                <th className="border p-2">메모</th>
+                {[
+                  { key: "feature", label: "기능" },
+                  { key: "domain", label: "도메인" },
+                  { key: "method", label: "Method" },
+                  { key: "uri", label: "URI" },
+                  { key: "importance", label: "중요도" },
+                  { key: "backendOwner", label: "BE" },
+                  { key: "frontendOwner", label: "FE" },
+                  { key: "memo", label: "메모" },
+                ].map((column) => (
+                  <th
+                    key={column.key}
+                    style={{ width: `${columnWidths[column.key]}px` }}
+                    className="relative p-2 text-center font-semibold"
+                  >
+                    {column.label}
+                    <span
+                      onMouseDown={(e) => handleResize(column.key, e)}
+                      className="absolute right-0 top-1 h-full cursor-col-resize px-1 text-slate-200"
+                      title="너비 조정 가능"
+                    >
+                      &#x22EE;
+                    </span>
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {apiSpecifications.map((spec, index) => (
-                <TableRow key={index} spec={spec} onUriClick={handleUriClick} />
+                <TableRow
+                  key={index}
+                  spec={spec}
+                  onUriClick={handleUriClick}
+                  columnWidths={columnWidths}
+                />
               ))}
             </tbody>
           </table>
           <button
             onClick={handleNewRow}
-            className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+            className="mt-4 ms-2 px-4 py-2 text-gray-500 border rounded-md hover:bg-gray-200 transition duration-200 ease-in-out"
           >
-            새 페이지 추가
+            + 추가하기
           </button>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet-async";
-import Header from "../../components/common/Header";
 import Sticker from "../../components/ideaboard/Sticker";
 import { useState } from "react";
 import StickerModal from "../../components/ideaboard/StickerModal";
@@ -11,12 +10,12 @@ function IdeaBoardPage() {
   // 첫 6개 좌표를 각 섹션 범위 내에서 랜덤으로 생성
   // const generateSectionCoordinates = () => {
   //   const coordinates = [
-  //     { xRange: [0, 14], yRange: [5, 28] },
-  //     { xRange: [28, 43], yRange: [5, 28] },
-  //     { xRange: [57, 86], yRange: [5, 28] },
-  //     { xRange: [0, 14], yRange: [41, 77] },
-  //     { xRange: [28, 43], yRange: [41, 77] },
-  //     { xRange: [57, 86], yRange: [41, 77] },
+  //     { xRange: [0, 14], yRange: [0, 28] },
+  //     { xRange: [28, 43], yRange: [0, 28] },
+  //     { xRange: [57, 86], yRange: [0, 28] },
+  //     { xRange: [0, 14], yRange: [41, 71] },
+  //     { xRange: [28, 43], yRange: [41, 71] },
+  //     { xRange: [57, 86], yRange: [41, 71] },
   //   ];
 
   //   return coordinates.map(({ xRange, yRange }, index) => ({
@@ -32,7 +31,7 @@ function IdeaBoardPage() {
   //   for (let i = 0; i < count; i++) {
   //     coordinates.push({
   //       x: `${Math.random() * 86}%`, // x 범위 0% ~ 86%
-  //       y: `${5 + Math.random() * 72}%`, // y 범위 5% ~ 77%
+  //       y: `${Math.random() * 71}%`, // y 범위 0% ~ 71%
   //       delay: (i + 6) * 100,
   //     });
   //   }
@@ -43,15 +42,15 @@ function IdeaBoardPage() {
   const coordinates = [
     // ...generateSectionCoordinates(),
     // ...generateRandomCoordinates(2),
-    { x: "5%", y: "13%", delay: 0 },
+    { x: "4%", y: "0%", delay: 0 },
     { x: "30%", y: "8%", delay: 100 },
     { x: "67%", y: "20%", delay: 200 },
     { x: "8%", y: "70%", delay: 300 },
     { x: "33%", y: "55%", delay: 400 },
-    { x: "80%", y: "41%", delay: 500 },
+    { x: "86%", y: "41%", delay: 500 },
     { x: "56%", y: "54%", delay: 600 },
     { x: "12%", y: "38%", delay: 700 },
-    { x: "34%", y: "77%", delay: 800 },
+    { x: "40%", y: "71%", delay: 800 },
   ];
 
   // 색상 배열 정의
@@ -88,9 +87,7 @@ function IdeaBoardPage() {
       <Helmet>
         <title>아이디어보드 페이지</title>
       </Helmet>
-      <div className="h-full w-full relative overflow-hidden">
-        <Header content="관통 프로젝트" />
-
+      <div className="relative h-full w-full overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(circle,_#ddd_1px,_transparent_1px)] before:bg-[length:20px_20px]">
         {/* Sticker 컴포넌트 좌표화 렌더링 */}
         {coordinates.map(({ x, y, delay }, index) => (
           <Sticker

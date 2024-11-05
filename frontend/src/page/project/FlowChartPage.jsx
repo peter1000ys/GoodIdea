@@ -1,9 +1,6 @@
 import { useRef, useEffect, useState, Children, isValidElement } from "react";
-// import dynamic from "next/dynamic";
 import mermaid from "mermaid";
-// import { useMutation, useStorage } from "../../../liveblocks.config";
 import { Helmet } from "react-helmet-async";
-import Header from "../../components/common/Header";
 import MDEditor from "@uiw/react-md-editor";
 // Mermaid 초기화 설정
 mermaid.initialize({
@@ -65,7 +62,19 @@ function Code({ inline, children = [], className, ...props }) {
 }
 
 export default function FLOWCHARTPage() {
-  const [markdown, setMarkdown] = useState("");
+  const [markdown, setMarkdown] = useState(`\`\`\`mermaid 코드 예시
+flowchart TD
+    A[Start] --> B{Is it?}
+    B -- Yes --> C[OK]
+    C --> D[Rethink]
+    D --> B
+    B -- No ----> E[End]
+\`\`\``);
+
+  /*
+  *
+  1. 툴팁 만들어서 링크로 연결될 수 있도록 수정. (참고: https://mermaid.js.org/syntax/flowchart.html)
+  */
 
   return (
     <>
@@ -73,7 +82,6 @@ export default function FLOWCHARTPage() {
         <title>FLOWCHART 페이지</title>
       </Helmet>
       <div className="h-full w-full flex flex-col">
-        <Header content="관통 프로젝트" />
         <div className="flex-1 w-full h-full p-4 bg-gray-100">
           <MDEditor
             value={markdown}

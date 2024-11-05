@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import Nav from "./common/Nav";
+import Header from "./common/Header";
 
 function CommonLayout() {
   const [isproject, setisproject] = useState(false);
   const params = useParams();
+  const location = useLocation();
 
   useEffect(() => {
     if (params?.id) setisproject(true);
@@ -16,8 +18,9 @@ function CommonLayout() {
       {isproject && <Nav />}
 
       {/* Main Content */}
-      <main className={`flex-1 ${isproject ? "ml-64" : "ml-0"}`}>
+      <main className={`flex-1 flex flex-col ${isproject ? "ml-64" : "ml-0"}`}>
         {/* 자식 컴포넌트를 렌더링 */}
+        {location.pathname.includes("project") && <Header />}
         <Outlet />
       </main>
     </div>

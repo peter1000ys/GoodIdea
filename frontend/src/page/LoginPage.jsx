@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { createAuthAxiosInstance } from "../api/http-commons/authAxios";
 import { useUserStore } from "../store/useUserStore";
 import axios from "axios";
 
@@ -15,13 +14,9 @@ const LoginPage = () => {
       const accessToken = urlParams.get("accessToken");
       const refreshToken = urlParams.get("refreshToken");
       if (accessToken && refreshToken) {
-        // 토큰을 세션 스토리지에 저장
-        sessionStorage.setItem("accessToken", accessToken);
-        sessionStorage.setItem("refreshToken", refreshToken);
-        console.log("Access Token:", accessToken);
-        console.log("Refresh Token:", refreshToken);
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
         // 인증된 axios 인스턴스 생성
-        createAuthAxiosInstance();
         try {
           // 프로필 정보 요청
           const profileResponse = await axios.get(
@@ -37,7 +32,7 @@ const LoginPage = () => {
           setLogin(userInfo); // userInfo 저장
 
           // 메인 페이지로 리디렉트
-          navigate("/");
+          navigate("/projectlist");
         } catch (error) {
           console.error("프로필 정보 가져오기 실패:", error);
         }

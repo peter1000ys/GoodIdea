@@ -4,70 +4,60 @@ import axios from "axios";
 const BASE_URL = "https://oracle1.mypjt.xyz/";
 const REFRESH_URL = BASE_URL + "/main/jwt/refresh";
 
-let authAxiosInstance = null; // 초기값은 null
+const authAxiosInstance = axios.create({
+  baseURL: BASE_URL,
+  timeout: 10000, // 10초
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+});
 
-// 로그인 시 호출되는 함수에서 axios 인스턴스 생성
-export const createAuthAxiosInstance = () => {
-  if (!authAxiosInstance) {
-    authAxiosInstance = axios.create({
-      baseURL: BASE_URL,
-      timeout: 10000, // 10초
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
+// 요청 인터셉터
+authAxiosInstance.interceptors.request.use(
+  async (config) => {
+    const token = localStorage.getItem("accessToken");
 
-    // 요청 인터셉터
-    authAxiosInstance.interceptors.request.use(
-      async (config) => {
-        const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
 
-        if (token) {
-          config.headers["Authorization"] = `Bearer ${token}`;
-        }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
+// 응답 인터셉터
+authAxiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-    // 응답 인터셉터
-    authAxiosInstance.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
-
-          try {
-            const newToken = await refreshToken();
-            authAxiosInstance.defaults.headers.common[
-              "Authorization"
-            ] = `Bearer ${newToken}`;
-            return authAxiosInstance(originalRequest); // 원래의 요청을 새로운 토큰으로 재전송
-          } catch (refreshError) {
-            // 리프레시 토큰 실패 처리
-            console.error("Failed to refresh token:", refreshError);
-            // 로그아웃 처리나 리다이렉트 등 추가적인 처리를 여기에 구현
-            clearAuthData();
-            window.location.href = "/login";
-            return Promise.reject(refreshError);
-          }
-        }
-
-        return Promise.reject(error);
+      try {
+        const newToken = await refreshToken();
+        authAxiosInstance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${newToken}`;
+        return authAxiosInstance(originalRequest); // 원래의 요청을 새로운 토큰으로 재전송
+      } catch (refreshError) {
+        // 리프레시 토큰 실패 처리
+        console.error("Failed to refresh token:", refreshError);
+        // 로그아웃 처리나 리다이렉트 등 추가적인 처리를 여기에 구현
+        clearAuthData();
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
       }
-    );
-  }
+    }
 
-  return authAxiosInstance;
-};
+    return Promise.reject(error);
+  }
+);
 
 // 로그아웃 또는 필요 시 인스턴스 제거
 export const clearAuthAxiosInstance = () => {
-  authAxiosInstance = null;
   clearAuthData();
 };
 
@@ -109,3 +99,5 @@ const clearAuthData = () => {
   localStorage.removeItem("refreshToken");
   localStorage.removeItem("userStore");
 };
+
+export default authAxiosInstance;

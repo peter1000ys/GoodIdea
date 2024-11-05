@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
-import Header from "../components/common/Header";
 import DefaultButton from "../components/common/DefaultButton";
+import Typewriter from "../components/main/Typewriter";
 
 function MainPage() {
   const REDIRECT_URI = "https://oracle1.mypjt.xyz/api/v1/auth/callback";
@@ -14,17 +14,17 @@ function MainPage() {
       <Helmet>
         <title>메인페이지</title>
       </Helmet>
-      <div className="h-full w-full flex flex-col">
-        <Header content="관통 프로젝트" />
+      <div className="h-full w-full flex flex-col ">
         <div className="min-h-screen bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100">
           {/* Header Section */}
-          <header className="py-10 text-center">
+          <header className="py-10 flex flex-col items-center">
             <h1 className="text-5xl font-bold text-gray-800">
               환영합니다! SSAFY PROJECT!
             </h1>
             <p className="mt-4 text-lg text-gray-600">
               기획을 쉽게 만들 수 있어요!
             </p>
+            <Typewriter />
           </header>
 
           {/* Hero Section */}

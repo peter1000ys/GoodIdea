@@ -1,105 +1,137 @@
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import Header from "../../components/common/Header";
+import * as Y from "yjs";
+import { HocuspocusProvider, TiptapCollabProvider } from "@hocuspocus/provider";
 
-// 깃랩 정보 등은 api요청으로 받아와서 작성
+// Yjs 문서 생성 및 필드 초기화
+const doc = new Y.Doc();
+const fields = {
+  teamGitlabCode: doc.getText("teamGitlabCode"),
+  teamName: doc.getText("teamName"),
+  teamMembers: doc.getText("teamMembers"),
+  projectName: doc.getText("projectName"),
+  figmaLink: doc.getText("figmaLink"),
+  jiraLink: doc.getText("jiraLink"),
+  gitlabLink: doc.getText("gitlabLink"),
+  teamInfo: doc.getText("teamInfo"),
+};
+
+// 초기값 설정
+Object.keys(fields).forEach((key) => {
+  if (fields[key].toString() === "") {
+    fields[key].insert(0, ""); // 필요시 초기값 설정
+  }
+});
 
 function ProjectEssentialPage() {
+  const [fieldValues, setFieldValues] = useState({
+    teamGitlabCode: "",
+    teamName: "",
+    teamMembers: "",
+    projectName: "",
+    figmaLink: "",
+    jiraLink: "",
+    gitlabLink: "",
+    teamInfo: "",
+  });
+
+  useEffect(() => {
+    const provider = new HocuspocusProvider({
+      url: "ws://192.168.100.129:3001", // WebSocket URL
+      document: doc,
+      // appId: "7j9y6m10",
+      name: "projectEssential_private", // 문서의 고유 식별자
+      token: "notoken", // JWT 토큰 (필요에 따라 설정)
+      onSynced: () => {
+        console.log("Synced with server");
+      },
+    });
+
+    // Yjs 문서의 변경 사항을 React 상태와 동기화
+    const updateFieldValues = () => {
+      console.log("updateFieldValues called");
+      const newFieldValues = {
+        teamGitlabCode: fields.teamGitlabCode.toString(),
+        teamName: fields.teamName.toString(),
+        teamMembers: fields.teamMembers.toString(),
+        projectName: fields.projectName.toString(),
+        figmaLink: fields.figmaLink.toString(),
+        jiraLink: fields.jiraLink.toString(),
+        gitlabLink: fields.gitlabLink.toString(),
+        teamInfo: fields.teamInfo.toString(),
+      };
+
+      // 변경이 있을 때만 상태 업데이트
+      if (JSON.stringify(newFieldValues) !== JSON.stringify(fieldValues)) {
+        setFieldValues(newFieldValues);
+      }
+    };
+
+    // Yjs 문서 변경 시 updateFieldValues 실행
+    doc.on("update", updateFieldValues);
+
+    return () => {
+      provider.destroy();
+      doc.off("update", updateFieldValues);
+    };
+  }, [fieldValues]);
+
+  // 입력 필드 변경 시 Yjs 문서 업데이트
+  const handleChange = (field, value) => {
+    fields[field].delete(0, fields[field].length); // 이전 텍스트 제거
+    fields[field].insert(0, value); // 새 텍스트 삽입
+  };
+
   return (
     <>
       <Helmet>
         <title>프로젝트 기본 정보 페이지</title>
       </Helmet>
       <div className="h-full w-full flex flex-col">
-        <Header content="관통프로젝트" />
-
-        {/* 전체 배경 */}
         <div className="flex-1 flex justify-center items-center bg-gray-100 py-8">
-          {/* 메인 컨테이너 */}
           <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
-            {/* 상단 헤더 */}
             <div className="bg-blue-900 text-white py-6 px-8 rounded-t-lg">
               <h1 className="text-2xl font-bold">프로젝트 필수 정보</h1>
               <p className="text-sm text-blue-200">Team Information & Links</p>
             </div>
-
-            {/* Registration Form */}
             <div className="p-8">
               <h2 className="text-xl font-bold text-blue-800 mb-4">
                 REGISTRATION FORM
               </h2>
-
-              {/* 그리드 레이아웃 */}
               <div className="grid grid-cols-3 gap-4 mb-6">
-                {/* Row 1 */}
-                <div className="col-span-1 flex items-center">팀 깃랩 코드</div>
-                <div className="col-span-2">
-                  <input
-                    className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
-                    placeholder="깃랩 코드"
-                  />
-                </div>
-
-                {/* Row 2 */}
-                <div className="col-span-1 flex items-center">팀 명</div>
-                <div className="col-span-2">
-                  <input
-                    className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
-                    placeholder="팀 명 입력"
-                  />
-                </div>
-
-                {/* Row 3 */}
-                <div className="col-span-1 flex items-center">팀 구성원</div>
-                <div className="col-span-2">
-                  <input
-                    className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
-                    placeholder="팀 구성원"
-                  />
-                </div>
-
-                {/* Row 4 */}
-                <div className="col-span-1 flex items-center">프로젝트 명</div>
-                <div className="col-span-2">
-                  <input
-                    className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
-                    placeholder="프로젝트 명"
-                  />
-                </div>
-
-                {/* Row 5 */}
-                <div className="col-span-1 flex items-center">피그마 링크</div>
-                <div className="col-span-2">
-                  <input
-                    className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
-                    placeholder="피그마 링크"
-                  />
-                </div>
-
-                {/* Row 6 */}
-                <div className="col-span-1 flex items-center">지라 링크</div>
-                <div className="col-span-2">
-                  <input
-                    className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
-                    placeholder="지라 링크"
-                  />
-                </div>
-
-                {/* Row 7 */}
-                <div className="col-span-1 flex items-center">깃랩 링크</div>
-                <div className="col-span-2">
-                  <input
-                    className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
-                    placeholder="깃랩 링크"
-                  />
-                </div>
-
-                {/* Row 8 */}
+                {[
+                  { label: "팀 깃랩 코드", name: "teamGitlabCode" },
+                  { label: "팀 명", name: "teamName" },
+                  { label: "팀 구성원", name: "teamMembers" },
+                  { label: "프로젝트 명", name: "projectName" },
+                  { label: "피그마 링크", name: "figmaLink" },
+                  { label: "지라 링크", name: "jiraLink" },
+                  { label: "깃랩 링크", name: "gitlabLink" },
+                ].map((field) => (
+                  <React.Fragment key={field.name}>
+                    <div className="col-span-1 flex items-center">
+                      {field.label}
+                    </div>
+                    <div className="col-span-2">
+                      <input
+                        className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
+                        // placeholder={field.label}
+                        value={fieldValues[field.name]}
+                        onChange={(e) =>
+                          handleChange(field.name, e.target.value)
+                        }
+                      />
+                    </div>
+                  </React.Fragment>
+                ))}
                 <div className="col-span-1 flex items-center">팀원 정보</div>
                 <div className="col-span-2">
                   <textarea
                     className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md resize-none"
                     placeholder="팀원 정보 및 관심사 등을 입력해주세요!"
-                    rows="4"
+                    rows={4}
+                    value={fieldValues.teamInfo}
+                    onChange={(e) => handleChange("teamInfo", e.target.value)}
                   ></textarea>
                 </div>
               </div>

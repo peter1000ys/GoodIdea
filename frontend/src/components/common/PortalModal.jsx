@@ -11,7 +11,7 @@ const PortalModal = ({ isOpen, onClose, children, className }) => {
       >
         <button
           onClick={onClose}
-          className="absolute text-2xl top-3 right-3 text-gray-500 hover:text-gray-700"
+          className="absolute text-2xl top-3 right-3 text-gray-500 hover:text-gray-700 z-50"
         >
           <big>&times;</big>
         </button>

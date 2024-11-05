@@ -12,15 +12,16 @@ const EnhancedModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
         className="absolute inset-0 bg-black bg-opacity-50"
         onClick={onClose}
       />
-      <div className="absolute inset-6 bg-gray-100 rounded-xl shadow-2xl overflow-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+      <div className="relative w-full max-w-3xl max-h-[90vh] bg-gray-100 rounded-xl shadow-2xl flex flex-col overflow-hidden">
+        {/* 고정된 모달 헤더 */}
+        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center z-10">
           <h2 className="text-xl font-semibold">
-            API 명세 수정 - {selectedSpec?.uri}
+            API 명세 수정 - {selectedSpec?.feature}
           </h2>
           <button
             onClick={onClose}
@@ -42,8 +43,9 @@ const EnhancedModal = ({
           </button>
         </div>
 
-        <div className="p-6">
-          <div className="mb-6">
+        {/* 스크롤 가능한 모달 바디 */}
+        <div className="flex-1 p-6 overflow-y-auto space-y-6">
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               URI
             </label>
@@ -52,7 +54,7 @@ const EnhancedModal = ({
               name="uri"
               value={formData.uri || ""}
               onChange={onChange}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -62,42 +64,40 @@ const EnhancedModal = ({
             value={formData.requestHeader}
             onChange={onChange}
           />
-
           <MarkdownEditor
             label="Request Params"
             name="requestParams"
             value={formData.requestParams}
             onChange={onChange}
           />
-
           <MarkdownEditor
             label="Request Body"
             name="requestBody"
             value={formData.requestBody}
             onChange={onChange}
           />
-
           <MarkdownEditor
             label="Response Body"
             name="responseBody"
             value={formData.responseBody}
             onChange={onChange}
           />
+        </div>
 
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex justify-end gap-2">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
-            >
-              취소
-            </button>
-            <button
-              onClick={onSubmit}
-              className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
-            >
-              저장
-            </button>
-          </div>
+        {/* 고정된 모달 푸터 */}
+        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300"
+          >
+            취소
+          </button>
+          <button
+            onClick={onSubmit}
+            className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+          >
+            저장
+          </button>
         </div>
       </div>
     </div>
