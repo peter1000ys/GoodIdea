@@ -1,6 +1,7 @@
 package com.ssafy.goodIdea.comment.entity;
 
-import java.time.LocalDateTime;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.ssafy.goodIdea.common.entity.BaseTime;
 import com.ssafy.goodIdea.idea.entity.Idea;
@@ -34,9 +35,6 @@ public class Comment extends BaseTime {
     @Column(name = "rating", nullable = false)
     private Float rating; // 별점
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
     @Builder
     public Comment(Idea idea, User user, String commentContent, float rating) {
         if (rating < 0 || rating > 5) {
@@ -47,5 +45,13 @@ public class Comment extends BaseTime {
         this.commentContent = commentContent;
         this.rating = rating;
         this.createdAt = LocalDateTime.now();
+    }
+
+    /*
+     * 댓글 수정
+     */
+    public void updateComment(String commentContent, float rating) {
+        this.commentContent = commentContent;
+        this.rating = rating;
     }
 }

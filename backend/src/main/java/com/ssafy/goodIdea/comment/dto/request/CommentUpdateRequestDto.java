@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CommentCreateRequestDto {
+public class CommentUpdateRequestDto {
     private String commentContent;
-    private Double rating;
+    private Float rating;
 }

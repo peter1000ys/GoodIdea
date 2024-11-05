@@ -20,6 +20,7 @@ public enum MsgType {
     IDEA_COMMENT_UPDATE_SUCCESS("아이디어 댓글 수정 성공"), 
     IDEA_COMMENT_DELETE_SUCCESS("아이디어 댓글 삭제 성공"),
     IDEA_SELECT_SUCCESS("아이디어 채택 성공"),
+    IDEA_UNSELECT_SUCCESS("아이디어 채택 취소 성공"),
     IDEA_UPDATE_SUCCESS("아이디어 수정 성공"),
     IDEA_DELETE_SUCCESS("아이디어 삭제 성공"),
 //    idea_planner

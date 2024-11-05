@@ -3,6 +3,8 @@ package com.ssafy.goodIdea.idea.service;
 import java.util.stream.Collectors;
 
 import java.util.List;
+import java.util.Objects;
+
 import org.springframework.stereotype.Service;
 
 import com.ssafy.goodIdea.comment.entity.Comment;
@@ -10,14 +12,17 @@ import com.ssafy.goodIdea.comment.repository.CommentRepository;
 import com.ssafy.goodIdea.common.exception.BaseException;
 import com.ssafy.goodIdea.common.exception.ErrorType;
 import com.ssafy.goodIdea.idea.dto.request.IdeaCreateRequestDto;
+import com.ssafy.goodIdea.idea.dto.request.IdeaUpdateRequestDto;
 import com.ssafy.goodIdea.idea.dto.response.IdeaCreateResponseDto;
 import com.ssafy.goodIdea.idea.dto.response.IdeaDetailResponseDto;
 import com.ssafy.goodIdea.idea.dto.response.IdeaListResponseDto;
+import com.ssafy.goodIdea.idea.dto.response.IdeaUpdateResponseDto;
 import com.ssafy.goodIdea.idea.entity.Idea;
 import com.ssafy.goodIdea.idea.repository.IdeaRepository;
 import com.ssafy.goodIdea.project.entity.Project;
 import com.ssafy.goodIdea.project.repository.ProjectRepository;
 import com.ssafy.goodIdea.user.entity.User;
+import com.ssafy.goodIdea.userProject.repository.UserProjectRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +35,8 @@ public class IdeaService {
     private final IdeaRepository ideaRepository;
     private final ProjectRepository projectRepository;
     private final CommentRepository commentRepository;
+    private final UserProjectRepository userProjectRepository;
+    
     /*
      * 아이디어 생성
      * return created idea
@@ -50,7 +57,7 @@ public class IdeaService {
         idea = ideaRepository.save(idea);
 
         return IdeaCreateResponseDto.builder()
-            .id(idea.getId())
+            .ideaId(idea.getId())
             .serviceName(idea.getServiceName())
             .background(idea.getBackground())
             .introduction(idea.getIntroduction()) 
@@ -72,6 +79,7 @@ public class IdeaService {
                 .ideaId(idea.getId())
                 .serviceName(idea.getServiceName())
                 .introduction(idea.getIntroduction())
+                .averageRating(idea.getAverageRating())
                 .build())
             .collect(Collectors.toList());
     }
@@ -113,8 +121,131 @@ public class IdeaService {
             .introduction(idea.getIntroduction())
             .target(idea.getTarget())
             .expectedEffect(idea.getExpectedEffect())
-            .commentsRating(avgRating)
+            .averageRating(avgRating)
             .comments(commentDtos)
             .build();
+    }
+
+    /*
+     * 아이디어 채택
+     * @param user 현재 로그인한 사용자 정보
+     * @param ideaId 채택할 아이디어 ID
+     */
+    public void selectIdea(User user, Long ideaId) {
+        Idea idea = ideaRepository.findById(ideaId)
+            .orElseThrow(() -> new BaseException(ErrorType.IDEA_NOT_FOUND));
+
+        Project project = projectRepository.findById(idea.getProject().getId())
+            .orElseThrow(() -> new BaseException(ErrorType.PROJECT_NOT_FOUND));
+
+        // 팀장 권한 체크
+        if (!Objects.equals(project.getLeader(), user.getId())) {
+            throw new BaseException(ErrorType.NOT_TEAM_LEADER);
+        }
+        // 메인 아이디어 설정
+        project.setMainIdeaId(ideaId);
+        projectRepository.save(project);
+    }
+
+    /*
+     * 아이디어 채택 취소
+     * @param user 현재 로그인한 사용자 정보
+     * @param ideaId 채택 취소할 아이디어 ID
+     */
+    public void unselectIdea(User user, Long ideaId) {
+
+        // 메인 아이디어 취소
+        Project project = projectRepository.findById(ideaId)
+            .orElseThrow(() -> new BaseException(ErrorType.PROJECT_NOT_FOUND));
+
+        // 팀장 권한 체크
+        if (!Objects.equals(project.getLeader(), user.getId())) {
+            throw new BaseException(ErrorType.NOT_TEAM_LEADER);
+        }
+
+        // 아이디어가 비어있는지 확인
+        if (project.getMainIdeaId() == null) {
+            throw new BaseException(ErrorType.IDEA_NOT_EMPTY);
+        }
+        
+        // 메인 아이디어 취소
+        project.setMainIdeaId(null);
+        projectRepository.save(project);
+    }
+
+    /*
+     * 아이디어 수정
+     * return updated idea
+     * @param user 현재 로그인한 사용자 정보
+     * @param ideaId 수정할 아이디어 ID
+     * @param dto 수정할 아이디어 정보
+     */
+    public IdeaUpdateResponseDto updateIdea(User user, Long ideaId, IdeaUpdateRequestDto dto) {
+
+        Idea idea = ideaRepository.findById(ideaId)
+            .orElseThrow(() -> new BaseException(ErrorType.IDEA_NOT_FOUND));
+
+        // 프로젝트 ID 가져오기
+        Long projectId = idea.getProject().getId();
+
+        // 해당 프로젝트의 팀원이 아닐 경우 오류 발생
+        checkUserInProject(user, projectId);
+
+        // 수정 후 아이디어 정보 저장
+        IdeaUpdateResponseDto responseDto = IdeaUpdateResponseDto.builder()
+                .ideaId(ideaId)
+                .serviceName(dto.getServiceName())
+                .background(dto.getBackground())
+                .introduction(dto.getIntroduction())
+                .target(dto.getTarget())
+                .expectedEffect(dto.getExpectedEffect())
+                .build(); 
+
+        // dto의 내용으로 아이디어 업데이트
+        idea.updateIdea(dto);
+
+        // 저장
+        ideaRepository.save(idea);
+
+        // ResponseDto 생성 및 반환
+        return responseDto;
+    }
+
+    /*
+     * 아이디어 삭제
+     * return deleted idea
+     * @param user 현재 로그인한 사용자 정보
+     * @param ideaId 삭제할 아이디어 ID
+     */
+    public void deleteIdea(User user, Long ideaId) {
+        Idea idea = ideaRepository.findById(ideaId)
+            .orElseThrow(() -> new BaseException(ErrorType.IDEA_NOT_FOUND));
+        
+        // 프로젝트 ID 가져오기
+        Long projectId = idea.getProject().getId();
+
+        // 해당 프로젝트의 팀원이 아닐 경우 오류 발생
+        checkUserInProject(user, projectId);
+
+        // 1. 먼저 연관된 댓글들을 삭제
+        commentRepository.deleteByIdeaId(ideaId);
+
+        // 2. 프로젝트의 메인 아이디어였다면 null로 설정
+        Project project = idea.getProject();
+        if (project.getMainIdeaId() != null && project.getMainIdeaId().equals(ideaId)) {
+            project.setMainIdeaId(null);
+            projectRepository.save(project);
+        }
+
+        // 3. 마지막으로 아이디어 삭제
+        ideaRepository.delete(idea);
+    }
+
+    // 해당 프로젝트의 팀원이 아닐 경우 오류 발생 메서드
+    public void checkUserInProject(User user, Long projectId) {
+        boolean isUserInProject = userProjectRepository.existsByUserIdAndProjectId(user.getId(), projectId);
+        if (!isUserInProject) {
+            throw new BaseException(ErrorType.NO_PERMISSION);
+        }
     }
 }
