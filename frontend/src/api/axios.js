@@ -44,7 +44,7 @@ export const createProject = async (projectData) => {
     const response = await axios.post(
       "https://oracle1.mypjt.xyz/api/v1/project/create",
       {
-        projectData,
+        body: projectData,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
