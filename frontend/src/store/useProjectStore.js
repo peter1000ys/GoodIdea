@@ -4,17 +4,17 @@ export const useProjectStore = create((set) => ({
   projects: [],
   nextProjectId: 1,
   methods: [
-    "GET",
-    "POST",
-    "DELETE",
-    "PUT",
-    "PATCH",
-    "OPTIONS",
-    "CONNECT",
-    "HEAD",
-    "TRACE",
+    "get",
+    "post",
+    "delete",
+    "put",
+    "patch",
+    "options",
+    "connect",
+    "head",
+    "trace",
   ],
-  importanceLevels: ["HIGH", "MIDDLE", "LOW"],
+  importanceLevels: ["high", "middle", "low"],
   addProject: (projectData) => {
     set((state) => ({
       projects: [

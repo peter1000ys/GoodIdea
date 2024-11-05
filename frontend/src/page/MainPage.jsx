@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import DefaultButton from "../components/common/DefaultButton";
-import Typewriter from "../components/main/Typewriter.JSX";
+import Typewriter from "../components/main/Typewriter";
 
 function MainPage() {
   const REDIRECT_URI = "https://oracle1.mypjt.xyz/api/v1/auth/callback";

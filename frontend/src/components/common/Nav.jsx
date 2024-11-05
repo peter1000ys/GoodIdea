@@ -86,7 +86,7 @@ function Nav() {
                 to="project/:id"
                 className={`text-xl block w-full h-full p-2 border border-[#8F8F8F] shadow-md rounded-lg hover:bg-[#666666] select-none ${
                   activeItem === "기본 정보"
-                    ? "bg-[#666666] cursor-default"
+                    ? "bg-[#666666] cursor-default font-bold"
                     : "cursor-pointer"
                 }`}
                 onClick={() => handleItemClick("기본 정보")}
@@ -98,8 +98,8 @@ function Nav() {
             {/* 브레인 스토밍 메뉴 */}
             <li>
               <div
-                className={`text-xl flex justify-between items-center cursor-pointer border border-[#8F8F8F] hover:bg-[#666666] shadow-md select-none p-2 rounded-lg ${
-                  isBrainstormingOpen ? "bg-[#666666]" : ""
+                className={`text-xl flex justify-between items-center cursor-pointer border border-[#8F8F8F] shadow-md select-none p-2 rounded-lg ${
+                  isBrainstormingOpen ? "font-bold" : ""
                 }`}
                 onClick={toggleBrainstorming}
               >
@@ -163,8 +163,8 @@ function Nav() {
             {/* 산출물 메뉴 */}
             <li>
               <div
-                className={` text-xl flex flex-row justify-between items-center cursor-pointer border border-[#858585] shadow-md p-2 select-none rounded-lg hover:bg-[#666666] ${
-                  isResultOpen ? "bg-[#666666]" : ""
+                className={` text-xl flex flex-row justify-between items-center cursor-pointer border border-[#858585] shadow-md p-2 select-none ${
+                  isResultOpen ? "font-bold" : ""
                 }`}
                 onClick={toggleResult}
               >

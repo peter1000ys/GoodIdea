@@ -42,7 +42,7 @@ function IdeaBoardPage() {
   const coordinates = [
     // ...generateSectionCoordinates(),
     // ...generateRandomCoordinates(2),
-    { x: "0%", y: "0px", delay: 0 },
+    { x: "4%", y: "0%", delay: 0 },
     { x: "30%", y: "8%", delay: 100 },
     { x: "67%", y: "20%", delay: 200 },
     { x: "8%", y: "70%", delay: 300 },
@@ -87,7 +87,7 @@ function IdeaBoardPage() {
       <Helmet>
         <title>아이디어보드 페이지</title>
       </Helmet>
-      <div className="h-full w-full relative overflow-hidden">
+      <div className="relative h-full w-full overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(circle,_#ddd_1px,_transparent_1px)] before:bg-[length:20px_20px]">
         {/* Sticker 컴포넌트 좌표화 렌더링 */}
         {coordinates.map(({ x, y, delay }, index) => (
           <Sticker
