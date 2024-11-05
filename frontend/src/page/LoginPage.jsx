@@ -20,6 +20,8 @@ const LoginPage = () => {
         sessionStorage.setItem("refreshToken", refreshToken);
         console.log("Access Token:", accessToken);
         console.log("Refresh Token:", refreshToken);
+        localStorage.setItem("accessToken");
+        localStorage.setItem("refreshToken");
         // 인증된 axios 인스턴스 생성
         createAuthAxiosInstance();
         try {
