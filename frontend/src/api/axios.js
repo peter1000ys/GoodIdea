@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const accessToken = localStorage.removeItem("accessToken");
+const accessToken = localStorage.getItem("accessToken");
 
 export const fetchGitlabProjectList = async () => {
   try {
