@@ -14,7 +14,7 @@ const ProjectCard = ({ title, handleReader }) => {
           시작하기
         </button>
         <p className="text-center">
-          프로젝트를 시작한 인원이 팀장으로 지정됩니다
+          주의! 프로젝트를 시작한 인원이 팀장으로 지정됩니다
         </p>
       </div>
     </div>
@@ -61,7 +61,7 @@ const ReaderWritePage = ({ title, setIsCreateModalOpen }) => {
   const handleButtonClick = () => {
     console.log("프로젝트 데이터:", projectData);
     createProject(projectData);
-    setIsCreateModalOpen(true);
+    setIsCreateModalOpen(false);
   };
 
   return (
