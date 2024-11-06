@@ -44,7 +44,6 @@ public class Comment extends BaseTime {
         this.user = user;
         this.commentContent = commentContent;
         this.rating = rating;
-        this.createdAt = LocalDateTime.now();
     }
 
     /*
