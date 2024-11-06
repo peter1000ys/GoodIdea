@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import DefaultButton from "../components/common/DefaultButton";
 import Typewriter from "../components/main/Typewriter";
+import MindType from "../components/main/Mindmap";
+import ContactType from "../components/main/contact";
+import AIType from "../components/main/AI";
+import PlanType from "../components/main/plan";
+import StartType from "../components/main/Start";
 
 function MainPage() {
   const [activeSection, setActiveSection] = useState("section1");
@@ -286,21 +291,36 @@ function MainPage() {
                   </p>
                 </>
               )}
+              {section.id === "section2" && (
+                <>
+                  <ContactType />
+                </>
+              )}
+              {section.id === "section3" && (
+                <>
+                  <MindType />
+                </>
+              )}
+              {section.id === "section4" && (
+                <>
+                  <AIType />
+                </>
+              )}
+              {section.id === "section5" && (
+                <>
+                  <PlanType />
+                </>
+              )}
               {section.id === "section6" && (
                 <>
-                  <h2 className="text-2xl text-gray-800 mb-4">
-                    {section.title}
-                  </h2>
+                  <StartType />
                   <DefaultButton
                     onClick={handleGitLabLogin}
                     theme="bright"
-                    className="bg-slate-500 hover:bg-slate-300"
+                    className="bg-slate-500 hover:bg-slate-300 mt-3"
                     text="GitLab으로 로그인"
                   />
                 </>
-              )}
-              {section.id !== "section1" && section.id !== "section6" && (
-                <h2 className="text-2xl text-gray-800">{section.title}</h2>
               )}
             </PostitNote>
           </section>
