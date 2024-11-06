@@ -44,7 +44,14 @@ public class Comment extends BaseTime {
         this.user = user;
         this.commentContent = commentContent;
         this.rating = rating;
-        this.createdAt = LocalDateTime.now();
+    }
+
+    /*
+     * 댓글 수정
+     */
+    public void updateComment(String commentContent, float rating) {
+        this.commentContent = commentContent;
+        this.rating = rating;
     }
 
     /*
