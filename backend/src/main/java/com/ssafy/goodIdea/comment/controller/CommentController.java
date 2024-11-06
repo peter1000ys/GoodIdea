@@ -32,7 +32,7 @@ public class CommentController {
      * return created comment
      */
     @PostMapping("/{ideaId}/create")
-    public ApiResponse<CommentCreateResponseDto> createComment(@CurrentUser User user, @PathVariable Long ideaId, @RequestBody CommentCreateRequestDto dto) {
+    public ApiResponse<CommentCreateResponseDto> createComment(@CurrentUser User user, @PathVariable(name = "ideaId") Long ideaId, @RequestBody CommentCreateRequestDto dto) {
         return ApiResponse.ok(commentService.createComment(ideaId, user, dto));
     }
 
@@ -40,7 +40,7 @@ public class CommentController {
      * 댓글 수정
      */
     @PutMapping("/{commentId}/update")
-    public ApiResponse<CommentUpdateResponseDto> updateComment(@CurrentUser User user, @PathVariable Long commentId, @RequestBody CommentUpdateRequestDto dto) {
+    public ApiResponse<CommentUpdateResponseDto> updateComment(@CurrentUser User user, @PathVariable(name = "commentId") Long commentId, @RequestBody CommentUpdateRequestDto dto) {
         return ApiResponse.ok(commentService.updateComment(commentId, user, dto));
     }
 
@@ -48,7 +48,7 @@ public class CommentController {
      * 댓글 삭제
      */
     @DeleteMapping("/{commentId}/delete")
-    public ApiResponse<MsgType> deleteComment(@CurrentUser User user, @PathVariable Long commentId) {
+    public ApiResponse<MsgType> deleteComment(@CurrentUser User user, @PathVariable(name = "commentId") Long commentId) {
         commentService.deleteComment(commentId, user);
         return ApiResponse.ok(MsgType.IDEA_COMMENT_DELETE_SUCCESS); 
     }

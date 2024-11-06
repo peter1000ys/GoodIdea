@@ -1,8 +1,5 @@
 package com.ssafy.goodIdea.comment.entity;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import com.ssafy.goodIdea.common.entity.BaseTime;
 import com.ssafy.goodIdea.idea.entity.Idea;
 import com.ssafy.goodIdea.user.entity.User;
