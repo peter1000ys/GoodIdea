@@ -13,6 +13,7 @@ import axios from "axios";
 
 function MainPage() {
   const [activeSection, setActiveSection] = useState("section1");
+  const [isLastSection, setIsLastSection] = useState(false);
   const { setLogin } = useUserStore();
   const navigate = useNavigate();
   const REDIRECT_URI = "https://oracle1.mypjt.xyz/api/v1/auth/callback";
@@ -174,6 +175,10 @@ function MainPage() {
       const scrollPosition = window.scrollY;
       const windowHeight = window.innerHeight;
 
+      const lastSection = document.getElementById("section6");
+      const { top } = lastSection.getBoundingClientRect();
+      setIsLastSection(top <= windowHeight / 2); // 마지막 섹션에 도달하면 true 설정
+
       for (const section of sections) {
         const element = document.getElementById(section.id);
         if (element) {
@@ -236,6 +241,18 @@ function MainPage() {
       </Helmet>
 
       <div className="min-h-screen font-serif relative">
+        {/* 고정된 GitLab 로그인 버튼: 마지막 섹션에서 안 보이게 */}
+        {!isLastSection && (
+          <div className="fixed top-8 right-8 z-50 flex flex-col items-center">
+            <DefaultButton
+              onClick={handleGitLabLogin}
+              theme="bright"
+              className="bg-slate-500 hover:bg-slate-300 mt-3"
+              text="GitLab으로 로그인"
+            />
+          </div>
+        )}
+
         <nav className="fixed h-full p-8 flex flex-col justify-end z-50">
           <ul className="mb-24 ml-8">
             {sections.map((section) => (
@@ -291,6 +308,17 @@ function MainPage() {
             className={`h-screen text-4xl font-thin ${section.bgColor} text-white
               flex flex-col justify-center items-center gap-8 relative`}
           >
+            <img
+              src="/bonobono.png"
+              alt="bonobono"
+              className="absolute z-50"
+              style={{
+                top: "81%",
+                left: "75.5%",
+                width: "100px",
+                height: "100px",
+              }}
+            />
             {/* 배경 포스트잇 추가 */}
             {fixedPositions.map((position, index) => (
               <div
@@ -356,12 +384,15 @@ function MainPage() {
                     text="GitLab으로 로그인"
                   />
                   {/* 테스트 드라이버용 버튼 ------------------- 시작 ------------------- */}
-                  <DefaultButton
-                    onClick={handleDevLoginForJUHO}
-                    theme="bright"
-                    className="bg-slate-500 hover:bg-slate-300 mt-3"
-                    text="주호 계정으로 로그인하기"
-                  />
+
+                  {import.meta.env.VITE_APP_MODE === "DEV" && (
+                    <DefaultButton
+                      onClick={handleDevLoginForJUHO}
+                      theme="bright"
+                      className="bg-slate-500 hover:bg-slate-300 mt-3"
+                      text="주호 계정으로 로그인하기"
+                    />
+                  )}
                   {/* 테스트 드라이버용 버튼 ------------------- 끝 ------------------- */}
                 </div>
               )}
