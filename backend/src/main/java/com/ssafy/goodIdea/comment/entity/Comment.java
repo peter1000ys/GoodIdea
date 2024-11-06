@@ -61,5 +61,4 @@ public class Comment extends BaseTime {
         this.commentContent = commentContent;
         this.rating = rating;
     }
-
 }
