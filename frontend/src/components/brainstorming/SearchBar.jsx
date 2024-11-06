@@ -7,6 +7,7 @@ function SearchBar({
   handleInfoClick,
 }) {
   const [isSearchAnimation, setIsSearchAnimation] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const search = () => {
     handleSearch(searchKeyword);
@@ -17,17 +18,28 @@ function SearchBar({
     <>
       {/* 검색창 */}
       <div className="flex justify-center my-8">
-        <input
-          id="searchInput"
-          type="text"
-          onKeyDown={(e) => (e.key === "Enter" ? search(e.target.value) : null)}
-          onChange={(e) => setSearchKeyword(e.target.value)}
-          value={searchKeyword}
-          autoComplete="off"
-          placeholder="여기에 검색어를 입력하세요"
-          className="w-full max-w-2xl p-3 pl-5 border border-gray-300 rounded-full shadow-sm focus:outline-none"
-        />
-
+        <div
+          className={`w-full max-w-2xl  transition-all rounded-full p-1 ${
+            isFocused
+              ? "bg-gradient-to-r from-red-500 via-blue-500 to-pink-500 animate-rotation"
+              : "bg-gray-700"
+          }`}
+        >
+          <input
+            id="searchInput"
+            type="text"
+            onKeyDown={(e) =>
+              e.key === "Enter" ? search(e.target.value) : null
+            }
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            value={searchKeyword}
+            autoComplete="off"
+            placeholder="여기에 검색어를 입력하세요"
+            className="w-full max-w-2xl p-3 pl-5  rounded-3xl border border-gray-500 focus:outline-none"
+          />
+        </div>
         {/* 돋보기 아이콘 */}
         <div
           onClick={search}
@@ -66,6 +78,21 @@ function SearchBar({
           </svg>
         </div>
       </div>
+      <style>
+        {`@keyframes rotation {
+    0% {
+      background-position-x: 0;
+    }
+    100% {
+      background-position-x: 1000px;
+    }
+  }
+
+  .animate-rotation {
+    animation: rotation 2s linear infinite;
+  }
+`}
+      </style>
     </>
   );
 }
