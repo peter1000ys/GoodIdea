@@ -15,43 +15,93 @@ function MainPage() {
     {
       id: "section1",
       counter: "01",
-      title: "Welcome",
-      body: "타임라인 스타일 네비게이션을 경험해보세요. 아래로 스크롤하거나 네비게이션 숫자를 클릭해보세요.",
+      title: "싸피인을 위한 올인원 기획 플랫폼 서비스",
+      body: (
+        <>
+          이곳에서 <span className="text-blue-600 font-extrabold">싸피인</span>
+          을 위한 최적의{" "}
+          <span className="text-yellow-300 font-extrabold">기획</span> 경험을
+          만나보세요.
+        </>
+      ),
       bgColor: "bg-gray-900",
     },
     {
       id: "section2",
       counter: "02",
-      title: "Get Started",
-      body: "GitLab으로 로그인하고 여정을 시작하세요.",
+      title: "contact",
+      body: "궁금한 점이 있거나 문의하고 싶다면 언제든지 연락해주세요. 여러분의 의견을 듣고 싶습니다.",
       bgColor: "bg-red-500",
     },
     {
       id: "section3",
       counter: "03",
-      title: "Features",
-      body: "우리가 제공하는 기능을 확인해보세요.",
+      title: "마인드맵 및 기획 도구",
+      body: (
+        <>
+          <span className="text-red-300 font-extrabold">마인드맵</span>과 이전
+          기수의
+          <span className="text-yellow-300 font-extrabold">레퍼런스</span>를
+          통해 창의적인 아이디어를 쉽게 도출할 수 있습니다. 다양한 기획 도구를
+          경험해보세요.
+        </>
+      ),
       bgColor: "bg-blue-500",
     },
     {
       id: "section4",
       counter: "04",
-      title: "Services",
-      body: "종합적인 서비스를 탐색해보세요.",
+      title: "AI 기반 기획서 작성",
+      body: (
+        <>
+          <span className="text-yellow-300 font-extrabold">AI</span>가 자동으로
+          기획서를 작성해줍니다. 아이디어가 떠오르지 않을 때{" "}
+          <span className="text-yellow-300 font-extrabold">AI</span>의 도움을
+          받아보세요.
+          <span className="text-red-500 font-extrabold">빠르고</span>{" "}
+          <span className="text-blue-500 font-extrabold">간편</span>하게 기획을
+          시작할 수 있습니다
+        </>
+      ),
       bgColor: "bg-orange-500",
     },
     {
       id: "section5",
       counter: "05",
-      title: "About Us",
-      body: "팀과 목표에 대해 더 알아보세요.",
+      title: "기획 산출물 작성 및 공동 편집",
+      body: (
+        <>
+          <span className="text-amber-400 font-extrabold">요구사항 명세서</span>
+          , <span className="text-sky-200 font-extrabold">API 명세서</span>,
+          <span className="text-blue-600 font-extrabold">FLOW CHART</span>,{" "}
+          <span className="text-amber-800 font-extrabold">ERD</span>등 다양한
+          산출물을 작성할 수 있습니다.
+          <span className="text-red-600 font-extrabold">
+            CRDT
+          </span> 기반으로{" "}
+          <span className="text-emerald-800 font-extrabold">공동 편집</span>과
+          <span className="text-emerald-800 font-extrabold">커서 공유</span>를
+          통해 팀원들과{" "}
+          <span className="text-red-600 font-extrabold">실시간 작업</span>을 할
+          수 있습니다.
+        </>
+      ),
       bgColor: "bg-purple-500",
     },
     {
       id: "section6",
       counter: "06",
-      title: "Contact",
-      body: "연락해 주세요.",
+      title: "GitLab 연동으로 간편한 시작",
+      body: (
+        <>
+          <span className="text-blue-600 font-extrabold">SSAFY</span>{" "}
+          <span className="text-orange-600 font-extrabold">GitLab</span>과
+          연동하여 프로젝트 정보를 손쉽게 가져오세요.{" "}
+          <span className="text-orange-600 font-extrabold">GitLab</span>
+          계정으로 로그인하고 플랫폼 기능을 사용해서 프로젝트 기획을
+          시작해보세요.
+        </>
+      ),
       bgColor: "bg-emerald-500",
     },
   ];
@@ -98,7 +148,7 @@ function MainPage() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [sections]);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -169,30 +219,25 @@ function MainPage() {
                 >
                   <span
                     className={`transition-all duration-150
-                    ${activeSection === section.id ? "text-5xl" : "text-2xl"}`}
+                    ${activeSection === section.id ? "text-5xl" : "text-xl"}`}
                   >
                     {section.counter}
                   </span>
-                  <h3
-                    className={`text-3xl font-light w-[300px] transition-all duration-300
-                    ${
+
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${
                       activeSection === section.id
-                        ? "h-10 opacity-100"
-                        : "h-0 opacity-0 overflow-hidden"
+                        ? "max-h-60 mt-2 opacity-100"
+                        : "max-h-0 opacity-0"
                     }`}
                   >
-                    {section.title}
-                  </h3>
-                  <p
-                    className={`text-lg font-thin w-[300px] transition-all duration-300
-                    ${
-                      activeSection === section.id
-                        ? "h-24 opacity-100"
-                        : "h-0 opacity-0 overflow-hidden"
-                    }`}
-                  >
-                    {section.body}
-                  </p>
+                    <h3 className="text-3xl font-light w-[300px] mb-2">
+                      {section.title}
+                    </h3>
+                    <p className="text-md font-thin w-[300px]">
+                      {section.body}
+                    </p>
+                  </div>
                 </button>
               </li>
             ))}
@@ -241,7 +286,7 @@ function MainPage() {
                   </p>
                 </>
               )}
-              {section.id === "section2" && (
+              {section.id === "section6" && (
                 <>
                   <h2 className="text-2xl text-gray-800 mb-4">
                     {section.title}
@@ -254,7 +299,7 @@ function MainPage() {
                   />
                 </>
               )}
-              {section.id !== "section1" && section.id !== "section2" && (
+              {section.id !== "section1" && section.id !== "section6" && (
                 <h2 className="text-2xl text-gray-800">{section.title}</h2>
               )}
             </PostitNote>
