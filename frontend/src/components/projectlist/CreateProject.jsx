@@ -21,7 +21,7 @@ const ProjectCard = ({ title, handleReader }) => {
   );
 };
 
-const ReaderWritePage = ({ title, setIsCreateModalOpen }) => {
+const ReaderWritePage = ({ title }) => {
   const [gitlabProjectList, setGitlabProjectList] = useState([]);
   const [projectData, setProjectData] = useState({
     projectId: "", // GITLAB Respository 입력 값을 저장할 필드
@@ -50,7 +50,6 @@ const ReaderWritePage = ({ title, setIsCreateModalOpen }) => {
   // select 요소 변경 시 선택된 project의 id를 projectId에 할당
   const handleSelectChange = (e) => {
     const selectedProjectId = e.target.value;
-    console.log("선택된 프로젝트 ID:", selectedProjectId);
     setProjectData((prevData) => ({
       ...prevData,
       projectId: Number(selectedProjectId),
@@ -58,10 +57,14 @@ const ReaderWritePage = ({ title, setIsCreateModalOpen }) => {
   };
 
   // 프로젝트 생성 버튼 클릭 시 호출되는 함수
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     console.log("프로젝트 데이터:", projectData);
-    createProject(projectData);
-    setIsCreateModalOpen(false);
+    const isCreate = await createProject(projectData);
+    if (isCreate) {
+      window.location.reload();
+    } else {
+      window.alert("프로젝트 생성에 실패했습니다.");
+    }
   };
 
   return (
@@ -117,7 +120,7 @@ const ReaderWritePage = ({ title, setIsCreateModalOpen }) => {
   );
 };
 
-const CreateProject = ({ setIsCreateModalOpen }) => {
+const CreateProject = () => {
   const [page, setPage] = useState("project");
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
@@ -162,10 +165,7 @@ const CreateProject = ({ setIsCreateModalOpen }) => {
             isAnimating ? "opacity-0 blur-sm" : "opacity-100 blur-0"
           }`}
         >
-          <ReaderWritePage
-            title={selectedTitle}
-            setIsCreateModalOpen={setIsCreateModalOpen}
-          />
+          <ReaderWritePage title={selectedTitle} />
         </div>
       )}
     </div>

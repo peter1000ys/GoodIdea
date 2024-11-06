@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import DefaultButton from "../components/common/DefaultButton";
@@ -7,14 +8,48 @@ import ContactType from "../components/main/Contact";
 import AIType from "../components/main/AI";
 import PlanType from "../components/main/Plan";
 import StartType from "../components/main/Start";
+import { useUserStore } from "../store/useUserStore";
+import axios from "axios";
 
 function MainPage() {
   const [activeSection, setActiveSection] = useState("section1");
+  const { setLogin } = useUserStore();
+  const navigate = useNavigate();
   const REDIRECT_URI = "https://oracle1.mypjt.xyz/api/v1/auth/callback";
 
   const handleGitLabLogin = () => {
     window.location.href = `https://lab.ssafy.com/oauth/authorize?client_id=423f3efe4f264ff88416dc5ad049498edfaeaf5a68dcdb835ee4ce5b0bf48f32&redirect_uri=${REDIRECT_URI}&response_type=code&scope=read_user%20api&state=random_state_string`;
   };
+
+  // 테스트 드라이버용 함수 ----------------- 시작 -----------------
+  const handleDevLoginForJUHO = async () => {
+    localStorage.setItem("accessToken", import.meta.env.VITE_JUHO_ACCESSTOKEN);
+    localStorage.setItem(
+      "refreshToken",
+      import.meta.env.VITE_JUHO_REFRESHTOKEN
+    );
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      // 프로필 정보 요청
+      const profileResponse = await axios.get(
+        `https://oracle1.mypjt.xyz/api/v1/user/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("정보:", profileResponse.data.data);
+      const userInfo = profileResponse.data.data;
+      setLogin(userInfo); // userInfo 저장
+
+      // 메인 페이지로 리디렉트
+      navigate("/projectlist");
+    } catch (error) {
+      console.error("프로필 정보 가져오기 실패:", error);
+    }
+  };
+  // 테스트 드라이버용 함수 ----------------- 끝 -----------------
 
   const sections = [
     {
@@ -312,7 +347,7 @@ function MainPage() {
                 </>
               )}
               {section.id === "section6" && (
-                <>
+                <div className="flex flex-col">
                   <StartType />
                   <DefaultButton
                     onClick={handleGitLabLogin}
@@ -320,7 +355,15 @@ function MainPage() {
                     className="bg-slate-500 hover:bg-slate-300 mt-3"
                     text="GitLab으로 로그인"
                   />
-                </>
+                  {/* 테스트 드라이버용 버튼 ------------------- 시작 ------------------- */}
+                  <DefaultButton
+                    onClick={handleDevLoginForJUHO}
+                    theme="bright"
+                    className="bg-slate-500 hover:bg-slate-300 mt-3"
+                    text="주호 계정으로 로그인하기"
+                  />
+                  {/* 테스트 드라이버용 버튼 ------------------- 끝 ------------------- */}
+                </div>
               )}
             </PostitNote>
           </section>

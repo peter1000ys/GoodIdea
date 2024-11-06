@@ -146,7 +146,7 @@ function ProjectEssentialPage() {
             <DefaultButton
               onClick={() => {
                 deleteProject(projectId);
-                navigate("/");
+                navigate("/projectlist");
               }}
               theme="bright"
               text={"프로젝트 삭제"}

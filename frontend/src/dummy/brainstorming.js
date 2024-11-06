@@ -71,3 +71,12 @@ export const mindMapColorData = {
   lightblue: "#5DADE2",
   turquoise: "#1ABC9C",
 };
+export const colorName = [
+  // "center",
+  "blue",
+  "yellow",
+  "coral",
+  "green",
+  "lightblue",
+  "turquoise",
+];
