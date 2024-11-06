@@ -1,20 +1,34 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DefaultButton from "./DefaultButton";
 import { useUserStore } from "../../store/useUserStore";
 import { clearAuthAxiosInstance } from "../../api/http-commons/authAxios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useProjectStore } from "../../store/useProjectStore";
 
-function Header({ content }) {
+function Header() {
   const navigate = useNavigate();
+  const param = useParams();
+  const [content, setContent] = useState(null);
+  const { projects } = useProjectStore();
+
+  useEffect(() => {
+    console.log(param?.id);
+    if (param?.id) {
+      projects.map((project) => {
+        if (project.project_id === parseInt(param.id)) {
+          setContent(project.projectType);
+        }
+      });
+    } else {
+      setContent(null);
+    }
+  }, [param]);
+
   const goProjectList = () => {
     // 프로젝트 리스트로 이동
     navigate("/projectlist");
   };
   const { userInfo, setLogout } = useUserStore();
-
-  useEffect(() => {
-    console.log("userInfo", userInfo);
-  }, [userInfo]);
 
   return (
     <div className="border-b-2 border-gray-300 flex items-center justify-between p-2">
@@ -29,7 +43,7 @@ function Header({ content }) {
           {content && (
             <>
               {" / "}
-              <span className="font-bold">{content}</span>
+              <span className="font-bold">{content} 프로젝트</span>
             </>
           )}
         </div>
