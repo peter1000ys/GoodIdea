@@ -44,7 +44,7 @@ export const createProject = async (projectData) => {
   if (!response.ok) return;
 
   console.log("프로젝트 생성", response.data);
-  return response?.data?.data;
+  return true;
 };
 
 export const deleteProject = async (projectId) => {
