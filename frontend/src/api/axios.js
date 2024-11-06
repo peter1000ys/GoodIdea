@@ -49,7 +49,7 @@ export const createProject = async (projectData) => {
 
 export const deleteProject = async (projectId) => {
   const response = await helper(
-    () => authAxiosInstance.delete(`api/v1/project/${projectId}/create`),
+    () => authAxiosInstance.delete(`api/v1/project/${projectId}/delete`),
     "프로젝트 삭제"
   );
   if (!response.ok) return;
