@@ -41,7 +41,7 @@ ELASTIC_ID = os.getenv("ELASTIC_ID")
 ELASTIC_PW = os.getenv("ELASTIC_PW")
 
 # Elasticsearch 인스턴스
-es = Elasticsearch("http://localhost:9200", basic_auth=(ELASTIC_ID, ELASTIC_PW))
+es = Elasticsearch("http://elasticsearch:9200", basic_auth=(ELASTIC_ID, ELASTIC_PW))
 
 # @app.post("/api/v1/recommend")
 # async def read_root():
