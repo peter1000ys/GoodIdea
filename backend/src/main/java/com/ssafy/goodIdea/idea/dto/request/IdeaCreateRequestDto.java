@@ -3,9 +3,11 @@ package com.ssafy.goodIdea.idea.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class IdeaCreateRequestDto {
     private String serviceName; // 서비스 이름

@@ -154,8 +154,11 @@ public class IdeaService {
      */
     public void unselectIdea(User user, Long ideaId) {
 
+        Idea idea = ideaRepository.findById(ideaId)
+                .orElseThrow(() -> new BaseException(ErrorType.IDEA_NOT_FOUND));
+
         // 메인 아이디어 취소
-        Project project = projectRepository.findById(ideaId)
+        Project project = projectRepository.findById(idea.getProject().getId())
             .orElseThrow(() -> new BaseException(ErrorType.PROJECT_NOT_FOUND));
 
         // 팀장 권한 체크
