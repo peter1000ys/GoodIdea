@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useRef } from "react";
 import * as d3 from "d3";
-// import { mindMapColorData, mindMapData } from "../../dummy/brainstorming";
 
 const MindMap = ({ mindMapData, mindMapColorData, onClick }) => {
   const svgRef = useRef();
