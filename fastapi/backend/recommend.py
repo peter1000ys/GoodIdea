@@ -13,11 +13,19 @@ def generate_embedding(text):
     with torch.no_grad():
         outputs = model(**inputs)
         embedding = outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
-    return embedding
+    return embedding.tolist()
 
 # 임베딩을 Elasticsearch에 업데이트
 def update_embedding_in_es(doc_id, embeddings, es):
-    es.update(index="news-topic", id=doc_id, body={"doc": {"tokens_embedding": embeddings}})
+    es.update(
+        index="news-topic",
+        id=doc_id,
+        body={
+            "doc": {
+                "tokens_embedding": embeddings  # dense_vector와 맞는 리스트 형태
+            }
+        }
+    )
 
 # KNN 검색 로직
 def knn_search(keyword_embedding, es):
