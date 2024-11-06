@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet-async";
-import Header from "../../components/common/Header";
 import "./ProposalPage.module.css";
 
 import * as Y from "yjs";
