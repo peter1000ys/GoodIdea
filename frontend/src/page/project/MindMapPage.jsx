@@ -1,15 +1,20 @@
 import { Helmet } from "react-helmet-async";
 import MindMap from "../../components/brainstorming/MindMap";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
+  colorName,
   mindMapColorData,
   mindMapData as mmdata,
 } from "../../dummy/brainstorming";
 import AIPlanForm from "../../components/brainstorming/AIPlanForm";
 import PortalModal from "../../components/common/PortalModal";
 import DefaultButton from "../../components/common/DefaultButton";
+import { createMindMap, fetchMindMapSubKeyword } from "../../api/axios";
+import { CreateMindMapData } from "../../utils/mindMapUtils";
+import { useParams } from "react-router-dom";
 
 function MindMapPage() {
+  const params = useParams();
   const [isPlanOpen, setIsPlanOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedKeyword, setSelectedKeyword] = useState(null);
@@ -32,21 +37,45 @@ function MindMapPage() {
     }
   }, [selectedDetail]);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     const keyword = searchKeyword.trim();
     if (!keyword) {
       alert("검색어를 입력해주세요.");
       return;
+    }
+
+    // 마인드맵 작성
+    const SubKeywords = await fetchMindMapSubKeyword(keyword);
+    if (Array.isArray(SubKeywords)) {
+      const { nodes: newNodes, links: newLinks } = CreateMindMapData(
+        searchKeyword,
+        SubKeywords
+      );
+
+      // 저장
+      createMindMap({
+        projectId: params?.id,
+        mainKeyword: searchKeyword,
+        keywords: SubKeywords,
+      });
+
+      // 세팅
+      setMindMapData({
+        nodes: newNodes,
+        links: newLinks,
+      });
+    } else {
+      alert("서버 에러");
     }
     setIsSearchAnimation(true);
     setTimeout(() => setIsSearchAnimation(false), 500);
     setSelectedDetail(null);
     setSearchKeyword("");
 
-    setSelectedKeyword(keyword);
-    setMindMapData(mmdata);
+    // setSelectedKeyword(keyword);
+    // setMindMapData(mmdata);
 
-    alert("검색어가 입력되었습니다: " + keyword);
+    // alert("검색어가 입력되었습니다: " + keyword);
   };
 
   const handleDetailClick = (detail) => {
@@ -60,6 +89,17 @@ function MindMapPage() {
   const handeInfoClick = () => {
     alert("인포아이콘클릭");
   };
+
+  const handleMindMapItemClick = useCallback(
+    (itemId) => {
+      if (selectedDetail && selectedDetail.id === itemId) {
+        setSelectedDetail(null);
+        return;
+      }
+      setSelectedDetail(mindMapData.nodes.find((node) => node.id === itemId));
+    },
+    [selectedDetail, mindMapData]
+  );
 
   return (
     <>
@@ -149,7 +189,7 @@ function MindMapPage() {
               // 마인드맵 영역
               <>
                 <MindMap
-                  setSelectedKeyword={setSelectedKeyword}
+                  onClick={handleMindMapItemClick}
                   mindMapColorData={mindMapColorData}
                   mindMapData={mindMapData}
                 />

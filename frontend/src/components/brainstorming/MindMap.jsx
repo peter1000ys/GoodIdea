@@ -3,14 +3,14 @@ import { useRef } from "react";
 import * as d3 from "d3";
 // import { mindMapColorData, mindMapData } from "../../dummy/brainstorming";
 
-const MindMap = ({ setSelectedKeyword, mindMapData, mindMapColorData }) => {
+const MindMap = ({ mindMapData, mindMapColorData, onClick }) => {
   const svgRef = useRef();
   const clickHandle = useCallback(
     (event, d) => {
-      setSelectedKeyword(d.id);
+      onClick(d.id);
       console.log("Clicked node:", d);
     },
-    [setSelectedKeyword]
+    [onClick]
   );
 
   useEffect(() => {
