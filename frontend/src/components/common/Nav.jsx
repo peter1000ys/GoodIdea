@@ -163,7 +163,7 @@ function Nav() {
             {/* 산출물 메뉴 */}
             <li>
               <div
-                className={` text-xl flex flex-row justify-between items-center cursor-pointer border border-[#858585] shadow-md p-2 select-none ${
+                className={` text-xl flex flex-row justify-between items-center cursor-pointer border border-[#858585] shadow-md p-2 select-none rounded-lg ${
                   isResultOpen ? "font-bold" : ""
                 }`}
                 onClick={toggleResult}
