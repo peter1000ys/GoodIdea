@@ -9,7 +9,6 @@ from konlpy.tag import Okt
 from kafka_producer import send_to_kafka
 
 # 기본 설정
-target_date = (datetime.now() - timedelta(days=1)).strftime("%Y%m%d")
 base_url = "https://news.daum.net/breakingnews/"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
@@ -27,7 +26,7 @@ def extract_meaningful_tokens(text):
     tokens = [word for word, pos in okt.pos(text) if pos == "Noun" and word not in stopwords and len(word) > 1 and word not in ["포토", "사진", "종합", "오늘", ] ]
     return tokens
 
-def get_last_page():
+def get_last_page(target_date):
     response = requests.get(base_url, params={"page": 10000, "regDate": target_date}, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
     last_page_tag = soup.select_one("span.inner_paging em.num_page")
@@ -66,14 +65,14 @@ def get_article_content(url):
     tokens = extract_meaningful_tokens(title)
     return {"title": title, "tokens": tokens, "date":formatted_date}
 
-def crawl_daum_news():
-    last_page = get_last_page()
+def crawl_daum_news(target_date):
+    last_page = get_last_page(target_date)
     print(f"총 {last_page} 페이지까지 크롤링을 진행합니다.")
     articles = []
     
     for page in range(1, last_page + 1, max(1, last_page // 200)):
         print(f"==== {page} 페이지 크롤링 시작 ====")
-        article_links = get_article_links(page)
+        article_links = get_article_links(page, target_date)
         
         for url in article_links:
             article = get_article_content(url)
