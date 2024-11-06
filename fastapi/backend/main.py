@@ -12,7 +12,8 @@ import requests
 import json
 from utils import crawl_daum_news, handle_crawl_news_all_request
 from typing import Any, Dict, List
-# from kafka import send_message
+from recommend import update_embedding_in_es, knn_search, generate_embedding
+from elasticsearch import Elasticsearch
 
 app = FastAPI()
 origins = [
@@ -35,15 +36,22 @@ GITHUB_ACCESS_TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
 NAVER_API_ID = os.getenv("NAVER_API_ID")
 NAVER_API_SECRET = os.getenv("NAVER_API_SECRET")
 
-@app.post("/api/v1/recommend")
-async def read_root():
-    temp_list = list()
-    keywords = ["미국", "중국", "인도", "다우기술", "베트남", 
-                "북한", "멕시코", "아르헨티나", "메시", "페이커"]
-    for keyword in keywords:
-        temp_list.append(keyword)
+# ELASTIC ID, PW 설정
+ELASTIC_ID = os.getenv("ELASTIC_ID")
+ELASTIC_PW = os.getenv("ELASTIC_PW")
 
-    return {"data": temp_list}
+# Elasticsearch 인스턴스
+es = Elasticsearch("http://localhost:9200", basic_auth=(ELASTIC_ID, ELASTIC_PW))
+
+# @app.post("/api/v1/recommend")
+# async def read_root():
+#     temp_list = list()
+#     keywords = ["미국", "중국", "인도", "다우기술", "베트남", 
+#                 "북한", "멕시코", "아르헨티나", "메시", "페이커"]
+#     for keyword in keywords:
+#         temp_list.append(keyword)
+
+#     return {"data": temp_list}
 
 @app.get("/api/v1/search")
 async def search(keyword: str = Query(..., description="검색에 사용할 단일 키워드 입력")):
@@ -109,7 +117,7 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
     # JSON 형태로 결과 반환
     return response.json()
 
-@app.get("/api/v1/crawling/news")
+@app.post("/api/v1/crawling/news")
 async def start_news_crawling():
     try:
         articles = crawl_daum_news((datetime.now() - timedelta(days=1)).strftime("%Y%m%d"))
@@ -117,9 +125,45 @@ async def start_news_crawling():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-@app.get("/api/v1/crawling/news/all")
+@app.post("/api/v1/crawling/news/all")
 async def all_news_crawling():
     try:
         handle_crawl_news_all_request()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/api/v1/training")
+async def training():
+    page_size = 1000
+    page = 0
+    
+    while True:
+        # 페이지 번호에 따라 문서 가져오기
+        data = es.search(
+            index="news-topic",
+            body={"query": {"match_all": {}}},
+            size=page_size,
+            from_=page * page_size
+        )
+        
+        hits = data["hits"]["hits"]
+        if not hits:
+            break  # 더 이상 문서가 없으면 종료
+        
+        for hit in hits:
+            doc_id = hit["_id"]
+            tokens = hit["_source"]["tokens"]
+            embeddings = [generate_embedding(token) for token in tokens]
+            update_embedding_in_es(doc_id, embeddings, es)
+        
+        print(f"Page {page + 1} 이동")
+        page += 1  # 다음 페이지로 이동
+    
+    return {"result": "학습 완료"}
+
+@app.get("/api/v1/recommend")
+async def recommend(keyword: str = Query(..., description="검색어")):
+    keyword_embedding = generate_embedding(keyword)
+    recommended_tokens = knn_search(keyword_embedding, es)
+    
+    return {"sub_keywords": recommended_tokens}
