@@ -5,7 +5,6 @@ import { HocuspocusProvider, TiptapCollabProvider } from "@hocuspocus/provider";
 import DefaultButton from "../../components/common/DefaultButton";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { deleteProject } from "../../api/axios";
-
 // Yjs 문서 생성 및 필드 초기화
 const doc = new Y.Doc();
 const fields = {
@@ -19,12 +18,13 @@ const fields = {
   teamInfo: doc.getText("teamInfo"),
 };
 
-// 초기값 설정
-Object.keys(fields).forEach((key) => {
-  if (fields[key].toString() === "") {
-    fields[key].insert(0, ""); // 필요시 초기값 설정
-  }
-});
+// // 초기값 설정
+// Object.keys(fields).forEach((key) => {
+//   console.log(fields[key].toString());
+//   if (fields[key].toString() === "") {
+//     fields[key].insert(0, ""); // 필요시 초기값 설정
+//   }
+// });
 
 function ProjectEssentialPage() {
   const navigate = useNavigate();
@@ -73,6 +73,7 @@ function ProjectEssentialPage() {
         setFieldValues(newFieldValues);
       }
     };
+    doc.on("load", updateFieldValues);
 
     // Yjs 문서 변경 시 updateFieldValues 실행
     doc.on("update", updateFieldValues);
