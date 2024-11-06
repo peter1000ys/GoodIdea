@@ -134,6 +134,7 @@ async def all_news_crawling():
     
 @app.post("/api/v1/training")
 async def training():
+    print("PW: ",ELASTIC_PW)
     page_size = 1000
     page = 0
     
