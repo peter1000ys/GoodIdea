@@ -44,6 +44,17 @@ public class Comment extends BaseTime {
         this.user = user;
         this.commentContent = commentContent;
         this.rating = rating;
+<<<<<<< HEAD
+    }
+
+    /*
+     * 댓글 수정
+     */
+    public void updateComment(String commentContent, float rating) {
+        this.commentContent = commentContent;
+        this.rating = rating;
+=======
+>>>>>>> bd4a0137498d3e30b8cd1300d608ec65827e35e6
     }
 
     /*
