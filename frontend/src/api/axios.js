@@ -1,3 +1,4 @@
+import AIAxios from "./http-commons/AIAxios";
 import authAxiosInstance from "./http-commons/authAxios";
 
 /**
@@ -16,6 +17,8 @@ const helper = async (cbFunc, type = "미입력") => {
   }
 };
 
+// --------------------프로젝트 api 시작---------------------
+// gitlab의프로젝트 목록 조회
 export const fetchGitlabProjectList = async () => {
   const response = await helper(
     () => authAxiosInstance.get("api/v1/project/gitlab"),
@@ -26,6 +29,7 @@ export const fetchGitlabProjectList = async () => {
   return response?.data?.data;
 };
 
+// 우리 서비스의 자신의 프로젝트 리스트 조회
 export const fetchProjectList = async () => {
   const response = await helper(
     () => authAxiosInstance.get("api/v1/project"),
@@ -36,6 +40,7 @@ export const fetchProjectList = async () => {
   return response?.data?.data;
 };
 
+// 우리 서비스의 자신의 프로젝트 생성
 export const createProject = async (projectData) => {
   const response = await helper(
     () => authAxiosInstance.post("api/v1/project/create", projectData),
@@ -56,4 +61,44 @@ export const deleteProject = async (projectId) => {
 
   console.log("프로젝트 삭제", response.data);
   return true;
+};
+// --------------------프로젝트 api 끝---------------------
+
+// --------------------마인드맵 api 시작---------------------
+// 마인드맵 조회
+export const fetchMindMap = async (projectId) => {
+  const response = await helper(
+    () => authAxiosInstance.get(`api/v1/mindmap/${projectId}`),
+    "마인드맵 조회"
+  );
+  if (!response.ok) return;
+  // console.log(response.data);
+  return response?.data?.data;
+};
+
+// 마인드맵 생성
+export const createMindMap = async ({ projectId, mainKeyword, keywords }) => {
+  const response = await helper(
+    () =>
+      authAxiosInstance.post(`api/v1/mindmap/${projectId}/create`, {
+        mainKeyword,
+        keywords,
+      }),
+    "마인드맵 생성"
+  );
+  if (!response.ok) return;
+
+  console.log("마인드맵 생성", response.data);
+  return response?.data?.data;
+};
+
+// 마인드맵 서브 키워드 조회
+export const fetchMindMapSubKeyword = async (keyword) => {
+  const response = await helper(
+    () => AIAxios.post(`api/v1/recommend?keyword=${keyword}`),
+    "마인드맵 서브 키워드 조회"
+  );
+  if (!response.ok) return;
+  // console.log(response.data);
+  return response?.data?.data;
 };
