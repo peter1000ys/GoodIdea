@@ -32,7 +32,7 @@ public class IdeaController {
      * return created idea
      * */
     @PostMapping("/{projectId}/create")
-    public ApiResponse<IdeaCreateResponseDto> createIdea(@CurrentUser User user, @PathVariable("projectId") Long projectId, @RequestBody IdeaCreateRequestDto dto) {
+    public ApiResponse<IdeaCreateResponseDto> createIdea(@CurrentUser User user, @PathVariable(name = "projectId") Long projectId, @RequestBody IdeaCreateRequestDto dto) {
         return ApiResponse.ok(ideaService.createIdea(user, projectId, dto));
     }
 
@@ -41,7 +41,7 @@ public class IdeaController {
      * return list of ideas
      * */
     @GetMapping("/{projectId}")
-    public ApiResponse<List<IdeaListResponseDto>> getIdeas(@PathVariable("projectId") Long projectId) {
+    public ApiResponse<List<IdeaListResponseDto>> getIdeas(@PathVariable(name = "projectId") Long projectId) {
         return ApiResponse.ok(ideaService.getIdeas(projectId));
     }
 
@@ -50,7 +50,7 @@ public class IdeaController {
      * return idea detail
      * */
     @GetMapping("/{projectId}/{ideaId}")
-    public ApiResponse<IdeaDetailResponseDto> getIdeaDetail(@PathVariable("projectId") Long projectId, @PathVariable("ideaId") Long ideaId) {
+    public ApiResponse<IdeaDetailResponseDto> getIdeaDetail(@PathVariable(name = "projectId") Long projectId, @PathVariable(name = "ideaId") Long ideaId) {
         return ApiResponse.ok(ideaService.getIdeaDetail(projectId, ideaId));
     }
 
@@ -59,7 +59,7 @@ public class IdeaController {
      * return selected idea
      */
     @PutMapping("/{ideaId}/select")
-    public ApiResponse<MsgType> selectIdea(@CurrentUser User user, @PathVariable Long ideaId) {
+    public ApiResponse<MsgType> selectIdea(@CurrentUser User user, @PathVariable(name = "ideaId") Long ideaId) {
         ideaService.selectIdea(user, ideaId);
         return ApiResponse.ok(MsgType.IDEA_SELECT_SUCCESS);
     }
@@ -69,7 +69,7 @@ public class IdeaController {
      * return unselected idea
      */
     @PutMapping("/{ideaId}/unselect")
-    public ApiResponse<MsgType> unselectIdea(@CurrentUser User user,@PathVariable Long ideaId) {
+    public ApiResponse<MsgType> unselectIdea(@CurrentUser User user,@PathVariable(name = "ideaId") Long ideaId) {
         ideaService.unselectIdea(user, ideaId);
         return ApiResponse.ok(MsgType.IDEA_UNSELECT_SUCCESS);
     }
@@ -79,7 +79,7 @@ public class IdeaController {
      * return updated idea
      */
     @PutMapping("/{ideaId}/update")
-    public ApiResponse<IdeaUpdateResponseDto> updateIdea(@CurrentUser User user, @PathVariable Long ideaId, @RequestBody IdeaUpdateRequestDto dto) {
+    public ApiResponse<IdeaUpdateResponseDto> updateIdea(@CurrentUser User user, @PathVariable(name = "ideaId") Long ideaId, @RequestBody IdeaUpdateRequestDto dto) {
         return ApiResponse.ok(ideaService.updateIdea(user, ideaId, dto));
     }
 
@@ -88,7 +88,7 @@ public class IdeaController {
      * return deleted idea
      */
     @DeleteMapping("/{ideaId}/delete")
-    public ApiResponse<MsgType> deleteIdea(@CurrentUser User user, @PathVariable Long ideaId) {
+    public ApiResponse<MsgType> deleteIdea(@CurrentUser User user, @PathVariable(name = "ideaId") Long ideaId) {
         ideaService.deleteIdea(user, ideaId);
         return ApiResponse.ok(MsgType.IDEA_DELETE_SUCCESS);
     }
