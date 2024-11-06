@@ -3,9 +3,9 @@ import { Helmet } from "react-helmet-async";
 import DefaultButton from "../components/common/DefaultButton";
 import Typewriter from "../components/main/Typewriter";
 import MindType from "../components/main/Mindmap";
-import ContactType from "../components/main/contact";
+import ContactType from "../components/main/Contact";
 import AIType from "../components/main/AI";
-import PlanType from "../components/main/plan";
+import PlanType from "../components/main/Plan";
 import StartType from "../components/main/Start";
 
 function MainPage() {
