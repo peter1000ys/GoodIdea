@@ -102,3 +102,25 @@ export const fetchMindMapSubKeyword = async (keyword) => {
   // console.log(response.data);
   return response?.data?.data;
 };
+
+// 마인드맵-> 깃허브 조회
+export const fetchAllGenGithubPJTtoKeyword = async (keyword) => {
+  const response = await helper(
+    () => AIAxios.post(`api/v1/github?keyword=${keyword}`),
+    "마인드맵-> 깃허브 조회"
+  );
+  if (!response.ok) return;
+  // console.log(response.data);
+  return response?.data?.data;
+};
+
+// 마인드맵 키워드 -> 뉴스 조회
+export const fetchNewstoKeyword = async (keyword) => {
+  const response = await helper(
+    () => AIAxios.post(`api/v1/news?query=${keyword}`),
+    "마인드맵 키워드 -> 뉴스 조회"
+  );
+  if (!response.ok) return;
+  // console.log(response.data);
+  return response?.data?.data;
+};
