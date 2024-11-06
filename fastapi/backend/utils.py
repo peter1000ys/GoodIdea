@@ -15,10 +15,6 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
 }
 
-# JSON 파일 저장 경로 설정
-save_dir = os.path.expanduser("~/news_data")
-os.makedirs(save_dir, exist_ok=True)
-
 # 불용어 로드
 def load_stopwords():
     response = requests.get("https://raw.githubusercontent.com/stopwords-iso/stopwords-ko/master/stopwords-ko.txt")
@@ -28,7 +24,7 @@ okt = Okt()
 stopwords = load_stopwords()
 
 def extract_meaningful_tokens(text):
-    tokens = [word for word, pos in okt.pos(text) if pos == "Noun" and word not in stopwords and len(word) > 1 and word not in ["포토", "사진", "종합"] ]
+    tokens = [word for word, pos in okt.pos(text) if pos == "Noun" and word not in stopwords and len(word) > 1 and word not in ["포토", "사진", "종합", "오늘", ] ]
     return tokens
 
 def get_last_page():
@@ -42,7 +38,7 @@ def get_last_page():
     else:
         return 1
 
-def get_article_links(page):
+def get_article_links(page, target_date):
     print(f"{page} 페이지에서 기사 링크 수집 중...")
     response = requests.get(base_url, params={"page": page, "regDate": target_date}, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
@@ -55,13 +51,20 @@ def get_article_content(url):
     soup = BeautifulSoup(response.text, "html.parser")
     title_tag = soup.select_one("h3.tit_view")
     title = title_tag.text if title_tag else "제목 없음"
-    
+    date_tag = soup.select_one("span.num_date")
+    date_text = date_tag.text.strip() if date_tag else None
+    formatted_date = None
+
+    if date_text:
+        date_obj = datetime.strptime(date_text, "%Y. %m. %d. %H:%M")
+        formatted_date = date_obj.strftime("%Y%m%d")
+
     if re.match(r'^[a-zA-Z\s]*$', title_tag.text):
         print("영문으로만 이루어진 기사 - 필터링")
         return None
 
     tokens = extract_meaningful_tokens(title)
-    return {"title": title, "tokens": tokens}
+    return {"title": title, "tokens": tokens, "date":formatted_date}
 
 def crawl_daum_news():
     last_page = get_last_page()
@@ -75,15 +78,24 @@ def crawl_daum_news():
         for url in article_links:
             article = get_article_content(url)
             if article:
-                send_to_kafka(article)  # Kafka에 데이터 전송
+                send_to_kafka(article)
                 articles.append(article)
         
         print(f"==== {page} 페이지 크롤링 완료 ====")
         time.sleep(1)
     
-    output_path = os.path.join(save_dir, f"news_{target_date}.json")
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(articles, f, ensure_ascii=False, indent=4)
-    
-    print("크롤링 및 JSON 저장 완료")
     return articles
+
+def crawl_daum_news_all():
+    start_date = datetime(datetime.now().year, 1, 1)
+    end_date = datetime.now() - timedelta(days=2)
+    current_date = start_date
+
+    while current_date <= end_date:
+        target_date = current_date.strftime("%Y%m%d")
+        crawl_daum_news(target_date)
+        current_date += timedelta(days=1)
+    print("모든 기간의 뉴스 크롤링 완료")
+
+def handle_crawl_news_all_request():
+    crawl_daum_news_all()

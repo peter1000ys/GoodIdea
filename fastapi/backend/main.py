@@ -4,12 +4,13 @@ from github import Github, GithubException
 import asyncio
 from confluent_kafka import Producer, KafkaError
 from dotenv import load_dotenv
+from datetime import datetime, timedelta
 import os
 import httpx
 from pathlib import Path
 import requests
 import json
-from utils import crawl_daum_news
+from utils import crawl_daum_news, handle_crawl_news_all_request
 from typing import Any, Dict, List
 # from kafka import send_message
 
@@ -111,7 +112,14 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
 @app.get("/api/v1/crawling/news")
 async def start_news_crawling():
     try:
-        articles = crawl_daum_news()
-        return {"status": "success", "message": f"{len(articles)}개의 기사가 성공적으로 전송되었습니다.", "data": articles}
+        articles = crawl_daum_news((datetime.now() - timedelta(days=1)).strftime("%Y%m%d"))
+        return {"status": "success", "message": f"{len(articles)}개의 기사가 성공적으로 전송되었습니다."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/api/v1/crawling/news/all")
+async def all_news_crawling():
+    try:
+        handle_crawl_news_all_request()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
