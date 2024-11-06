@@ -125,7 +125,7 @@ function ProjectListPage() {
         }}
       >
         <div className="w-full h-full flex flex-col">
-          <CreateProject setIsCreateModalOpen={setIsCreateModalOpen} />
+          <CreateProject />
         </div>
       </PortalModal>
     </>
