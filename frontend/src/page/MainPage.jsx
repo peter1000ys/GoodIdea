@@ -240,7 +240,7 @@ function MainPage() {
         <title>메인페이지</title>
       </Helmet>
 
-      <div className="min-h-screen font-serif relative">
+      <div className="min-h-screen font-serif relative overflow-x-hidden">
         {/* 고정된 GitLab 로그인 버튼: 마지막 섹션에서 안 보이게 */}
         {!isLastSection && (
           <div className="fixed top-8 right-8 z-50 flex flex-col items-center">
@@ -383,8 +383,8 @@ function MainPage() {
                     className="bg-slate-500 hover:bg-slate-300 mt-3"
                     text="GitLab으로 로그인"
                   />
-                  {/* 테스트 드라이버용 버튼 ------------------- 시작 ------------------- */}
 
+                  {/* 테스트 드라이버용 버튼 ------------------- 시작 ------------------- */}
                   {import.meta.env.VITE_APP_MODE === "DEV" && (
                     <DefaultButton
                       onClick={handleDevLoginForJUHO}
