@@ -253,7 +253,7 @@ function MainPage() {
       <div className="min-h-screen font-serif relative overflow-x-hidden">
         {/* 고정된 GitLab 로그인 버튼: 마지막 섹션에서 안 보이게 */}
         {!isLastSection && (
-          <div className="fixed top-8 right-8 z-50 flex flex-col items-center animate-tinUpIn">
+          <div className="fixed top-8 right-8 z-[51] flex flex-col items-center animate-tinUpIn">
             <DefaultButton
               onClick={handleGitLabLogin}
               theme="bright"
@@ -412,6 +412,27 @@ function MainPage() {
           </section>
         ))}
       </div>
+
+      <style>
+        {`
+        
+        
+        ::-webkit-scrollbar {
+            background-color: #000;
+            width: 12px;
+            // border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            // border-radius: 10px;
+            box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
+        }
+        
+        ::-webkit-scrollbar-thumb {  
+
+            background-image: -webkit-gradient(linear, left bottom, left top,color-stop(1, #ff5733), color-stop(.5, #a520ca), color-stop(0, #2681cc));
+            `}
+      </style>
     </>
   );
 }
