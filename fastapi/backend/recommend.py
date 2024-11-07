@@ -28,7 +28,7 @@ def save_token(token, es):
             "term": {"token.keyword": token}
         }
     }
-    existing_docs = es.search(index="news-topic", body=search_query)
+    existing_docs = es.search(index="news-token", body=search_query)
     
     # 기존 벡터들과 중복 확인
     for doc in existing_docs["hits"]["hits"]:
@@ -42,7 +42,7 @@ def save_token(token, es):
     # 고유 ID로 새 문서 저장
     doc_id = str(uuid.uuid4())
     es.index(
-        index="news-topic",
+        index="news-token",
         id=doc_id,
         body={
             "token": token,
@@ -51,7 +51,8 @@ def save_token(token, es):
     )
 
 # KNN 검색 로직
-def knn_search(keyword_embedding, es):
+def knn_search(keyword, es):
+    keyword_embedding = generate_embedding(keyword)
     knn_query = {
         "size": 10,
         "query": {
@@ -64,7 +65,7 @@ def knn_search(keyword_embedding, es):
             }
         }
     }
-    response = es.search(index="news-topic", body=knn_query)
+    response = es.search(index="news-token", body=knn_query)
     recommended_tokens = []
     for hit in response["hits"]["hits"]:
         tokens = hit["_source"]["tokens"]
