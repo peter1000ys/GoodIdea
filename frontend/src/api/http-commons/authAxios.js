@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// const BASE_URL = import.meta.env.VITE_BASE_URL;
+// const BASE_URL = import.meta.env.VITE_BASE_URL_COMMON;
 const BASE_URL = "https://oracle1.mypjt.xyz/";
 const REFRESH_URL = BASE_URL + "/main/jwt/refresh";
 

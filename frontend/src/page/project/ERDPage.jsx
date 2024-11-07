@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import { Helmet } from "react-helmet-async";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const ERDDrawing = React.lazy(() => import("../../components/erd/ERDDrawing"));
 
@@ -17,7 +18,7 @@ function ERDPage() {
       </Helmet>
       <div className="w-full h-full flex flex-col">
         <div className="flex-1 flex">
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <ERDDrawing />
           </Suspense>
         </div>

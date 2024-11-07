@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import DefaultButton from "../components/common/DefaultButton";
 import Typewriter from "../components/main/Typewriter";
@@ -51,102 +51,112 @@ function MainPage() {
     }
   };
   // 테스트 드라이버용 함수 ----------------- 끝 -----------------
-
-  const sections = [
-    {
-      id: "section1",
-      counter: "01",
-      title: "싸피인을 위한 올인원 기획 플랫폼 서비스",
-      body: (
-        <>
-          이곳에서 <span className="text-blue-600 font-extrabold">싸피인</span>
-          을 위한 최적의{" "}
-          <span className="text-yellow-300 font-extrabold">기획</span> 경험을
-          만나보세요.
-        </>
-      ),
-      bgColor: "bg-gray-900",
-    },
-    {
-      id: "section2",
-      counter: "02",
-      title: "contact",
-      body: "궁금한 점이 있거나 문의하고 싶다면 언제든지 연락해주세요. 여러분의 의견을 듣고 싶습니다.",
-      bgColor: "bg-red-500",
-    },
-    {
-      id: "section3",
-      counter: "03",
-      title: "마인드맵 및 기획 도구",
-      body: (
-        <>
-          <span className="text-red-300 font-extrabold">마인드맵</span>과 이전
-          기수의
-          <span className="text-yellow-300 font-extrabold">레퍼런스</span>를
-          통해 창의적인 아이디어를 쉽게 도출할 수 있습니다. 다양한 기획 도구를
-          경험해보세요.
-        </>
-      ),
-      bgColor: "bg-blue-500",
-    },
-    {
-      id: "section4",
-      counter: "04",
-      title: "AI 기반 기획서 작성",
-      body: (
-        <>
-          <span className="text-yellow-300 font-extrabold">AI</span>가 자동으로
-          기획서를 작성해줍니다. 아이디어가 떠오르지 않을 때{" "}
-          <span className="text-yellow-300 font-extrabold">AI</span>의 도움을
-          받아보세요.
-          <span className="text-red-500 font-extrabold">빠르고</span>{" "}
-          <span className="text-blue-500 font-extrabold">간편</span>하게 기획을
-          시작할 수 있습니다
-        </>
-      ),
-      bgColor: "bg-orange-500",
-    },
-    {
-      id: "section5",
-      counter: "05",
-      title: "기획 산출물 작성 및 공동 편집",
-      body: (
-        <>
-          <span className="text-amber-400 font-extrabold">요구사항 명세서</span>
-          , <span className="text-sky-200 font-extrabold">API 명세서</span>,
-          <span className="text-blue-600 font-extrabold">FLOW CHART</span>,{" "}
-          <span className="text-amber-800 font-extrabold">ERD</span>등 다양한
-          산출물을 작성할 수 있습니다.
-          <span className="text-red-600 font-extrabold">
-            CRDT
-          </span> 기반으로{" "}
-          <span className="text-emerald-800 font-extrabold">공동 편집</span>과
-          <span className="text-emerald-800 font-extrabold">커서 공유</span>를
-          통해 팀원들과{" "}
-          <span className="text-red-600 font-extrabold">실시간 작업</span>을 할
-          수 있습니다.
-        </>
-      ),
-      bgColor: "bg-purple-500",
-    },
-    {
-      id: "section6",
-      counter: "06",
-      title: "GitLab 연동으로 간편한 시작",
-      body: (
-        <>
-          <span className="text-blue-600 font-extrabold">SSAFY</span>{" "}
-          <span className="text-orange-600 font-extrabold">GitLab</span>과
-          연동하여 프로젝트 정보를 손쉽게 가져오세요.{" "}
-          <span className="text-orange-600 font-extrabold">GitLab</span>
-          계정으로 로그인하고 플랫폼 기능을 사용해서 프로젝트 기획을
-          시작해보세요.
-        </>
-      ),
-      bgColor: "bg-emerald-500",
-    },
-  ];
-
+  const sections = useMemo(
+    () => [
+      {
+        id: "section1",
+        counter: "01",
+        title: "싸피인을 위한 올인원 기획 플랫폼 서비스",
+        body: (
+          <>
+            이곳에서{" "}
+            <span className="text-blue-300 font-extrabold "> 싸피인</span>을
+            위한 최적의{" "}
+            <span className="text-yellow-300 font-extrabold">기획</span> 경험을
+            만나보세요.
+          </>
+        ),
+        bgColor: "bg-gray-900",
+        textBgColor: "bg-red-900",
+      },
+      {
+        id: "section2",
+        counter: "02",
+        title: "contact",
+        body: "궁금한 점이 있거나 문의하고 싶다면 언제든지 연락해주세요. 여러분의 의견을 듣고 싶습니다.",
+        bgColor: "bg-red-500",
+        textBgColor: "bg-gray-500",
+      },
+      {
+        id: "section3",
+        counter: "03",
+        title: "마인드맵 및 기획 도구",
+        body: (
+          <>
+            <span className="text-emerald-300 font-extrabold">마인드맵</span>과
+            이전 기수의
+            <span className="text-yellow-300 font-extrabold">레퍼런스</span>를
+            통해 창의적인 아이디어를 쉽게 도출할 수 있습니다. 다양한 기획 도구를
+            경험해보세요.
+          </>
+        ),
+        bgColor: "bg-blue-500",
+        textBgColor: "bg-red-500",
+      },
+      {
+        id: "section4",
+        counter: "04",
+        title: "AI 기반 기획서 작성",
+        body: (
+          <>
+            <span className="text-yellow-300 font-extrabold">AI</span>가
+            자동으로 기획서를 작성해줍니다. 아이디어가 떠오르지 않을 때{" "}
+            <span className="text-yellow-300 font-extrabold">AI</span>의 도움을
+            받아보세요.
+            <span className="text-red-600 font-extrabold">빠르고</span>{" "}
+            <span className="text-blue-700 font-extrabold">간편</span>하게
+            기획을 시작할 수 있습니다
+          </>
+        ),
+        bgColor: "bg-orange-500",
+        textBgColor: "bg-emerald-500",
+      },
+      {
+        id: "section5",
+        counter: "05",
+        title: "기획 산출물 작성 및 공동 편집",
+        body: (
+          <>
+            <span className="text-amber-400 font-extrabold">
+              요구사항 명세서
+            </span>
+            , <span className="text-sky-200 font-extrabold">API 명세서</span>,
+            <span className="text-blue-600 font-extrabold">FLOW CHART</span>,{" "}
+            <span className="text-amber-800 font-extrabold">ERD</span>등 다양한
+            산출물을 작성할 수 있습니다.
+            <span className="text-red-600 font-extrabold">
+              CRDT
+            </span> 기반으로{" "}
+            <span className="text-emerald-800 font-extrabold">공동 편집</span>과
+            <span className="text-emerald-800 font-extrabold">커서 공유</span>를
+            통해 팀원들과{" "}
+            <span className="text-red-600 font-extrabold">실시간 작업</span>을
+            할 수 있습니다.
+          </>
+        ),
+        bgColor: "bg-purple-500",
+        textBgColor: "bg-orange-500",
+      },
+      {
+        id: "section6",
+        counter: "06",
+        title: "GitLab 연동으로 간편한 시작",
+        body: (
+          <>
+            <span className="text-blue-600 font-extrabold">SSAFY</span>{" "}
+            <span className="text-orange-600 font-extrabold">GitLab</span>과
+            연동하여 프로젝트 정보를 손쉽게 가져오세요.{" "}
+            <span className="text-orange-600 font-extrabold">GitLab</span>
+            계정으로 로그인하고 플랫폼 기능을 사용해서 프로젝트 기획을
+            시작해보세요.
+          </>
+        ),
+        bgColor: "bg-emerald-500",
+        textBgColor: "bg-gray-500",
+      },
+    ],
+    []
+  );
   const fixedPositions = [
     { top: "5%", left: "10%" },
     { top: "5%", left: "50%" },
@@ -243,11 +253,11 @@ function MainPage() {
       <div className="min-h-screen font-serif relative overflow-x-hidden">
         {/* 고정된 GitLab 로그인 버튼: 마지막 섹션에서 안 보이게 */}
         {!isLastSection && (
-          <div className="fixed top-8 right-8 z-50 flex flex-col items-center">
+          <div className="fixed top-8 right-8 z-50 flex flex-col items-center animate-tinUpIn">
             <DefaultButton
               onClick={handleGitLabLogin}
               theme="bright"
-              className="bg-slate-500 hover:bg-slate-300 mt-3"
+              className="bg-slate-500 hover:bg-slate-300 mt-3 "
               text="GitLab으로 로그인"
             />
           </div>
@@ -282,16 +292,18 @@ function MainPage() {
                   </span>
 
                   <div
-                    className={`overflow-hidden transition-all duration-300 ${
+                    className={`overflow-hidden transition-all duration-300 bg-opacity-70 rounded-lg border-0  ${
+                      section.textBgColor
+                    } ${
                       activeSection === section.id
-                        ? "max-h-60 mt-2 opacity-100"
+                        ? "max-h-60 mt-2 opacity-100 p-5 "
                         : "max-h-0 opacity-0"
                     }`}
                   >
                     <h3 className="text-3xl font-light w-[300px] mb-2">
                       {section.title}
                     </h3>
-                    <p className="text-md font-thin w-[300px]">
+                    <p className="text-md font-thin w-[300px] b-span">
                       {section.body}
                     </p>
                   </div>
