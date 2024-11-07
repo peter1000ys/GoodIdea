@@ -1,11 +1,30 @@
 import { Helmet } from "react-helmet-async";
 import Sticker from "../../components/ideaboard/Sticker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StickerModal from "../../components/ideaboard/StickerModal";
 
 function IdeaBoardPage() {
   const [selectedSticker, setSelectedSticker] = useState(null); // 선택된 스티커
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+  const [scale, setScale] = useState(1); // 확대/축소 비율
+  const [translate, setTranslate] = useState({ x: 0, y: 0 }); // 이동 비율
+
+  useEffect(() => {
+    // 기본 브라우저 확대/축소 막기
+    const preventDefaultZoom = (e) => {
+      if (e.ctrlKey && e.type === "wheel") {
+        e.preventDefault();
+      } else if (e.ctrlKey && (e.key === "=" || e.key === "-")) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("wheel", preventDefaultZoom, { passive: false });
+    window.addEventListener("keydown", preventDefaultZoom, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", preventDefaultZoom);
+      window.removeEventListener("keydown", preventDefaultZoom);
+    };
+  }, []);
 
   // 첫 6개 좌표를 각 섹션 범위 내에서 랜덤으로 생성
   // const generateSectionCoordinates = () => {
@@ -82,31 +101,91 @@ function IdeaBoardPage() {
     setIsModalOpen(false);
   };
 
+  // 확대/축소 핸들러
+  const handleWheel = (e) => {
+    if (e.ctrlKey) {
+      // 컨트롤 키가 눌려 있고
+      e.preventDefault();
+      const zoomIntensity = 0.1;
+      let newScale = scale - e.deltaY * zoomIntensity * 0.01;
+      newScale = Math.min(Math.max(newScale, 0.5), 3); // 최소 0.5배, 최대 3배
+      setScale(newScale);
+    }
+  };
+
+  // 드래그로 이동 핸들러
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startY = e.clientY;
+
+    const startTranslate = { ...translate };
+
+    const handleMouseMove = (moveEvent) => {
+      const dx = moveEvent.clientX - startX;
+      const dy = moveEvent.clientY - startY;
+
+      setTranslate({
+        x: startTranslate.x + dx,
+        y: startTranslate.y + dy,
+      });
+    };
+
+    const handleMouseUp = () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  };
+
   return (
     <>
       <Helmet>
         <title>아이디어보드 페이지</title>
       </Helmet>
-      <div className="relative h-full w-full overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(circle,_#ddd_1px,_transparent_1px)] before:bg-[length:20px_20px]">
-        {/* Sticker 컴포넌트 좌표화 렌더링 */}
-        {coordinates.map(({ x, y, delay }, index) => (
-          <Sticker
-            key={index}
-            x={x}
-            y={y}
-            delay={delay}
-            color={colors[index % colors.length]}
-            darkColor={darkColors[index % darkColors.length]}
-            onClick={() =>
-              openModal({
-                x,
-                y,
-                color: colors[index % colors.length],
-                darkColor: darkColors[index % darkColors.length],
-              })
-            }
-          />
-        ))}
+      <div
+        className="relative overflow-hidden w-full h-full"
+        style={{
+          width: "3000px",
+          height: "3000px",
+        }}
+        onWheel={handleWheel}
+        onMouseDown={handleMouseDown}
+      >
+        <div
+          className="relative overflow-hidden"
+          style={{
+            width: "3000px",
+            height: "3000px",
+            position: "relative",
+            transformOrigin: "center center", // 확대/축소 기준을 중앙으로 설정
+            transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`, // 확대/축소 및 이동 적용
+            background:
+              "radial-gradient(circle, #828282 1px, transparent 1px) 0 0 / 20px 20px", // 점 패턴 배경
+          }}
+        >
+          {/* Sticker 컴포넌트 좌표화 렌더링 */}
+          {coordinates.map(({ x, y, delay }, index) => (
+            <Sticker
+              key={index}
+              x={x}
+              y={y}
+              delay={delay}
+              color={colors[index % colors.length]}
+              darkColor={darkColors[index % darkColors.length]}
+              onClick={() =>
+                openModal({
+                  x,
+                  y,
+                  color: colors[index % colors.length],
+                  darkColor: darkColors[index % darkColors.length],
+                })
+              }
+            />
+          ))}
+        </div>
       </div>
       {/* 모달 */}
       {isModalOpen && selectedSticker && (
