@@ -70,7 +70,7 @@ def crawl_daum_news(target_date):
     print(f"총 {last_page} 페이지까지 크롤링을 진행합니다.")
     articles = []
     
-    for page in range(1, last_page + 1, max(1, last_page // 10)):
+    for page in range(1, last_page + 1, max(1, last_page // 200)):
         print(f"==== {page} 페이지 크롤링 시작 ====")
         article_links = get_article_links(page, target_date)
         
