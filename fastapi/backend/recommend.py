@@ -95,6 +95,6 @@ def knn_search(keyword, es):
     response = es.search(index="news-token", body=knn_query)
     recommended_tokens = []
     for hit in response["hits"]["hits"]:
-        tokens = hit["_source"]["tokens"]
+        tokens = hit["_source"]["token"]
         recommended_tokens.extend(tokens)
     return list(set(recommended_tokens))[:10]  # 중복 제거 후 상위 10개 추천
