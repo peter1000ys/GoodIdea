@@ -168,4 +168,4 @@ async def recommend(keyword: str = Query(..., description="검색어")):
     keyword_embedding = generate_embedding(keyword)
     recommended_tokens = knn_search(keyword_embedding, es)
     
-    return {"sub_keywords": recommended_tokens}
+    return {"data": recommended_tokens}

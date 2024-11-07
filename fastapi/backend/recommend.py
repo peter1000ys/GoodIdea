@@ -10,6 +10,8 @@ model = AutoModel.from_pretrained("beomi/KcELECTRA-base-v2022")
 
 # 단어 임베딩 벡터 생성 함수
 def generate_embedding(token):
+    if not isinstance(token, str):
+        token = str(token)
     # 미리 토큰화된 단어를 ID 배열로 변환하여 모델에 입력
     inputs = tokenizer(token, return_tensors="pt", add_special_tokens=True)
     with torch.no_grad():
