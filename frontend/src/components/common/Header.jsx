@@ -12,7 +12,6 @@ function Header() {
   const { projects } = useProjectStore();
 
   useEffect(() => {
-    console.log(param?.id);
     if (param?.id) {
       projects.map((project) => {
         if (project.project_id === parseInt(param.id)) {
@@ -22,7 +21,7 @@ function Header() {
     } else {
       setContent(null);
     }
-  }, [param]);
+  }, [param, projects]);
 
   const goProjectList = () => {
     // 프로젝트 리스트로 이동

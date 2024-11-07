@@ -143,14 +143,17 @@ function ProjectEssentialPage() {
                 </div>
               </div>
             </div>
-            <DefaultButton
-              onClick={() => {
-                deleteProject(projectId);
-                navigate("/projectlist");
-              }}
-              theme="bright"
-              text={"프로젝트 삭제"}
-            />
+            <div className="flex flex-1 justify-end px-8 mb-8">
+              <DefaultButton
+                onClick={() => {
+                  deleteProject(projectId);
+                  navigate("/projectlist");
+                }}
+                className=""
+                theme="alert"
+                text={"프로젝트 삭제"}
+              />
+            </div>
             <div className="bg-blue-900 text-white p-8"></div>
           </div>
         </div>
