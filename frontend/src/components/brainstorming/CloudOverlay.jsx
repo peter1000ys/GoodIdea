@@ -12,9 +12,9 @@ const CloudOverlay = () => {
     <div className="flex items-center justify-center">
       <button
         onClick={handleClick}
-        className="px-4 py-2 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white font-bold rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
+        className="px-3 py-1 bg-gradient-to-br animate-pulse from-blue-500 via-blue-300 to-blue-500 text-orange-300 font-bold rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
       >
-        ?
+        <span className="text-xs">Keyword추천</span>
       </button>
 
       {/* 구름 오버레이 */}
