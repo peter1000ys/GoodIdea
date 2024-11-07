@@ -77,24 +77,39 @@ def save_token(token, es):
     else:
         print(f"'{token}' was not saved due to similarity with existing documents.")
 
-# KNN 검색 로직
-def knn_search(keyword, es):
-    keyword_embedding = generate_embedding(keyword)
+def hybrid_search(keyword, es, alpha=0.5):
+    keyword_embedding = generate_embedding(f"{keyword}")
+    
+    # 2. 모든 단어 토큰에 대해 임베딩 유사도 기반 검색 쿼리 설정
     knn_query = {
-        "size": 10,
+        "size": 100,  # 상위 100개 후보군 (임베딩 유사도 기반 검색)
         "query": {
             "script_score": {
                 "query": {"match_all": {}},
                 "script": {
-                    "source": "cosineSimilarity(params.query_vector, 'tokens_embedding') + 1.0",
+                    "source": "cosineSimilarity(params.query_vector, 'embedding_vector') + 1.0",
                     "params": {"query_vector": keyword_embedding}
                 }
             }
         }
     }
     response = es.search(index="news-token", body=knn_query)
+
+    # 3. 임베딩 유사도 기반 후보군을 가져와서 추천 점수 계산
     recommended_tokens = []
     for hit in response["hits"]["hits"]:
-        tokens = hit["_source"]["token"]
-        recommended_tokens.extend(tokens)
-    return list(set(recommended_tokens))[:10]  # 중복 제거 후 상위 10개 추천
+        embedding_vector = hit["_source"]["embedding_vector"]
+        
+        # 코사인 유사도로 임베딩 유사도 계산
+        embedding_similarity = 1 - cosine(keyword_embedding, embedding_vector)
+        
+        # 결합 점수 계산 (임베딩 유사도만 사용)
+        combined_score = embedding_similarity  # 필요 시 BM25와 결합 가능
+        
+        # 추천 단어와 점수 저장
+        recommended_tokens.append((hit["_source"]["token"], combined_score))
+    
+    # 4. 유사도 점수를 기준으로 상위 10개 추천
+    recommended_tokens = sorted(recommended_tokens, key=lambda x: x[1], reverse=True)[:10]
+    unique_recommended_tokens = list({token for token, _ in recommended_tokens})
+    return unique_recommended_tokens[:10]  # 상위 10개의 유니크한 추천 결과 반환

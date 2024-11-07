@@ -12,7 +12,7 @@ import requests
 import json
 from utils import crawl_daum_news, handle_crawl_news_all_request
 from typing import Any, Dict, List
-from recommend import knn_search, generate_embedding, save_token
+from recommend import hybrid_search, generate_embedding, save_token
 from elasticsearch import Elasticsearch
 
 app = FastAPI()
@@ -165,7 +165,6 @@ async def training():
 
 @app.get("/api/v1/recommend")
 async def recommend(keyword: str = Query(..., description="검색어")):
-    keyword_embedding = generate_embedding(keyword)
-    recommended_tokens = knn_search(keyword_embedding, es)
+    recommended_tokens = hybrid_search(keyword, es)
     
     return {"data": recommended_tokens}
