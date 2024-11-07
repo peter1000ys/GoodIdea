@@ -25,30 +25,55 @@ def save_token(token, es):
     # 기존 임베딩 벡터 조회
     search_query = {
         "query": {
-            "term": {"token.keyword": token}
+            "term": {
+                "token": token  # token.keyword 사용 필요 시 변경
+            }
         }
     }
     existing_docs = es.search(index="news-token", body=search_query)
-    
+    found_similar = False  # 중복 여부를 추적하기 위한 플래그
     # 기존 벡터들과 중복 확인
     for doc in existing_docs["hits"]["hits"]:
+        doc_id = doc["_id"]
         existing_embedding = doc["_source"]["embedding_vector"]
+        
         # 코사인 유사도 계산
         similarity = 1 - cosine(existing_embedding, new_embedding)
-        if similarity > 0.99:
-            print(f"'{token}' has similar embedding, not saving.")
-            return  # 유사도가 높으면 저장하지 않음
-    
-    # 고유 ID로 새 문서 저장
-    doc_id = str(uuid.uuid4())
-    es.index(
-        index="news-token",
-        id=doc_id,
-        body={
-            "token": token,
-            "embedding_vector": new_embedding
-        }
-    )
+        
+        # 유사도 검사 및 출력
+        print(f"Checking similarity for '{token}':", similarity)
+        
+        # 유사도가 높으면 count 증가
+        if similarity >= 0.99:
+            print(f"'{token}' has similar embedding with similarity {similarity}, updating count.")
+            es.update(
+                index="news-token",
+                id=doc_id,
+                body={
+                    "script": {
+                        "source": "ctx._source.count += 1",  # count를 +1 증가
+                        "lang": "painless"
+                    }
+                }
+            )
+            found_similar = True
+            break  # 중복이 확인되면 저장 작업을 중단
+
+    # 새로운 문서 저장 (중복이 없는 경우에만)
+    if not found_similar:
+        doc_id = str(uuid.uuid4())
+        es.index(
+            index="news-token",
+            id=doc_id,
+            body={
+                "token": token,
+                "embedding_vector": new_embedding,
+                "count": 1  # 새로운 문서의 count 초기값을 1로 설정
+            }
+        )
+        print(f"'{token}' saved with new embedding and count 1.")
+    else:
+        print(f"'{token}' was not saved due to similarity with existing documents.")
 
 # KNN 검색 로직
 def knn_search(keyword, es):
