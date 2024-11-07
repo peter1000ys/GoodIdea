@@ -12,7 +12,7 @@ const PlanType = () => {
   useEffect(() => {
     // Array of phrases
     const phrases = ["기획 산출물 작성 및 공동 편집", "노션보다 쉽다 !!"];
-
+    // 하하하
     // Cursor animation
     const cursor = gsap.to(cursorRef.current, {
       opacity: 0,
