@@ -12,7 +12,7 @@ import requests
 import json
 from utils import crawl_daum_news, handle_crawl_news_all_request
 from typing import Any, Dict, List
-from recommend import update_embedding_in_es, knn_search, generate_embedding
+from recommend import knn_search, generate_embedding, save_token
 from elasticsearch import Elasticsearch
 
 app = FastAPI()
@@ -134,31 +134,32 @@ async def all_news_crawling():
     
 @app.post("/api/v1/training")
 async def training():
-    print("PW: ",ELASTIC_PW)
     page_size = 1000
     page = 0
     
     while True:
-        # 페이지 번호에 따라 문서 가져오기
-        data = es.search(
-            index="news-topic",
-            body={"query": {"match_all": {}}},
-            size=page_size,
-            from_=page * page_size
-        )
+        try:
+            data = es.search(
+                index="news-topic",
+                body={"query": {"match_all": {}}},
+                size=page_size,
+                from_=page * page_size
+            )
+        except Exception as e:
+            print(f"Error fetching data from Elasticsearch: {e}")
+            break
         
         hits = data["hits"]["hits"]
         if not hits:
-            break  # 더 이상 문서가 없으면 종료
+            break
         
         for hit in hits:
-            doc_id = hit["_id"]
             tokens = hit["_source"]["tokens"]
-            embeddings = [generate_embedding(token) for token in tokens]
-            update_embedding_in_es(doc_id, embeddings, es)
+            for token in tokens:
+                save_token(token, es)
         
         print(f"Page {page + 1} 이동")
-        page += 1  # 다음 페이지로 이동
+        page += 1
     
     return {"result": "학습 완료"}
 

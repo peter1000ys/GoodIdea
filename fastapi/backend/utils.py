@@ -58,8 +58,8 @@ def get_article_content(url):
         date_obj = datetime.strptime(date_text, "%Y. %m. %d. %H:%M")
         formatted_date = date_obj.strftime("%Y%m%d")
 
-    if re.match(r'^[a-zA-Z\s]*$', title_tag.text):
-        print("영문으로만 이루어진 기사 - 필터링")
+    if re.match(r'^[a-zA-Z0-9\s]*$', title_tag.text):
+        print("영문, 숫자, 또는 영문+숫자로만 이루어진 기사 - 필터링")
         return None
 
     tokens = extract_meaningful_tokens(title)
@@ -70,13 +70,13 @@ def crawl_daum_news(target_date):
     print(f"총 {last_page} 페이지까지 크롤링을 진행합니다.")
     articles = []
     
-    for page in range(1, last_page + 1, max(1, last_page // 200)):
+    for page in range(1, last_page + 1, max(1, last_page // 10)):
         print(f"==== {page} 페이지 크롤링 시작 ====")
         article_links = get_article_links(page, target_date)
         
         for url in article_links:
             article = get_article_content(url)
-            if article:
+            if article and article["tokens"]:
                 send_to_kafka(article)
                 articles.append(article)
         
