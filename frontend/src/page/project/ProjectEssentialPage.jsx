@@ -148,7 +148,7 @@ function ProjectEssentialPage() {
                 deleteProject(projectId);
                 navigate("/projectlist");
               }}
-              theme="bright"
+              theme="alert"
               text={"프로젝트 삭제"}
             />
             <div className="bg-blue-900 text-white p-8"></div>
