@@ -11,6 +11,5 @@ def send_to_kafka(article):
     try:
         producer.produce(TOPIC, key=str(article["title"]), value=json.dumps(article, ensure_ascii=False))
         producer.flush()
-        print(f"Kafka 전송 완료: {article['title']}")
     except KafkaError as e:
         print(f"Kafka Error: {e}")

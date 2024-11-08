@@ -1,4 +1,3 @@
-import os
 import re
 import time
 import requests
@@ -34,18 +33,17 @@ def get_last_page(target_date):
     if last_page_tag:
         last_page_number = re.search(r'\d+', last_page_tag.text)
         return int(last_page_number.group()) if last_page_number else 1
+    
     else:
         return 1
 
 def get_article_links(page, target_date):
-    print(f"{page} 페이지에서 기사 링크 수집 중...")
     response = requests.get(base_url, params={"page": page, "regDate": target_date}, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
     article_tags = soup.select("ul.list_news2.list_allnews li a.link_txt")
     return [tag["href"] for tag in article_tags]
 
 def get_article_content(url):
-    print(f"기사 URL {url}에서 내용 수집 중...")
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
     title_tag = soup.select_one("h3.tit_view")
@@ -59,7 +57,6 @@ def get_article_content(url):
         formatted_date = date_obj.strftime("%Y%m%d")
 
     if re.match(r'^[a-zA-Z0-9\s]*$', title_tag.text):
-        print("영문, 숫자, 또는 영문+숫자로만 이루어진 기사 - 필터링")
         return None
 
     tokens = extract_meaningful_tokens(title)
@@ -67,11 +64,9 @@ def get_article_content(url):
 
 def crawl_daum_news(target_date):
     last_page = get_last_page(target_date)
-    print(f"총 {last_page} 페이지까지 크롤링을 진행합니다.")
     articles = []
     
     for page in range(1, last_page + 1, max(1, last_page // 200)):
-        print(f"==== {page} 페이지 크롤링 시작 ====")
         article_links = get_article_links(page, target_date)
         
         for url in article_links:
@@ -79,14 +74,12 @@ def crawl_daum_news(target_date):
             if article and article["tokens"]:
                 send_to_kafka(article)
                 articles.append(article)
-        
-        print(f"==== {page} 페이지 크롤링 완료 ====")
-        time.sleep(1)
+        time.sleep(0.6)
     
     return articles
 
 def crawl_daum_news_all():
-    start_date = datetime(datetime.now().year, 3, 15)
+    start_date = datetime(datetime.now().year, 4, 1)
     end_date = datetime.now() - timedelta(days=2)
     current_date = start_date
 
@@ -94,7 +87,6 @@ def crawl_daum_news_all():
         target_date = current_date.strftime("%Y%m%d")
         crawl_daum_news(target_date)
         current_date += timedelta(days=1)
-    print("모든 기간의 뉴스 크롤링 완료")
 
 def handle_crawl_news_all_request():
     crawl_daum_news_all()

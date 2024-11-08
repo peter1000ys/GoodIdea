@@ -2,7 +2,6 @@ from fastapi import FastAPI, HTTPException, Query, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from github import Github, GithubException
 import asyncio
-from confluent_kafka import Producer, KafkaError
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import os
@@ -10,7 +9,7 @@ import httpx
 from pathlib import Path
 import requests
 import json
-from utils import crawl_daum_news, handle_crawl_news_all_request
+from crawling.utils import crawl_daum_news, handle_crawl_news_all_request
 from typing import Any, Dict, List
 from recommend import hybrid_search, generate_embedding, save_token
 from elasticsearch import Elasticsearch
@@ -40,20 +39,8 @@ NAVER_API_SECRET = os.getenv("NAVER_API_SECRET")
 ELASTIC_ID = os.getenv("ELASTIC_ID")
 ELASTIC_PW = os.getenv("ELASTIC_PW")
 
-background_tasks = BackgroundTasks()
-
 # Elasticsearch 인스턴스
 es = Elasticsearch("http://elasticsearch:9200", basic_auth=(ELASTIC_ID, ELASTIC_PW))
-
-# @app.post("/api/v1/recommend")
-# async def read_root():
-#     temp_list = list()
-#     keywords = ["미국", "중국", "인도", "다우기술", "베트남", 
-#                 "북한", "멕시코", "아르헨티나", "메시", "페이커"]
-#     for keyword in keywords:
-#         temp_list.append(keyword)
-
-#     return {"data": temp_list}
 
 @app.get("/api/v1/search")
 async def search(keyword: str = Query(..., description="검색에 사용할 단일 키워드 입력")):
@@ -91,7 +78,7 @@ async def search(keyword: str = Query(..., description="검색에 사용할 단�
     except GithubException as e:
         return {"error": f"Failed to fetch data from GitHub: {e}"}
 
-async def fetch_repo_info(client, repo):
+async def fetch_repo_info(repo):
     return {
         'name': repo.name,
         'full_name': repo.full_name,
@@ -109,6 +96,7 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
         "X-Naver-Client-Id": NAVER_API_ID,
         "X-Naver-Client-Secret": NAVER_API_SECRET
     }
+
     # Naver API에 요청
     response = requests.get(url, headers=headers)
     
@@ -119,48 +107,6 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
     # JSON 형태로 결과 반환
     return response.json()
 
-@app.post("/api/v1/crawling/news")
-async def start_news_crawling():
-    try:
-        background_tasks.add_task(crawl_daum_news((datetime.now() - timedelta(days=1)).strftime("%Y%m%d")))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-@app.post("/api/v1/crawling/news/all")
-async def all_news_crawling(background_tasks: BackgroundTasks):
-    try:
-        background_tasks.add_task(handle_crawl_news_all_request)
-        return {"status": "크롤링 작업이 백그라운드에서 시작되었습니다."}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-@app.post("/api/v1/training")
-async def training():
-    page_size = 1000
-    page = 0
-    
-    while True:
-        try:
-            data = es.search(
-                index="news-topic",
-                body={"query": {"match_all": {}}},
-                size=page_size,
-                from_=page * page_size
-            )
-        except Exception as e:
-            break
-        
-        hits = data["hits"]["hits"]
-        if not hits:
-            break
-        
-        for hit in hits:
-            tokens = hit["_source"]["tokens"]
-            for token in tokens:
-                save_token(token, es)
-        
-        page += 1
-
 @app.get("/api/v1/recommend")
 async def recommend(keyword: str = Query(..., description="검색어")):
     recommended_tokens = hybrid_search(keyword, es)
@@ -169,6 +115,5 @@ async def recommend(keyword: str = Query(..., description="검색어")):
 
 @app.get("/api/v1/chatbot")
 async def recommend(keyword: str = Query(..., description="검색어")):
-    recommended_tokens = hybrid_search(keyword, es)
     
-    return {"data": recommended_tokens}
+    return {"message": "서버 점검중입니다. ~11. 18(화)"}
