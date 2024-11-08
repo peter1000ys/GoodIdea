@@ -1,7 +1,7 @@
 networks:
-    fastapi-network:
-    kafka_kafka_network:
-    docker-elk_elk:
+  fastapi-network:
+  kafka_kafka_network:
+  docker-elk_elk:
 
   services:
     crawling:
