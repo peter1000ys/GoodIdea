@@ -5,7 +5,6 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useRef } from "react";
 import { Client } from "@stomp/stompjs";
-import Header from "../../components/common/Header";
 import authAxiosInstance from "../../api//http-commons/authAxios";
 import { debounce } from "lodash";
 import useIdeaStore from "../../store/useIdeaStore";
