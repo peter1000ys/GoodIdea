@@ -22,7 +22,7 @@ public class Hello extends BaseTime {
     Long id;
 
 //    @ManyToOne(fetch = LAZY)
-//    @JoinColumn(name = "user_id")
+//    @JoinColumn(serviceName = "user_id")
 //    private User user;
 
     String content;
