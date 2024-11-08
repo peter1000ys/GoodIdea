@@ -17,6 +17,7 @@ httpx
 huggingface-hub
 idna
 Jinja2
+uvicorn
 MarkupSafe
 mpmath
 networkx

@@ -11,6 +11,7 @@ fsspec
 huggingface-hub
 idna
 Jinja2
+uvicorn
 loadenv
 MarkupSafe
 mpmath
