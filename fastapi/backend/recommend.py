@@ -90,6 +90,11 @@ def hybrid_search(keyword, es, alpha=0.5):
 
     for hit in response["hits"]["hits"]:
         token = hit["_source"]["token"]
+        
+        # keyword와 동일한 단어는 제외
+        if token == keyword:
+            continue
+        
         similarity_score = hit["_score"] - 1.0 
         
         # 빈도수 점수 계산 및 정규화
