@@ -124,3 +124,16 @@ export const fetchNewstoKeyword = async (keyword) => {
   // console.log(response.data);
   return response?.data;
 };
+
+// --------------------기획서 api 시작---------------------
+// 기획서 조회
+
+export const getProposal = async (ideaId) => {
+  const response = await helper(
+    () => authAxiosInstance.get(`api/v1/planner/${ideaId}`),
+    "기획서 조회"
+  );
+  if (!response.ok) return;
+  // console.log(response.data);
+  return response?.data?.data;
+};

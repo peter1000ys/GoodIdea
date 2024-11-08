@@ -15,13 +15,13 @@ public class MindMap extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mindMap_id")
-    Long id;
+    private Long id;
 
-    String mainKeyword;
+    private String mainKeyword;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
-    Project project;
+    private Project project;
 
     @Builder
     public MindMap(String mainKeyword, Project project) {

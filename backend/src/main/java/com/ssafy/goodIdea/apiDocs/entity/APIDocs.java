@@ -5,6 +5,7 @@ import com.ssafy.goodIdea.common.entity.BaseTime;
 import com.ssafy.goodIdea.idea.entity.Idea;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,9 +16,5 @@ public class APIDocs extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apidocs_id")
-    Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "api_id")
-    API api;
+    private Long id;
 }

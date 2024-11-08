@@ -16,15 +16,15 @@ public class UserProject extends BaseTime {
     @Id
     @Column(name = "user_project_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
-    Project project;
+    private Project project;
 
     @Builder
     public UserProject(User user, Project project) {

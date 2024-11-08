@@ -1,0 +1,13 @@
+version: "3"
+services:
+  front:
+    container_name: frontend
+    image: ssafy/frontend
+    ports:
+      - 3000:80
+
+  backend:
+    container_name: backend
+    image: ssafy/backend
+    ports:
+      - 8080:8080

@@ -2,6 +2,9 @@ package com.ssafy.goodIdea.project.service;
 
 import com.ssafy.goodIdea.common.exception.BaseException;
 import com.ssafy.goodIdea.common.exception.ErrorType;
+import com.ssafy.goodIdea.idea.dto.response.IdeaCreateResponseDto;
+import com.ssafy.goodIdea.idea.entity.Idea;
+import com.ssafy.goodIdea.idea.repository.IdeaRepository;
 import com.ssafy.goodIdea.project.dto.request.ProjectCreateRequestDto;
 import com.ssafy.goodIdea.project.dto.request.ProjectUpdateRequestDto;
 import com.ssafy.goodIdea.project.dto.response.GitLabProjectResponseDto;
@@ -33,13 +36,16 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final UserRepository userRepository;
+    private final IdeaRepository ideaRepository;
 
     /*
     * @param user
     * @param ProjectCreateRequestDto
+    * @param GitLabProjectResponseDto
+    * @param List<GitLabUserResponseDto>
     */
     @Transactional
-    public void createProject(User user, ProjectCreateRequestDto dto, GitLabProjectResponseDto myProject, List<GitLabUserResponseDto> users) {
+    public ProjectResponseDto createProject(User user, ProjectCreateRequestDto dto, GitLabProjectResponseDto myProject, List<GitLabUserResponseDto> users) {
 
 //        같은 타입의 프로젝트를 생성하려할 경우 에러 발생
         Optional<Project> ou = projectRepository.findByUserIdAndProjectType(user.getId(), dto.getProjectType());
@@ -49,11 +55,11 @@ public class ProjectService {
 
         Project project = projectRepository.save(
                 Project.builder()
-                    .name(dto.getName())
+                    .teamName(dto.getTeamName())
                     .projectType(dto.getProjectType())
-                    .description(dto.getDescription())
-                    .gitlab_name(myProject.getName())
+                    .gitlabName(myProject.getName())
                     .gitlab_url(myProject.getWebUrl())
+                    .leader(user.getId())
                     .gitLabProjectId(myProject.getProject_id())
                 .build()
         );
@@ -65,13 +71,36 @@ public class ProjectService {
                                 .username(us.getUsername())
                                 .roleType(RoleType.USER)
                                 .build()));
-
                     }
             userProjectRepository.save(UserProject.builder()
                     .project(project)
                     .user(member.get())
                     .build());
                 });
+
+        return ProjectResponseDto.builder()
+                .project_id(project.getId())
+                .projectType(project.getProjectType())
+                .teamName(project.getTeamName())
+                .gitlabName(project.getGitlabName())
+                .gitlab_url(project.getGitlab_url())
+                .gitlab_project_id(project.getGitLabProjectId())
+                .members(
+                        userProjectRepository.findAllByProjectId(project.getId())
+                                .stream()
+                                .map( up -> {
+                                    User us = up.getUser();
+                                    return UserDto.builder()
+                                            .id(us.getId())
+                                            .grade(us.getGrade())
+                                            .locationType(us.getLocationType())
+                                            .username(us.getUsername())
+                                            .roleType(us.getRoleType())
+                                            .build();
+                                })
+                                .collect(Collectors.toList())
+                )
+                .build();
     }
 
     /*
@@ -81,14 +110,33 @@ public class ProjectService {
     public ProjectResponseDto getProject(User user, Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow( ()-> new BaseException(ErrorType.PROJECT_NOT_FOUND));
+        Idea mainIdea;
+        if ( project.getMainIdeaId() == null ) {
+            mainIdea = Idea.builder().build();
+        }
+        else {
+            Optional<Idea> oi = ideaRepository.findById(project.getMainIdeaId());
+            mainIdea = oi.orElseGet( () -> Idea.builder().build() );
+        }
+        String leaderUsername = userRepository.findById(project.getLeader())
+                .map(User::getUsername)
+                .orElse(null);
 
         return ProjectResponseDto.builder()
                     .project_id(project.getId())
                     .projectType(project.getProjectType())
-                    .name(project.getName())
-                    .description(project.getDescription())
-                    .gitlab_name(project.getGitlab_name())
+                    .teamName(project.getTeamName())
+                    .mainIdea(IdeaCreateResponseDto.builder()
+                            .ideaId(mainIdea.getId())
+                            .serviceName(mainIdea.getServiceName())
+                            .background(mainIdea.getBackground())
+                            .expectedEffect(mainIdea.getExpectedEffect())
+                            .introduction(mainIdea.getIntroduction())
+                            .target(mainIdea.getTarget())
+                            .build())
+                    .gitlabName(project.getGitlabName())
                     .gitlab_url(project.getGitlab_url())
+                    .leader(leaderUsername)
                     .members(
                             userProjectRepository.findAllByProjectId(projectId)
                                     .stream()
@@ -129,9 +177,8 @@ public class ProjectService {
                     Project project = userProject.getProject();
                     return ProjectResponseDto.builder()
                             .project_id(project.getId())
-                            .name(project.getName())
-                            .description(project.getDescription())
-                            .gitlab_name(project.getGitlab_name())
+                            .teamName(project.getTeamName())
+                            .gitlabName(project.getGitlabName())
                             .gitlab_url(project.getGitlab_url())
                             .projectType(project.getProjectType())
                         .build();
@@ -153,21 +200,25 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow( ()-> new BaseException(ErrorType.PROJECT_NOT_FOUND));
 
+        // System.out.println(dto.getMainIdeaId());
+        // System.out.println(dto.getProjectType());
+        // System.out.println(dto.getTeamName());
+
         if ( dto.getProjectType() != null)
             project.setProjectType(dto.getProjectType());
-        if ( dto.getDescription() != null)
-            project.setDescription(dto.getDescription());
-        if ( dto.getName() != null)
-            project.setName(dto.getName());
+        if ( dto.getTeamName() != null)
+            project.setTeamName(dto.getTeamName());
+        if ( dto.getMainIdeaId() != null)
+            project.setMainIdeaId(dto.getMainIdeaId());
         projectRepository.save(project);
 
         return ProjectResponseDto.builder()
                 .project_id(project.getId())
                 .projectType(project.getProjectType())
-                .name(project.getName())
-                .description(project.getDescription())
-                .gitlab_name(project.getGitlab_name())
+                .teamName(project.getTeamName())
+                .gitlabName(project.getGitlabName())
                 .gitlab_url(project.getGitlab_url())
+                .gitlab_project_id(project.getGitLabProjectId())
                 .build();
     }
 
@@ -175,11 +226,17 @@ public class ProjectService {
      * @param ProjectCreateRequestDto
      */
     @Transactional
-    public void deleteProject(Long projectId) {
+    public void deleteProject(User user, Long projectId) {
 
         List<UserProject> userProject = userProjectRepository.findAllByProjectId(projectId);
         Project project = projectRepository.findById(projectId)
                 .orElseThrow( ()-> new BaseException(ErrorType.PROJECT_NOT_FOUND));
+        Optional<User> ol = userRepository.findById(project.getLeader());
+        User leader = ol.orElseThrow( () -> new BaseException(ErrorType.USER_NOT_FOUND));
+//        팀장만 삭제 가능
+        if ( !leader.equals(user) ){
+            throw new BaseException(ErrorType.NOT_TEAM_LEADER);
+        }
 
         userProjectRepository.deleteAll(userProject);
         projectRepository.delete(project);
