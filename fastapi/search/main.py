@@ -9,9 +9,8 @@ import httpx
 from pathlib import Path
 import requests
 import json
-from crawling.utils import crawl_daum_news, handle_crawl_news_all_request
 from typing import Any, Dict, List
-from recommend import hybrid_search, generate_embedding, save_token
+from recommend import hybrid_search, generate_embedding
 from elasticsearch import Elasticsearch
 
 app = FastAPI()
