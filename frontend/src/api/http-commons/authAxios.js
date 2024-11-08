@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const BASE_URL = import.meta.env.VITE_BASE_URL_COMMON;
-const BASE_URL = "https://oracle1.mypjt.xyz/";
+const BASE_URL = "https://goodidea.world/";
 const REFRESH_URL = BASE_URL + "/main/jwt/refresh";
 
 const authAxiosInstance = axios.create({
