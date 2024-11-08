@@ -17,10 +17,6 @@ RUN useradd -s /bin/bash -m ubuntu
 WORKDIR /search
 COPY . /search
 COPY requirements-search.txt .
-COPY .env .env
-
-# .env 파일 권한 설정
-RUN chmod 644 .env
 
 # ubuntu 사용자로 pip3 설치
 RUN chown -R ubuntu:ubuntu /search
