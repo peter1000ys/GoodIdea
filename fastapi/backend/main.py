@@ -127,9 +127,10 @@ async def start_news_crawling():
         raise HTTPException(status_code=500, detail=str(e))
     
 @app.post("/api/v1/crawling/news/all")
-async def all_news_crawling():
+async def all_news_crawling(background_tasks: BackgroundTasks):
     try:
         background_tasks.add_task(handle_crawl_news_all_request)
+        return {"status": "크롤링 작업이 백그라운드에서 시작되었습니다."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
@@ -161,6 +162,12 @@ async def training():
         page += 1
 
 @app.get("/api/v1/recommend")
+async def recommend(keyword: str = Query(..., description="검색어")):
+    recommended_tokens = hybrid_search(keyword, es)
+    
+    return {"data": recommended_tokens}
+
+@app.get("/api/v1/chatbot")
 async def recommend(keyword: str = Query(..., description="검색어")):
     recommended_tokens = hybrid_search(keyword, es)
     
