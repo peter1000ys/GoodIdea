@@ -120,8 +120,7 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
 @app.post("/api/v1/crawling/news")
 async def start_news_crawling():
     try:
-        articles = crawl_daum_news((datetime.now() - timedelta(days=1)).strftime("%Y%m%d"))
-        return {"status": "success", "message": f"{len(articles)}개의 기사가 성공적으로 전송되었습니다."}
+        crawl_daum_news((datetime.now() - timedelta(days=1)).strftime("%Y%m%d"))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
@@ -146,7 +145,6 @@ async def training():
                 from_=page * page_size
             )
         except Exception as e:
-            print(f"Error fetching data from Elasticsearch: {e}")
             break
         
         hits = data["hits"]["hits"]
@@ -158,10 +156,7 @@ async def training():
             for token in tokens:
                 save_token(token, es)
         
-        print(f"Page {page + 1} 이동")
         page += 1
-    
-    return {"result": "학습 완료"}
 
 @app.get("/api/v1/recommend")
 async def recommend(keyword: str = Query(..., description="검색어")):
