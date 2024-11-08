@@ -1,9 +1,25 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 function Nav() {
   const location = useLocation();
   const navigate = useNavigate();
+  const param = useParams();
+
+  // useEffect(() => {
+  //   console.log(param?.id);
+  //   if (param?.id) {
+  //     console.log("프로젝트 리스트", projects);
+  //     projects.map((project) => {
+  //       console.log("반복문", project.project_id);
+  //       if (project.project_id === parseInt(param.id)) {
+  //         setContent(project.projectType);
+  //       }
+  //     });
+  //   } else {
+  //     setContent(null);
+  //   }
+  // }, [param]);
 
   const goHome = () => {
     // 프로젝트 리스트로 이동
@@ -83,7 +99,7 @@ function Nav() {
             {/* 기본 정보 */}
             <li>
               <Link
-                to="project/:id"
+                to={`project/${param?.id}`}
                 className={`text-xl block w-full h-full p-2 border border-[#8F8F8F] shadow-md rounded-lg hover:bg-[#666666] select-none ${
                   activeItem === "기본 정보"
                     ? "bg-[#666666] cursor-default font-bold"
@@ -133,7 +149,7 @@ function Nav() {
               >
                 <li className="mt-5">
                   <Link
-                    to="/project/:id/mindmap"
+                    to={`/project/${param?.id}/mindmap`}
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "마인드 맵"
                         ? "bg-[#666666] cursor-default"
@@ -146,7 +162,7 @@ function Nav() {
                 </li>
                 <li>
                   <Link
-                    to="/project/:id/ideaboard"
+                    to={`/project/${param?.id}/ideaboard`}
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "아이디어 보드"
                         ? "bg-[#666666] cursor-default"
@@ -163,7 +179,7 @@ function Nav() {
             {/* 산출물 메뉴 */}
             <li>
               <div
-                className={` text-xl flex flex-row justify-between items-center cursor-pointer border border-[#858585] shadow-md p-2 select-none ${
+                className={` text-xl flex flex-row justify-between items-center cursor-pointer border border-[#858585] shadow-md p-2 select-none rounded-lg ${
                   isResultOpen ? "font-bold" : ""
                 }`}
                 onClick={toggleResult}
@@ -196,7 +212,7 @@ function Nav() {
               >
                 <li className="mt-5">
                   <Link
-                    to="/project/:id/idea/:ideaid/proposal"
+                    to={`/project/${param?.id}/idea/:ideaid/proposal`}
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "기획서"
                         ? "bg-[#666666] cursor-default"
@@ -209,7 +225,7 @@ function Nav() {
                 </li>
                 <li>
                   <Link
-                    to="/project/:id/idea/:ideaid/requirementsspecification"
+                    to={`/project/${param?.id}/idea/:ideaid/requirementsspecification`}
                     className={`block w-full h-fullx text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "요구사항 명세서"
                         ? "bg-[#666666] cursor-default"
@@ -222,7 +238,7 @@ function Nav() {
                 </li>
                 <li>
                   <Link
-                    to="/project/:id/idea/:ideaid/apispecification"
+                    to={`/project/${param?.id}/idea/:ideaid/apispecification`}
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "API 명세서"
                         ? "bg-[#666666] cursor-default"
@@ -235,7 +251,7 @@ function Nav() {
                 </li>
                 <li>
                   <Link
-                    to="/project/:id/idea/:ideaid/erd"
+                    to={`/project/${param?.id}/idea/:ideaid/erd`}
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "ERD"
                         ? "bg-[#666666] cursor-default"
@@ -248,7 +264,7 @@ function Nav() {
                 </li>
                 <li>
                   <Link
-                    to="/project/:id/idea/:ideaid/flowchart"
+                    to={`/project/${param?.id}/idea/:ideaid/flowchart`}
                     className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
                       activeItem === "FLOWCHART"
                         ? "bg-[#666666] cursor-default"

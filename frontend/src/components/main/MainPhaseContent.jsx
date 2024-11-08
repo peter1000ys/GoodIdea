@@ -4,15 +4,15 @@ import { CustomEase } from "gsap/CustomEase";
 import { TextPlugin } from "gsap/TextPlugin";
 gsap.registerPlugin(CustomEase, TextPlugin);
 
-const PlanType = () => {
+function MainPhaseContent({ phrases }) {
   // Refs for elements
   const typewriterTextRef = useRef(null);
   const cursorRef = useRef(null);
 
   useEffect(() => {
     // Array of phrases
-    const phrases = ["기획 산출물 작성 및 공동 편집", "노션보다 쉽다 !!"];
-    // 하하하
+    // const phrases = ["마인드맵 및 기획 도구", "GOOD IDEA에서 한 번에 !!"];
+
     // Cursor animation
     const cursor = gsap.to(cursorRef.current, {
       opacity: 0,
@@ -67,15 +67,20 @@ const PlanType = () => {
 
     return () => {
       observer.disconnect();
+      masterTl.kill();
+      cursor.kill();
     };
-  }, []);
+  }, [phrases]);
 
   return (
-    <div className="flex flex-row items-start">
+    <div className="flex flex-row items-start ">
       <span
-        className="flex typewriter-text text-3xl font-bold"
+        className="flex typewriter-text text-5xl  text-black"
         ref={typewriterTextRef}
-        style={{ display: "inline-block" }}
+        style={{
+          display: "inline-block",
+          fontFamily: "'Nanum Pen Script', cursive",
+        }}
       ></span>
       <span
         className="typewriter-cursor inline-block bg-black w-1 h-8 ml-1"
@@ -83,6 +88,6 @@ const PlanType = () => {
       ></span>
     </div>
   );
-};
+}
 
-export default PlanType;
+export default MainPhaseContent;

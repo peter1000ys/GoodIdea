@@ -8,6 +8,7 @@ import DefaultButton from "../../components/common/DefaultButton";
 import {
   createMindMap,
   fetchAllGenGithubPJTtoKeyword,
+  fetchMindMap,
   fetchMindMapSubKeyword,
   fetchNewstoKeyword,
 } from "../../api/axios";
@@ -23,7 +24,7 @@ function MindMapPage() {
   const params = useParams();
   const [isPlanOpen, setIsPlanOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [selectedKeyword, setSelectedKeyword] = useState(null);
+  // const [selectedKeyword, setSelectedKeyword] = useState(null);
   const [selectedDetail, setSelectedDetail] = useState(null);
   const [newsIndex, setNewsIndex] = useState(0); // 현재 뉴스 인덱스
   const [githubIndex, setGithubIndex] = useState(0); // 현재 GitHub 링크 인덱스
@@ -46,6 +47,26 @@ function MindMapPage() {
       }
     }
   }, [selectedDetail]);
+
+  useEffect(() => {
+    const init = async () => {
+      const response = await fetchMindMap(params?.id);
+      if (response) {
+        // 이미 생성된 마인드맵이 있으면
+        const { mainKeyword, keywords } = response;
+        const { nodes: newNodes, links: newLinks } = CreateMindMapData(
+          mainKeyword,
+          keywords
+        );
+        setMindMapData({
+          nodes: newNodes,
+          links: newLinks,
+        });
+      }
+    };
+    if (params.id === undefined) return;
+    init();
+  }, [params.id]);
 
   // 마인드맵 검색
   const handleSearch = async () => {

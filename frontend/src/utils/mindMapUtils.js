@@ -1,5 +1,6 @@
 import { colorName } from "../dummy/brainstorming";
 
+// 데이터를 마인드맵 형식에 맞게 만드는 함수
 export function CreateMindMapData(searchKeyword, SubKeywords) {
   const newNodes = SubKeywords.map((node, idx) => ({
     id: node,
