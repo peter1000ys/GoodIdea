@@ -1,7 +1,9 @@
 networks:
   fastapi-network:
   kafka_kafka_network:
+    external: true
   docker-elk_elk:
+    external: true
 
 services:
   crawling:
