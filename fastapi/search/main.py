@@ -89,7 +89,7 @@ async def fetch_repo_info(repo):
         'forks_count': repo.forks_count,
     }
 
-@app.get("/api/v1/news")
+@app.get("/api/v1/search/news")
 async def get_news(query: str = Query(..., description="검색할 키워드를 입력하세요")) -> Any:
     url = f"https://openapi.naver.com/v1/search/news.json?query={query}&sort=sim&display=40"
     headers = {
@@ -107,13 +107,13 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
     # JSON 형태로 결과 반환
     return response.json()
 
-@app.get("/api/v1/recommend")
+@app.get("/api/v1/search/recommend")
 async def recommend(keyword: str = Query(..., description="검색어")):
     recommended_tokens = hybrid_search(keyword, es)
     
     return {"data": recommended_tokens}
 
-@app.get("/api/v1/chatbot")
+@app.get("/api/v1/search/chatbot")
 async def recommend(keyword: str = Query(..., description="검색어")):
     
     return {"message": "서버 점검중입니다. ~11. 18(화)"}
