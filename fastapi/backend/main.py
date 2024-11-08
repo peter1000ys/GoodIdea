@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from github import Github, GithubException
 import asyncio
@@ -39,6 +39,8 @@ NAVER_API_SECRET = os.getenv("NAVER_API_SECRET")
 # ELASTIC ID, PW 설정
 ELASTIC_ID = os.getenv("ELASTIC_ID")
 ELASTIC_PW = os.getenv("ELASTIC_PW")
+
+background_tasks = BackgroundTasks()
 
 # Elasticsearch 인스턴스
 es = Elasticsearch("http://elasticsearch:9200", basic_auth=(ELASTIC_ID, ELASTIC_PW))
@@ -120,14 +122,14 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
 @app.post("/api/v1/crawling/news")
 async def start_news_crawling():
     try:
-        crawl_daum_news((datetime.now() - timedelta(days=1)).strftime("%Y%m%d"))
+        background_tasks.add_task(crawl_daum_news((datetime.now() - timedelta(days=1)).strftime("%Y%m%d")))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
 @app.post("/api/v1/crawling/news/all")
 async def all_news_crawling():
     try:
-        handle_crawl_news_all_request()
+        background_tasks.add_task(handle_crawl_news_all_request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
