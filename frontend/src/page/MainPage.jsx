@@ -356,12 +356,14 @@ function MainPage() {
                     text="GitLab으로 로그인"
                   />
                   {/* 테스트 드라이버용 버튼 ------------------- 시작 ------------------- */}
-                  <DefaultButton
-                    onClick={handleDevLoginForJUHO}
-                    theme="bright"
-                    className="bg-slate-500 hover:bg-slate-300 mt-3"
-                    text="주호 계정으로 로그인하기"
-                  />
+                  {import.meta.env.VITE_APP_MODE === "DEV" && (
+                    <DefaultButton
+                      onClick={handleDevLoginForJUHO}
+                      theme="bright"
+                      className="bg-slate-500 hover:bg-slate-300 mt-3"
+                      text="주호 계정으로 로그인하기"
+                    />
+                  )}
                   {/* 테스트 드라이버용 버튼 ------------------- 끝 ------------------- */}
                 </div>
               )}
