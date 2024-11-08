@@ -60,7 +60,7 @@ function IdeaBoardPage() {
   // };
 
   // 첫 6개의 섹션 랜덤 좌표 + 나머지 전체 범위 랜덤 좌표
-  const coordinates = [
+  const [coordinates, setCoordinates] = useState([
     // ...generateSectionCoordinates(),
     // ...generateRandomCoordinates(2),
     { x: "4%", y: "0%", delay: 0 },
@@ -72,7 +72,7 @@ function IdeaBoardPage() {
     { x: "56%", y: "54%", delay: 600 },
     { x: "12%", y: "38%", delay: 700 },
     { x: "40%", y: "71%", delay: 800 },
-  ];
+  ]);
 
   // 색상 배열 정의
   const colors = [
@@ -92,6 +92,21 @@ function IdeaBoardPage() {
     "#D2A3F1",
     "#B1B1EE",
   ];
+
+  // 스티커 클릭 시 선택 상태로 변경
+  const handleStickerClick = (index) => {
+    setSelectedSticker(coordinates[index]);
+  };
+
+  // 스티커 삭제 함수
+  const handleDeleteSticker = () => {
+    if (selectedSticker) {
+      setCoordinates((prev) =>
+        prev.filter((sticker) => sticker !== selectedSticker)
+      );
+      setSelectedSticker(null); // 삭제 후 선택 해제
+    }
+  };
 
   // 스티커 모달을 여는 함수 - 스티커를 클릭했을 때 호출
   const openModal = (sticker) => {
@@ -220,28 +235,43 @@ function IdeaBoardPage() {
           }}
         >
           {coordinates.map(({ x, y, delay }, index) => (
-            <Sticker
-              key={index}
-              x={x}
-              y={y}
-              delay={delay}
-              color={colors[index % colors.length]}
-              darkColor={darkColors[index % darkColors.length]}
-              onClick={() =>
-                openModal({
-                  x,
-                  y,
-                  color: colors[index % colors.length],
-                  darkColor: darkColors[index % darkColors.length],
-                })
-              }
-            />
+            <div key={index}>
+              <Sticker
+                x={x}
+                y={y}
+                delay={delay}
+                color={colors[index % colors.length]}
+                darkColor={darkColors[index % darkColors.length]}
+                isSelected={coordinates[index] === selectedSticker}
+                onClick={() => handleStickerClick(index)}
+              />
+              {coordinates[index] === selectedSticker && (
+                <div
+                  className="absolute -top-8 right-0 flex space-x-2"
+                  style={{ transform: "translateX(50%)" }}
+                >
+                  <button
+                    className="px-2 py-1 bg-blue-500 text-white rounded text-sm"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    상세보기
+                  </button>
+                  <button
+                    className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                    onClick={handleDeleteSticker}
+                  >
+                    삭제
+                  </button>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
+
       {isModalOpen && selectedSticker && (
         <StickerModal
-          closeModal={closeModal}
+          closeModal={() => setIsModalOpen(false)}
           selectedSticker={selectedSticker}
         />
       )}
@@ -250,6 +280,7 @@ function IdeaBoardPage() {
         <button
           onClick={() => handleZoom(true)}
           className="text-lg font-semibold text-gray-700"
+          title={"ctrl을 누르고 마우스휠을 위로 굴리면 확대가 됩니다"}
         >
           +
         </button>
@@ -264,6 +295,7 @@ function IdeaBoardPage() {
         <button
           onClick={() => handleZoom(false)}
           className="text-lg font-semibold text-gray-700"
+          title={"ctrl을 누르고 마우스휠을 아래로 굴리면 축소가 됩니다"}
         >
           -
         </button>

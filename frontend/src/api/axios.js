@@ -95,7 +95,7 @@ export const createMindMap = async ({ projectId, mainKeyword, keywords }) => {
 // 마인드맵 서브 키워드 조회
 export const fetchMindMapSubKeyword = async (keyword) => {
   const response = await helper(
-    () => AIAxios.get(`api/v1/recommend?keyword=${keyword}`),
+    () => AIAxios.get(`api/v1/search/recommend?keyword=${keyword}`),
     "마인드맵 서브 키워드 조회"
   );
   if (!response.ok) return;

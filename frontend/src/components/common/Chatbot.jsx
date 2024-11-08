@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useChatbotStore from "../../store/useChatbotStore";
-import { sendMessageToGPT } from "../../api/gptApi";
+import { sendMessageToGPT } from "../../api/gptAPI";
 
 const Chatbot = () => {
   const { messages, addUserMessage, addGPTMessage, clearMessages } =
