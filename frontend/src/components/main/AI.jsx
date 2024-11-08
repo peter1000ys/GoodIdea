@@ -67,15 +67,20 @@ const AIType = () => {
 
     return () => {
       observer.disconnect();
+      masterTl.kill();
+      cursor.kill();
     };
   }, []);
 
   return (
     <div className="flex flex-row items-start">
       <span
-        className="flex typewriter-text text-3xl font-bold"
+        className="flex typewriter-text text-3xl font-bold text-black"
         ref={typewriterTextRef}
-        style={{ display: "inline-block" }}
+        style={{
+          display: "inline-block",
+          fontFamily: "'Nanum Pen Script', cursive",
+        }}
       ></span>
       <span
         className="typewriter-cursor inline-block bg-black w-1 h-8 ml-1"

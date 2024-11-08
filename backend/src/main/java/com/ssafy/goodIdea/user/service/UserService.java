@@ -26,13 +26,11 @@ public class UserService {
 
     @Transactional
     public UserDto changeUserLocation(User user, ChangeUserLocationRequestDto dto) {
-        System.out.println(dto.getGrade());
         if ( dto.getGrade() != null )
             user.setGrade(dto.getGrade());
         if ( dto.getLocationType() != null)
             user.setLocationType(dto.getLocationType());
         userRepository.save(user);
-        System.out.println(user.getGrade());
 
         return UserDto.builder()
                 .id(user.getId())
