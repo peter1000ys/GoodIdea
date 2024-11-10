@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import asyncio
 from datetime import datetime, timedelta
 from typing import Any, Dict, List
-
+from utils import crawl_daum_news, handle_crawl_news_all_request
 app = FastAPI()
 origins = [
     "*"
