@@ -4,7 +4,11 @@ FROM python:3.8
 # 필요한 패키지 설치 (librdkafka 및 Java 17)
 RUN apt-get update && apt-get install -y \
     librdkafka-dev \
+    openjdk-17-jdk \
     && rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH="$JAVA_HOME/bin:$PATH"
 
 # ubuntu 사용자 생성
 RUN useradd -s /bin/bash -m ubuntu
@@ -13,6 +17,7 @@ RUN useradd -s /bin/bash -m ubuntu
 WORKDIR /crawling
 COPY . /crawling
 COPY requirements-crawling.txt .
+
 # ubuntu 사용자로 pip3 설치
 RUN chown -R ubuntu:ubuntu /crawling
 USER ubuntu
