@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 
-const Sticker = ({ delay, x, y, color, darkColor, onClick, isSelected }) => {
+const Sticker = ({
+  delay,
+  x,
+  y,
+  color,
+  darkColor,
+  onClick,
+  isSelected,
+  animation,
+}) => {
   const [animate, setAnimate] = useState(false);
-
-  // 애니메이션 클래스 리스트 중 하나를 무작위로 선택
-  const animations = [
-    "animate-tinDownIn",
-    "animate-tinUpIn",
-    "animate-tinRightIn",
-    "animate-tinLeftIn",
-  ];
-
-  const randomAnimation =
-    animations[Math.floor(Math.random() * animations.length)];
 
   useEffect(() => {
     // delay 시간 후에 애니메이션 활성화
@@ -33,7 +31,7 @@ const Sticker = ({ delay, x, y, color, darkColor, onClick, isSelected }) => {
       {/* 중앙에 정렬된 스티커 */}
       <div
         className={`relative w-36 h-36 cursor-pointer transition-all z-10 ${
-          animate ? "randomAnimation" : "opacity-0"
+          animate ? animation : "opacity-0"
         }`}
         onClick={onClick}
       >

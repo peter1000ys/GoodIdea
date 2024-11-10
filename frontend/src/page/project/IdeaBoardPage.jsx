@@ -66,16 +66,87 @@ function IdeaBoardPage() {
   const [coordinates, setCoordinates] = useState([
     // ...generateSectionCoordinates(),
     // ...generateRandomCoordinates(2),
-    { x: "4%", y: "0%", delay: 0, color: "#FFF8B7", darkColor: "#E8DB78" },
-    { x: "30%", y: "8%", delay: 100, color: "#CFF3FF", darkColor: "#A4E1F5" },
-    { x: "67%", y: "20%", delay: 200, color: "#C6FFDC", darkColor: "#77FAA9" },
-    { x: "8%", y: "70%", delay: 300, color: "#FCCDF7", darkColor: "#EF99E6" },
-    { x: "33%", y: "55%", delay: 400, color: "#E8CAFC", darkColor: "#D2A3F1" },
-    { x: "86%", y: "41%", delay: 500, color: "#D2D2F8", darkColor: "#B1B1EE" },
-    { x: "56%", y: "54%", delay: 600, color: "#FFF8B7", darkColor: "#E8DB78" },
-    { x: "12%", y: "38%", delay: 700, color: "#CFF3FF", darkColor: "#A4E1F5" },
-    { x: "40%", y: "71%", delay: 800, color: "#C6FFDC", darkColor: "#77FAA9" },
+    {
+      x: "4%",
+      y: "0%",
+      delay: 0,
+      color: "#FFF8B7",
+      darkColor: "#E8DB78",
+      animation: "animate-tinDownIn",
+    },
+    {
+      x: "30%",
+      y: "8%",
+      delay: 100,
+      color: "#CFF3FF",
+      darkColor: "#A4E1F5",
+      animation: "animate-tinUpIn",
+    },
+    {
+      x: "67%",
+      y: "20%",
+      delay: 200,
+      color: "#C6FFDC",
+      darkColor: "#77FAA9",
+      animation: "animate-tinRightIn",
+    },
+    {
+      x: "8%",
+      y: "70%",
+      delay: 300,
+      color: "#FCCDF7",
+      darkColor: "#EF99E6",
+      animation: "animate-tinLeftIn",
+    },
+    {
+      x: "33%",
+      y: "55%",
+      delay: 400,
+      color: "#E8CAFC",
+      darkColor: "#D2A3F1",
+      animation: "animate-tinDownIn",
+    },
+    {
+      x: "86%",
+      y: "41%",
+      delay: 500,
+      color: "#D2D2F8",
+      darkColor: "#B1B1EE",
+      animation: "animate-tinUpIn",
+    },
+    {
+      x: "56%",
+      y: "54%",
+      delay: 600,
+      color: "#FFF8B7",
+      darkColor: "#E8DB78",
+      animation: "animate-tinRightIn",
+    },
+    {
+      x: "12%",
+      y: "38%",
+      delay: 700,
+      color: "#CFF3FF",
+      darkColor: "#A4E1F5",
+      animation: "animate-tinLeftIn",
+    },
+    {
+      x: "40%",
+      y: "71%",
+      delay: 800,
+      color: "#C6FFDC",
+      darkColor: "#77FAA9",
+      animation: "animate-tinDownIn",
+    },
   ]);
+
+  // 애니메이션
+  const animations = [
+    "animate-tinDownIn",
+    "animate-tinUpIn",
+    "animate-tinRightIn",
+    "animate-tinLeftIn",
+  ];
 
   // 색상 배열 정의
   const colors = [
@@ -237,46 +308,49 @@ function IdeaBoardPage() {
               "radial-gradient(circle, #a5a5a5 1px, transparent 1px) 0 0 / 20px 20px",
           }}
         >
-          {coordinates.map(({ x, y, delay }, index) => (
-            <div
-              key={index}
-              className="relative"
-              style={{ left: x, top: y, position: "absolute" }}
-            >
-              <Sticker
-                delay={delay}
-                color={colors[index % colors.length]}
-                darkColor={darkColors[index % darkColors.length]}
-                isSelected={coordinates[index] === selectedSticker}
-                onClick={() => handleStickerClick(index)}
-              />
-              {coordinates[index] === selectedSticker && (
-                <div
-                  className="absolute flex flex-row items-center space-x-2 z-10"
-                  style={{
-                    top: "-1.5rem", // 스티커의 상단에서 약간 위로
-                    left: "5.3rem", // 스티커의 중심을 기준으로 위치
-                    transform: "translate(-50%, -50%)", // 중앙 정렬 및 약간 위로 이동
-                  }}
-                >
-                  <button
-                    className="px-2 py-1 bg-blue-500 text-white rounded text-xs whitespace-nowrap"
-                    style={{ minWidth: "60px" }}
-                    onClick={() => setIsModalOpen(true)}
+          {coordinates.map(
+            ({ x, y, delay, color, darkColor, animation }, index) => (
+              <div
+                key={index}
+                className="relative"
+                style={{ left: x, top: y, position: "absolute" }}
+              >
+                <Sticker
+                  delay={delay}
+                  color={color}
+                  darkColor={darkColor}
+                  animation={animation}
+                  isSelected={coordinates[index] === selectedSticker}
+                  onClick={() => handleStickerClick(index)}
+                />
+                {coordinates[index] === selectedSticker && (
+                  <div
+                    className="absolute flex flex-row items-center space-x-2 z-10"
+                    style={{
+                      top: "-1.5rem", // 스티커의 상단에서 약간 위로
+                      left: "5.3rem", // 스티커의 중심을 기준으로 위치
+                      transform: "translate(-50%, -50%)", // 중앙 정렬 및 약간 위로 이동
+                    }}
                   >
-                    상세보기
-                  </button>
-                  <button
-                    className="px-2 py-1 bg-red-500 text-white rounded text-xs whitespace-nowrap"
-                    style={{ minWidth: "60px" }}
-                    onClick={handleDeleteSticker}
-                  >
-                    삭제
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+                    <button
+                      className="px-2 py-1 bg-blue-500 text-white rounded text-xs whitespace-nowrap"
+                      style={{ minWidth: "60px" }}
+                      onClick={() => setIsModalOpen(true)}
+                    >
+                      상세보기
+                    </button>
+                    <button
+                      className="px-2 py-1 bg-red-500 text-white rounded text-xs whitespace-nowrap"
+                      style={{ minWidth: "60px" }}
+                      onClick={handleDeleteSticker}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                )}
+              </div>
+            )
+          )}
         </div>
       </div>
 
