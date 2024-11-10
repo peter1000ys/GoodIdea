@@ -50,7 +50,7 @@ const Sticker = ({ delay, x, y, color, darkColor, onClick, isSelected }) => {
         {/* 하단 바 부분 */}
         <div
           className="w-[120px] h-6 ml-auto mr-0"
-          style={{ backgroundColor: color }}
+          style={{ backgroundColor: color, marginTop: "-1.2px" }}
         ></div>
 
         {/* 왼쪽 하단 접힌 부분 */}
