@@ -12,6 +12,9 @@ function IdeaBoardPage() {
   const containerRef = useRef(null);
 
   useEffect(() => {
+    console.log(selectedSticker);
+  }, [selectedSticker]);
+  useEffect(() => {
     // 기본 브라우저 확대/축소 막기
     const preventDefaultZoom = (e) => {
       if (e.ctrlKey && e.type === "wheel") {
@@ -63,15 +66,15 @@ function IdeaBoardPage() {
   const [coordinates, setCoordinates] = useState([
     // ...generateSectionCoordinates(),
     // ...generateRandomCoordinates(2),
-    { x: "4%", y: "0%", delay: 0 },
-    { x: "30%", y: "8%", delay: 100 },
-    { x: "67%", y: "20%", delay: 200 },
-    { x: "8%", y: "70%", delay: 300 },
-    { x: "33%", y: "55%", delay: 400 },
-    { x: "86%", y: "41%", delay: 500 },
-    { x: "56%", y: "54%", delay: 600 },
-    { x: "12%", y: "38%", delay: 700 },
-    { x: "40%", y: "71%", delay: 800 },
+    { x: "4%", y: "0%", delay: 0, color: "#FFF8B7", darkColor: "#E8DB78" },
+    { x: "30%", y: "8%", delay: 100, color: "#CFF3FF", darkColor: "#A4E1F5" },
+    { x: "67%", y: "20%", delay: 200, color: "#C6FFDC", darkColor: "#77FAA9" },
+    { x: "8%", y: "70%", delay: 300, color: "#FCCDF7", darkColor: "#EF99E6" },
+    { x: "33%", y: "55%", delay: 400, color: "#E8CAFC", darkColor: "#D2A3F1" },
+    { x: "86%", y: "41%", delay: 500, color: "#D2D2F8", darkColor: "#B1B1EE" },
+    { x: "56%", y: "54%", delay: 600, color: "#FFF8B7", darkColor: "#E8DB78" },
+    { x: "12%", y: "38%", delay: 700, color: "#CFF3FF", darkColor: "#A4E1F5" },
+    { x: "40%", y: "71%", delay: 800, color: "#C6FFDC", darkColor: "#77FAA9" },
   ]);
 
   // 색상 배열 정의
@@ -235,10 +238,12 @@ function IdeaBoardPage() {
           }}
         >
           {coordinates.map(({ x, y, delay }, index) => (
-            <div key={index}>
+            <div
+              key={index}
+              className="relative"
+              style={{ left: x, top: y, position: "absolute" }}
+            >
               <Sticker
-                x={x}
-                y={y}
                 delay={delay}
                 color={colors[index % colors.length]}
                 darkColor={darkColors[index % darkColors.length]}
@@ -247,17 +252,23 @@ function IdeaBoardPage() {
               />
               {coordinates[index] === selectedSticker && (
                 <div
-                  className="absolute -top-8 right-0 flex space-x-2"
-                  style={{ transform: "translateX(50%)" }}
+                  className="absolute flex flex-row items-center space-x-2 z-10"
+                  style={{
+                    top: "-1.5rem", // 스티커의 상단에서 약간 위로
+                    left: "5.3rem", // 스티커의 중심을 기준으로 위치
+                    transform: "translate(-50%, -50%)", // 중앙 정렬 및 약간 위로 이동
+                  }}
                 >
                   <button
-                    className="px-2 py-1 bg-blue-500 text-white rounded text-sm"
+                    className="px-2 py-1 bg-blue-500 text-white rounded text-xs whitespace-nowrap"
+                    style={{ minWidth: "60px" }}
                     onClick={() => setIsModalOpen(true)}
                   >
                     상세보기
                   </button>
                   <button
-                    className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                    className="px-2 py-1 bg-red-500 text-white rounded text-xs whitespace-nowrap"
+                    style={{ minWidth: "60px" }}
                     onClick={handleDeleteSticker}
                   >
                     삭제
