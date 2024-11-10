@@ -26,11 +26,6 @@ const useProjectStore = create((set, get) => ({
       members: projectData.members,
     }),
 
-    hasMainIdea: () => {
-      const state = get();
-      return state.mainIdea !== null && state.mainIdea !== undefined && state.mainIdea !== '';
-    },
-
   // 초기화
   clearProjectInfo: () =>
     set({
