@@ -67,7 +67,7 @@ function ProposalPage() {
 
   useEffect(() => {
     const client = new Client({
-      brokerURL: `https://oracle1.mypjt.xyz/ws`,
+      brokerURL: `wss://oracle1.mypjt.xyz/ws`,
       connectHeaders: {},
       debug: function (str) {
         console.log("STOMP:", str);
