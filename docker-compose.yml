@@ -1,5 +1,7 @@
 networks:
   msa-network:
+    external: true
+    driver: bridge
 
 services:
   discovery-service:
