@@ -62,6 +62,89 @@ export const deleteProject = async (projectId) => {
   console.log("프로젝트 삭제", response.data);
   return true;
 };
+
+export const createIdea = async (projectId) => {
+  const response = await helper(
+    () =>
+      authAxiosInstance.post(
+        `gateway/project-service/api/v1/idea/${projectId}/create`
+      ),
+    "아이디어 생성"
+  );
+  if (!response.ok) return;
+
+  console.log("아이디어 생성", response.data);
+  return true;
+};
+
+export const fetchIdea = async (projectId) => {
+  const response = await helper(
+    () =>
+      authAxiosInstance.get(`gateway/project-service/api/v1/idea/${projectId}`),
+    "아이디어 목록 조회"
+  );
+  if (!response.ok) return;
+
+  console.log("아이디어 목록 조회", response.data);
+  return response?.data?.data;
+};
+
+export const fetchIdeaDetail = async (projectId, ideaId) => {
+  const response = await helper(
+    () =>
+      authAxiosInstance.get(
+        `gateway/project-service/api/v1/idea/${projectId}/${ideaId}`
+      ),
+    "아이디어 상세 조회"
+  );
+  if (!response.ok) return;
+
+  console.log("아이디어 상세 조회", response.data);
+  return response?.data?.data;
+};
+
+export const deleteIdea = async (ideaId) => {
+  const response = await helper(
+    () =>
+      authAxiosInstance.delete(
+        `gateway/project-service/api/v1/idea/${ideaId}/delete`
+      ),
+    "아이디어 삭제"
+  );
+  if (!response.ok) return;
+
+  console.log("아이디어 삭제", response.data);
+  return true;
+};
+
+export const selectIdea = async (ideaId) => {
+  const response = await helper(
+    () =>
+      authAxiosInstance.put(
+        `gateway/project-service/api/v1/idea/${ideaId}/select`
+      ),
+    "아이디어 채택"
+  );
+  if (!response.ok) return;
+
+  console.log("아이디어 채택", response.data);
+  return true;
+};
+
+export const unselectIdea = async (ideaId) => {
+  const response = await helper(
+    () =>
+      authAxiosInstance.put(
+        `gateway/project-service/api/v1/idea/${ideaId}/unselect`
+      ),
+    "아이디어 채택 취소"
+  );
+  if (!response.ok) return;
+
+  console.log("아이디어 채택 취소", response.data);
+  return true;
+};
+
 // --------------------프로젝트 api 끝---------------------
 
 // --------------------마인드맵 api 시작---------------------
