@@ -9,7 +9,6 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,13 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 public class YjsWebSocketHandler extends TextWebSocketHandler {
     
     private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>();
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         String roomId = extractRoomId(session);
         rooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
-        log.info("New WebSocket connection established for room: {}", roomId);
+        log.info("New WebSocket connection established - Session ID: {}, Room ID: {}, URI: {}", 
+            session.getId(), roomId, session.getUri());
     }
 
     @Override
@@ -61,7 +60,7 @@ public class YjsWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        log.error("WebSocket transport error", exception);
+        log.error("WebSocket transport error - Session ID: {}", session.getId(), exception);
         String roomId = extractRoomId(session);
         log.error("Error in room: {}", roomId);
     }

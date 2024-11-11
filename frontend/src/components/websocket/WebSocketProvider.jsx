@@ -23,8 +23,8 @@ export function WebSocketProvider({
 
     // WebSocket 연결
     wsProvider.current = new WebsocketProvider(
-      `${import.meta.env.VITE_WEBSOCKET_URL}`,
-      `${documentType}-${ideaId}`,
+      `ws://localhost:5173/ws`,
+      `${documentType}/${ideaId}`,
       ydoc.current,
       {
         connect: true,

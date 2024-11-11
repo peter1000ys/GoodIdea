@@ -13,11 +13,11 @@ import com.ssafy.goodIdea.common.handler.YjsWebSocketHandler;
 public class WebSocketConfig implements WebSocketConfigurer {
     
     @Autowired
-    private YjsWebSocketHandler yjsWebSocketHandler;  // 컴포넌트 주입
+    private YjsWebSocketHandler yjsWebSocketHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(yjsWebSocketHandler, "/ws")
+        registry.addHandler(yjsWebSocketHandler, "/ws/**")
                 .setAllowedOrigins(
                     "http://localhost:5173",
                     "https://oracle1.mypjt.xyz"
