@@ -11,11 +11,10 @@ function MainPage() {
   const [isLastSection, setIsLastSection] = useState(false);
   const { setLogin } = useUserStore();
   const navigate = useNavigate();
-  const REDIRECT_URI =
-    "https://goodidea.world/gateway/auth-service/api/v1/auth/callback";
+  const REDIRECT_URI = "https://oracle1.mypjt.xyz/api/v1/auth/callback";
 
   const handleGitLabLogin = () => {
-    window.location.href = `https://lab.ssafy.com/oauth/authorize?client_id=6f0e2194257deee5608935898a17395f218031088862493f206ef8a9df28a90c&redirect_uri=${REDIRECT_URI}&response_type=code&scope=read_user%20api&state=random_state_string`;
+    window.location.href = `https://lab.ssafy.com/oauth/authorize?client_id=423f3efe4f264ff88416dc5ad049498edfaeaf5a68dcdb835ee4ce5b0bf48f32&redirect_uri=${REDIRECT_URI}&response_type=code&scope=read_user%20api&state=random_state_string`;
   };
 
   // 테스트 드라이버용 함수 ----------------- 시작 -----------------
@@ -29,7 +28,7 @@ function MainPage() {
     try {
       // 프로필 정보 요청
       const profileResponse = await axios.get(
-        `https://goodidea.world/gateway/user-service/api/v1/user/profile`,
+        `https://oracle1.mypjt.xyz/api/v1/user/profile`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -68,8 +67,8 @@ function MainPage() {
       {
         id: "section2",
         counter: "02",
-        title: "contact",
-        body: "궁금한 점이 있거나 문의하고 싶다면 언제든지 연락해주세요. 여러분의 의견을 듣고 싶습니다.",
+        title: "Chat Bot Service",
+        body: "궁금한 점이 있다면, GPT 챗봇을 사용해 무엇이든 물어보세요!!",
         bgColor: "bg-red-500",
         textBgColor: "bg-gray-500",
       },
@@ -367,8 +366,8 @@ function MainPage() {
                 <>
                   <MainPhaseContent
                     phrases={[
-                      "마인드맵 및 기획 도구",
-                      "GOOD IDEA에서 한 번에 !!",
+                      "기획.. 많이 어렵죠??!!!",
+                      "GOOD IDEA에서 쉽게 시작하세요 !!",
                     ]}
                   />
                   <p className="text-2xl font-bold mt-8 text-gray-800">
@@ -382,7 +381,7 @@ function MainPage() {
               {section.id === "section2" && (
                 <>
                   <MainPhaseContent
-                    phrases={["CONTACT US !!", "연락주세요 !!"]}
+                    phrases={["CHAT GPT 챗봇", "무엇이든 물어보삼 !!"]}
                   />
                 </>
               )}
