@@ -19,6 +19,7 @@ import SearchBar from "../../components/brainstorming/SearchBar";
 import NotYetSearchText from "../../components/brainstorming/NoSearchText";
 import GithubCarousel from "../../components/brainstorming/GithubCarousel";
 import NewsCarousel from "../../components/brainstorming/NewsCarousel";
+import CarouselItemSkeleton from "../../components/skeleton/CarouselItemSkeleton";
 
 function MindMapPage() {
   const params = useParams();
@@ -204,9 +205,21 @@ function MindMapPage() {
                           selectedDetail
                         )
                       }
-                      className="cursor-pointer shadow-md ml-2 font-semibold text-lg hover:text-blue-500 transition-colors duration-200"
+                      className="cursor-pointer ml-2 p-4 rounded-lg bg-gradient-to-r from-blue-100 to-blue-200 border border-blue-300
+    transition-transform duration-200 hover:shadow-xl"
                     >
-                      {mindMapData?.nodes[0]?.id}
+                      <div className="flex items-center space-x-3">
+                        {/* 아이콘 추가 */}
+                        <div className="text-blue-500 text-2xl">🔍</div>
+
+                        {/* 키워드 강조 */}
+                        <h2 className="font-bold text-xl text-blue-600">
+                          {mindMapData?.nodes[0]?.id}
+                        </h2>
+                      </div>
+
+                      {/* 하단 라인 추가 */}
+                      <div className="mt-2 border-t border-blue-300" />
                     </div>
 
                     {/* 뉴스 및 GitHub 링크 섹션 */}
@@ -218,7 +231,9 @@ function MindMapPage() {
                             관련 뉴스
                           </h3>
                           {dataLoading && (
-                            <p className="text-gray-400">데이터 로딩 중...</p>
+                            <>
+                              <CarouselItemSkeleton />
+                            </>
                           )}
                           {!dataLoading &&
                             (newsDatas.length ? (
@@ -233,9 +248,11 @@ function MindMapPage() {
                                 </div>
                               </div>
                             ) : (
-                              <p className="text-gray-400">
-                                뉴스 정보가 없습니다
-                              </p>
+                              <>
+                                <p className="text-gray-400">
+                                  뉴스 정보가 없습니다
+                                </p>
+                              </>
                             ))}
                         </div>
 
@@ -245,7 +262,9 @@ function MindMapPage() {
                             GitHub 링크
                           </h3>
                           {dataLoading && (
-                            <p className="text-gray-400">데이터 로딩 중...</p>
+                            <>
+                              <CarouselItemSkeleton />
+                            </>
                           )}
                           {!dataLoading &&
                             (githubDatas.length ? (
@@ -294,9 +313,9 @@ function MindMapPage() {
                                   관련 뉴스
                                 </h3>
                                 {dataLoading && (
-                                  <p className="text-gray-400">
-                                    데이터 로딩 중...
-                                  </p>
+                                  <>
+                                    <CarouselItemSkeleton />
+                                  </>
                                 )}
                                 {!dataLoading &&
                                   (newsDatas.length ? (
@@ -323,9 +342,9 @@ function MindMapPage() {
                                   GitHub 링크
                                 </h3>
                                 {dataLoading && (
-                                  <p className="text-gray-400">
-                                    데이터 로딩 중...
-                                  </p>
+                                  <>
+                                    <CarouselItemSkeleton />
+                                  </>
                                 )}
                                 {!dataLoading &&
                                   (githubDatas.length ? (

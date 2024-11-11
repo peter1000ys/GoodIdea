@@ -32,16 +32,25 @@ const CloudOverlay = ({ setIsPlanOpen }) => {
       <div className="text-end space-x-3">
         <button
           onClick={handleClick}
-          className="px-4 py-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 text-white font-bold rounded-full 
+          className="px-4 py-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 text-white font-bold rounded-full hover:from-blue-400 hover:via-cyan-300 hover:to-blue-400
         border-blue-800 focus:outline-none focus:ring-4 focus:ring-yellow-500"
         >
           <span className="text-xs tracking-wider uppercase">Keyword추천</span>
         </button>
-        <DefaultButton
+        <button
+          onClick={() => setIsPlanOpen(true)}
+          // onClick={handleClick}
+          className="px-4 py-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 text-white font-bold rounded-full hover:from-blue-400 hover:via-cyan-300 hover:to-blue-400
+        border-blue-800 focus:outline-none focus:ring-4 focus:ring-yellow-500"
+        >
+          <span className="text-xs tracking-wider">AI Support</span>
+        </button>
+
+        {/* <DefaultButton
           // theme="bright"
           text="AI Support"
           onClick={() => setIsPlanOpen(true)}
-        />
+        /> */}
       </div>
       <div className="flex items-center justify-center">
         {
