@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useRef } from "react";
-import { useEffect, useRef } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { WebSocketProvider, useWebSocket } from "../../components/websocket/WebSocketProvider";
