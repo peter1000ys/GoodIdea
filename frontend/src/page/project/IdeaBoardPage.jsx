@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import Sticker from "../../components/ideaboard/Sticker";
 import { useEffect, useRef, useState } from "react";
 import StickerModal from "../../components/ideaboard/StickerModal";
+import DefaultButton from "../../components/common/DefaultButton";
 
 function IdeaBoardPage() {
   const [selectedSticker, setSelectedSticker] = useState(null); // 선택된 스티커
@@ -172,6 +173,11 @@ function IdeaBoardPage() {
     setSelectedSticker(coordinates[index]);
   };
 
+  // 스티커 추가 함수
+  const handleAddSticker = () => {
+    console.log("아이디어(스티커) 생성");
+  };
+
   // 스티커 삭제 함수
   const handleDeleteSticker = () => {
     if (selectedSticker) {
@@ -315,8 +321,8 @@ function IdeaBoardPage() {
                   <div
                     className="absolute flex flex-row items-center space-x-2 z-10"
                     style={{
-                      top: "-1.5rem", // 스티커의 상단에서 약간 위로
-                      left: "5.3rem", // 스티커의 중심을 기준으로 위치
+                      top: "-1.2rem", // 스티커의 상단에서 약간 위로
+                      left: "4.5rem", // 스티커의 중심을 기준으로 위치
                       transform: "translate(-50%, -50%)", // 중앙 정렬 및 약간 위로 이동
                     }}
                   >
@@ -341,15 +347,35 @@ function IdeaBoardPage() {
           )}
         </div>
       </div>
-
       {isModalOpen && selectedSticker && (
         <StickerModal
           closeModal={() => setIsModalOpen(false)}
           selectedSticker={selectedSticker}
         />
       )}
+      {/* 아이디어(스티커) 추가 */}
+      <DefaultButton
+        onClick={handleAddSticker}
+        type="button"
+        text={
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.99805H13V10.998H19V12.998Z"
+              fill="white"
+            />
+          </svg>
+        }
+        className="fixed top-20 right-4"
+        theme="default"
+      />
       {/* 확대/축소 컨트롤러: transform 외부에 위치 */}
-      <div className="fixed right-4 top-[30%] -translate-y-1/2 flex flex-col items-center gap-2 bg-white rounded-lg p-2 shadow-md select-none">
+      <div className="fixed right-4 top-[25%] -translate-y-1/2 flex flex-col items-center gap-2 bg-white rounded-lg p-2 shadow-md select-none">
         <button
           onClick={() => handleZoom(true)}
           className="text-lg font-semibold text-gray-700"
