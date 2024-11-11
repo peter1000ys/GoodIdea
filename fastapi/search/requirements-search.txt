@@ -6,6 +6,7 @@ charset-normalizer
 colorama
 cryptography
 Deprecated
+distro
 elastic-transport
 elasticsearch
 fastapi
@@ -17,11 +18,12 @@ httpx
 huggingface-hub
 idna
 Jinja2
-uvicorn
+jiter
 MarkupSafe
 mpmath
 networkx
 numpy
+openai
 packaging
 pycparser
 pydantic
