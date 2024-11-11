@@ -144,8 +144,6 @@ def createAIPlanner(OPEN_AI_KEY, payload_dict:dict):
     Provide answers in JSON format and in Korean, ensuring each section is concise yet descriptive for direct inclusion in a professional project proposal document.
     """
 
-
-    # OpenAI API 호출 (ChatCompletion 사용)
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -155,10 +153,8 @@ def createAIPlanner(OPEN_AI_KEY, payload_dict:dict):
         temperature=0.7,
     )
     
-    # 응답 텍스트를 분리하여 딕셔너리 형태로 반환
     text_response = response.choices[0].message.content.strip()
 
-    # 가장 바깥쪽 JSON 객체만 추출
     json_match = re.search(r'(\{.*\})', text_response, re.DOTALL)
     if json_match:
         json_str = json_match.group(0)
@@ -172,5 +168,3 @@ def createAIPlanner(OPEN_AI_KEY, payload_dict:dict):
         response_dict = {"background": "", "service_intro": "", "target_users": "", "expected_effects": ""}
 
     return response_dict
-    
-    
