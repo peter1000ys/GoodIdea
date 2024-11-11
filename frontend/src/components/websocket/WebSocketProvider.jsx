@@ -21,20 +21,31 @@ export function WebSocketProvider({
     ydoc.current = new Y.Doc();
     ytext.current = ydoc.current.getText("content");
 
-    // WebSocket 연결
-    wsProvider.current = new WebsocketProvider(
-      `ws://localhost:5173/ws`,
+    // WebSocket 연결 설정
+    const wsProvider = new WebsocketProvider(
+      "ws://localhost:8080/ws",
       `${documentType}/${ideaId}`,
       ydoc.current,
       {
         connect: true,
         WebSocketPolyfill: WebSocket,
+        // 연결 재시도 설정 추가
+        maxBackoffTime: 3000,
+        reconnectInterval: 1000,
       }
     );
 
+    wsProvider.current = wsProvider;
+
     // 연결 상태 모니터링
-    wsProvider.current.on("status", (event) => {
-      setConnectionStatus(event.status);
+    wsProvider.on("status", ({ status }) => {
+      console.log('WebSocket status:', status);
+      setConnectionStatus(status);
+    });
+
+    // 에러 핸들링 추가
+    wsProvider.on("connection-error", (error) => {
+      console.error('WebSocket connection error:', error);
     });
 
     // 텍스트 변경 관찰
@@ -51,8 +62,11 @@ export function WebSocketProvider({
     });
 
     return () => {
-      if (wsProvider.current) {
-        wsProvider.current.destroy();
+      if (wsProvider) {
+        wsProvider.disconnect();
+        setTimeout(() => {
+          wsProvider.destroy();
+        }, 1000);
       }
       if (ydoc.current) {
         ydoc.current.destroy();
