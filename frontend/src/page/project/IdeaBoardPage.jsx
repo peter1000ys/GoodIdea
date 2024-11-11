@@ -3,8 +3,6 @@ import Sticker from "../../components/ideaboard/Sticker";
 import { useCallback, useEffect, useRef, useState } from "react";
 import StickerModal from "../../components/ideaboard/StickerModal";
 import DefaultButton from "../../components/common/DefaultButton";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { DndProvider } from "react-dnd";
 import { createIdea, deleteIdea, fetchIdea } from "../../api/axios";
 import { useParams } from "react-router-dom";
 
@@ -72,17 +70,6 @@ function IdeaBoardPage() {
     fetchIdeas();
   }, [param?.id, fetchIdeas]);
 
-  const handleMoveSticker = (id, newXPercent, newYPercent) => {
-    setCoordinates((prevCoordinates) =>
-      prevCoordinates.map((sticker) => {
-        console.log(sticker, prevCoordinates);
-        sticker.id === id
-          ? { ...sticker, x: `${newXPercent}%`, y: `${newYPercent}%` }
-          : sticker;
-      })
-    );
-  };
-
   // 스티커 클릭 시 선택 상태 변경
   const handleStickerClick = (index) => {
     setSelectedSticker(coordinates[index]);
@@ -148,7 +135,6 @@ function IdeaBoardPage() {
   const handleWheel = (e) => {
     if (e.ctrlKey) {
       // ctrl 키와 함께 휠을 움직일 때만 확대/축소 적용
-      e.preventDefault(); // 기본 확대/축소 동작 막기
       const zoomIntensity = 0.2; // 확대/축소 강도
       let newScale = scale - e.deltaY * zoomIntensity * 0.01; // 스케일 조정
       newScale = Math.min(Math.max(newScale, 1), 3); // 스케일을 최소 1배, 최대 3배로 제한
@@ -191,7 +177,7 @@ function IdeaBoardPage() {
     setScale(newScale);
   };
   return (
-    <DndProvider backend={HTML5Backend}>
+    <>
       <Helmet>
         <title>아이디어보드 페이지</title>
       </Helmet>
@@ -212,23 +198,19 @@ function IdeaBoardPage() {
           }}
         >
           {coordinates.map(
-            ({ id, x, y, delay, color, darkColor, animation }, index) => (
+            ({ ideaId, x, y, color, darkColor, animation }, index) => (
               <div
-                key={id}
+                key={ideaId}
                 style={{ left: `${x}%`, top: `${y}%`, position: "absolute" }}
               >
                 <Sticker
-                  id={id}
-                  delay={delay}
                   x={`${x}%`}
                   y={`${y}%`}
                   color={color}
                   darkColor={darkColor}
                   animation={animation}
-                  containerRef={containerRef} // 컨테이너 참조 전달
                   isSelected={coordinates[index] === selectedSticker}
                   onClick={() => handleStickerClick(index)}
-                  onMoveSticker={handleMoveSticker}
                 />
                 {coordinates[index] === selectedSticker && (
                   <div
@@ -310,7 +292,7 @@ function IdeaBoardPage() {
           -
         </button>
       </div>
-    </DndProvider>
+    </>
   );
 }
 
