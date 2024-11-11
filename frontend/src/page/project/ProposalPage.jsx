@@ -19,7 +19,7 @@ function ProposalEditor({ initialContent }) {
   const editor = useEditor({
     autofocus: true,
     extensions: [StarterKit.configure({ history: true })],
-    content: initialContent,
+    content: initialContent || '',
     editorProps: {
       attributes: {
         class: `${styles.tiptap} prose max-w-none w-full focus:outline-none`,
@@ -34,7 +34,7 @@ function ProposalEditor({ initialContent }) {
   });
 
   useEffect(() => {
-    if (editor && initialContent) {
+    if (editor && initialContent !== null) {
       isLocalUpdate.current = true;
       editor.commands.setContent(initialContent);
       isLocalUpdate.current = false;
@@ -59,7 +59,7 @@ ProposalEditor.defaultProps = {
 
 function ProposalPage() {
   const { projectId, ideaId } = useParams();
-  const [plannerData, setPlannerData] = useState(null);
+  const [plannerData, setPlannerData] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,9 +67,11 @@ function ProposalPage() {
         const response = await authAxiosInstance.get(
           `api/v1/planner/${ideaId}`
         );
-        setPlannerData(response.data.data.content);
+        console.log("Loaded planner data:", response.data);
+        setPlannerData(response.data.data.content || '');
       } catch (error) {
         console.error("기획서 데이터 로딩 실패:", error);
+        setPlannerData('');
       }
     };
 
@@ -77,7 +79,8 @@ function ProposalPage() {
   }, [ideaId]);
 
   const handleMessageReceived = (data) => {
-    if (data.content) {
+    console.log("Received message:", data);
+    if (data && data.content) {
       setPlannerData(data.content);
     }
   };
@@ -86,7 +89,7 @@ function ProposalPage() {
     <WebSocketProvider
       projectId={projectId}
       ideaId={ideaId}
-      documentType={"planner"}
+      documentType="planner"
       onMessageReceived={handleMessageReceived}
     >
       <Helmet>

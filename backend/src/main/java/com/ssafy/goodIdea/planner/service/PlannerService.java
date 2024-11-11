@@ -39,24 +39,21 @@ public class PlannerService {
             // YJS 업데이트 데이터 파싱
             JsonNode updateData = objectMapper.readTree(operationDto.getData());
             
-            // content 필드에서 실제 내용 추출
-            String content = updateData.path("content")
-                                    .path("data")
-                                    .asText();
-
-            // HTML 태그가 포함된 content 파싱
-            if (content.startsWith("{") && content.endsWith("}")) {
-                JsonNode contentNode = objectMapper.readTree(content);
-                content = contentNode.path("content").asText();
-            }
+            // content 직접 추출 (YJS는 단순 텍스트로 전송)
+            String content = updateData.path("content").asText();
 
             // 컨텐츠 업데이트
             planner.updateContent(content);
+
+            // 변경사항 저장
+            plannerRepository.save(planner);
             
-            // 응답 생성
-            PlannerUpdateResponseDto response = PlannerUpdateResponseDto.from(planner, 
-                updateData.get("clientId").asText(),
-                updateData.get("timestamp").asLong());
+            // 응답 생성 (YJS 형식에 맞춤)
+            PlannerUpdateResponseDto response = PlannerUpdateResponseDto.from(
+                planner, 
+                updateData.path("clientId").asText(),
+                System.currentTimeMillis()
+            );
 
             log.debug("Updated planner content for ideaId: {}", ideaId);
             return response;
