@@ -35,6 +35,7 @@ function ProposalEditor() {
     },
   });
 
+  // 초기 콘텐츠 로딩
   useEffect(() => {
     const loadInitialContent = async () => {
       try {
