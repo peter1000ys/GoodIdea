@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DefaultButton from "../common/DefaultButton";
+import { generatePlan } from "../../api/aiPlan";
 
 const AIPlanForm = ({ onClose }) => {
   const [tags, setTags] = useState({
@@ -15,6 +16,10 @@ const AIPlanForm = ({ onClose }) => {
     기대효과: "",
   });
 
+  const [generatedPlan, setGeneratedPlan] = useState(null); // 초기값 null
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const handleInputChange = (event, key) => {
     setInputs({ ...inputs, [key]: event.target.value });
   };
@@ -29,6 +34,13 @@ const AIPlanForm = ({ onClose }) => {
       });
       setInputs({ ...inputs, [key]: "" });
     }
+  };
+
+  const handleRemoveTag = (key, tagToRemove) => {
+    setTags({
+      ...tags,
+      [key]: tags[key].filter((tag) => tag !== tagToRemove),
+    });
   };
 
   return (
@@ -66,12 +78,7 @@ const AIPlanForm = ({ onClose }) => {
                     >
                       {tag}
                       <button
-                        onClick={() =>
-                          setTags({
-                            ...tags,
-                            [key]: tags[key].filter((t) => t !== tag),
-                          })
-                        }
+                        onClick={() => handleRemoveTag(key, tag)}
                         className="ml-2 text-gray-500 hover:text-gray-700"
                       >
                         &times;
@@ -88,14 +95,35 @@ const AIPlanForm = ({ onClose }) => {
             className="space-y-6 overflow-y-auto pl-4"
             style={{ height: "100%" }}
           >
-            {Object.keys(tags).map((key) => (
-              <div key={key} className="grid grid-rows-[auto_1fr] gap-2">
-                <label className="text-gray-700 font-medium">{key}</label>
-                <div className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-600 h-20">
-                  인공지능이 작성해준 {key} 내용
+            {isLoading && <p>기획서를 생성 중입니다...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            {generatedPlan ? (
+              Object.keys(generatedPlan).map((key) => (
+                <div key={key} className="grid grid-rows-[auto_1fr] gap-2">
+                  <label className="text-gray-700 font-medium">
+                    {key === "background"
+                      ? "기획배경"
+                      : key === "service_intro"
+                      ? "서비스소개"
+                      : key === "target_users"
+                      ? "타겟유저"
+                      : key === "expected_effects"
+                      ? "기대효과"
+                      : key}
+                  </label>
+                  <div className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-600">
+                    {typeof generatedPlan[key] === "string"
+                      ? generatedPlan[key]
+                      : JSON.stringify(generatedPlan[key])}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>
+                생성된 기획서 내용이 없습니다. 키워드를 입력하고 기획서를
+                생성하세요.
+              </p>
+            )}
           </div>
         </div>
 
@@ -103,11 +131,22 @@ const AIPlanForm = ({ onClose }) => {
         <div className="flex justify-between p-8">
           <DefaultButton onClick={onClose} text="닫기" />
           <DefaultButton
-            text="기획서 생성"
-            onClick={() => {
-              // 기획서 생성 로직
+            text={isLoading ? "기획서 생성 중..." : "기획서 생성"}
+            onClick={async () => {
+              setIsLoading(true);
+              setError(null);
+              try {
+                const plan = await generatePlan(tags);
+                console.log("Generated Plan:", plan); // 디버깅을 위한 로그
+                setGeneratedPlan(plan);
+              } catch (err) {
+                setError("기획서 생성에 실패했습니다. 다시 시도해주세요.");
+              } finally {
+                setIsLoading(false);
+              }
             }}
-            type="submit"
+            type="button" // 폼 제출 방지
+            disabled={isLoading} // 로딩 중 버튼 비활성화
           />
         </div>
       </div>
