@@ -124,7 +124,7 @@ async def recommend(keyword: str = Query(..., description="검색어")):
     return {"data": recommended_tokens}
 
 @app.post("/api/v1/search/ai-planner")
-async def createAIPlanner(api_key: str, payload: PlannerPayload):
+async def createAIPlanner(payload: PlannerPayload):
     api_key = OPEN_AI_KEY
     result = createAIPlanner(api_key, payload)
     return {"data": result}
