@@ -1,4 +1,6 @@
 from transformers import AutoTokenizer, AutoModel
+import json
+import re
 import torch
 from openai import OpenAI
 from datetime import datetime, timedelta
@@ -103,11 +105,10 @@ def get_top_tokens_last_7_days(es):
     
     return top_tokens
 
-def createAIPlanner(OPEN_AI_KEY, payload:dict):
+def createAIPlanner(OPEN_AI_KEY, payload_dict:dict):
     client = OpenAI(
         api_key = OPEN_AI_KEY
     )
-    payload_dict = payload.dict()
     # 프롬프트 구성
     prompt = f"""
     You are an AI assistant that drafts a comprehensive project proposal summary in JSON format. For each section below, provide a summary in 1 to 3 full sentences that explains the purpose and key elements of the project. Ensure that each section contains meaningful content based on the provided keywords and must not be left empty. 
@@ -126,6 +127,7 @@ def createAIPlanner(OPEN_AI_KEY, payload:dict):
     1. **Background**: 
        - Describe the context and motivation behind this project, focusing on why this service is needed.
        - Relate the project’s background to the main purpose described in the service introduction, explaining why this service was created to address the issues at hand.
+       - Use the following background keywords to structure this section: {", ".join(payload_dict["background"])}.
 
     2. **Service Introduction**: 
        - Provide a brief overview of the service offered by this project. Explain the primary goals and key features of the service, such as {", ".join(payload_dict["service_intro"])}.
@@ -137,7 +139,7 @@ def createAIPlanner(OPEN_AI_KEY, payload:dict):
 
     4. **Expected Effects**: 
        - Summarize the expected positive outcomes or impacts of this project, explaining any specific improvements, awareness, or behaviors that the project aims to foster.
-       - Each effect should directly relate to the benefits for the target users and broader societal impact, without merely listing keywords.
+       - Each effect should directly relate to the benefits for the target users and broader societal impact, using the following expected effects keywords: {", ".join(payload_dict["expected_effects"])}.
 
     Provide answers in JSON format and in Korean, ensuring each section is concise yet descriptive for direct inclusion in a professional project proposal document.
     """
@@ -156,10 +158,19 @@ def createAIPlanner(OPEN_AI_KEY, payload:dict):
     # 응답 텍스트를 분리하여 딕셔너리 형태로 반환
     text_response = response.choices[0].message.content.strip()
 
-    try:
-        response_dict = eval(text_response)  # JSON 문자열을 딕셔너리로 변환
-    except SyntaxError:
+    # 가장 바깥쪽 JSON 객체만 추출
+    json_match = re.search(r'(\{.*\})', text_response, re.DOTALL)
+    if json_match:
+        json_str = json_match.group(0)
+        try:
+            response_dict = json.loads(json_str)
+        except json.JSONDecodeError:
+            print("JSON 파싱 에러 발생 - 올바른 JSON 형식으로 변환되지 않았습니다.")
+            response_dict = {"background": "", "service_intro": "", "target_users": "", "expected_effects": ""}
+    else:
+        print("JSON 형식을 찾을 수 없음.")
         response_dict = {"background": "", "service_intro": "", "target_users": "", "expected_effects": ""}
 
     return response_dict
+    
     
