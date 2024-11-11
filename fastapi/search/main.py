@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Query, BackgroundTasks
+from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from github import Github, GithubException
 import asyncio
@@ -11,7 +12,7 @@ from pathlib import Path
 import requests
 import json
 from typing import Any, Dict, List
-from recommend import hybrid_search, generate_embedding, get_top_tokens_last_7_days
+from recommend import hybrid_search, generate_embedding, get_top_tokens_last_7_days, createAIPlanner
 from elasticsearch import Elasticsearch
 
 app = FastAPI()
