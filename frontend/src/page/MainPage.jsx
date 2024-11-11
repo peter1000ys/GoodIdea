@@ -12,7 +12,7 @@ function MainPage() {
   const { setLogin } = useUserStore();
   const navigate = useNavigate();
   const REDIRECT_URI =
-    "https://goodidea.world/auth-service/api/v1/auth/callback";
+    "https://goodidea.world/gateway/auth-service/api/v1/auth/callback";
 
   const handleGitLabLogin = () => {
     window.location.href = `https://lab.ssafy.com/oauth/authorize?client_id=423f3efe4f264ff88416dc5ad049498edfaeaf5a68dcdb835ee4ce5b0bf48f32&redirect_uri=${REDIRECT_URI}&response_type=code&scope=read_user%20api&state=random_state_string`;
