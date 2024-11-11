@@ -46,10 +46,10 @@ export const createProject = async (projectData) => {
     () => authAxiosInstance.post("api/v1/project/create", projectData),
     "프로젝트 생성"
   );
-  if (!response.ok) return;
+  if (!response.ok) return { status: false, message: response?.message };
 
   console.log("프로젝트 생성", response.data);
-  return true;
+  return { status: true };
 };
 
 export const deleteProject = async (projectId) => {

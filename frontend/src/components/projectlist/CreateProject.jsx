@@ -60,10 +60,11 @@ const ReaderWritePage = ({ title }) => {
   const handleButtonClick = async () => {
     console.log("프로젝트 데이터:", projectData);
     const isCreate = await createProject(projectData);
-    if (isCreate) {
+    console.log(isCreate);
+    if (isCreate?.status) {
       window.location.reload();
     } else {
-      window.alert("프로젝트 생성에 실패했습니다.");
+      window.alert("프로젝트 생성에 실패했습니다. " + isCreate?.message);
     }
   };
 
