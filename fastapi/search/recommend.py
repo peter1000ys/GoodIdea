@@ -1,6 +1,6 @@
 from transformers import AutoTokenizer, AutoModel
 import torch
-import openai
+from openai import OpenAI
 from datetime import datetime, timedelta
 from fastapi import HTTPException
 
@@ -115,30 +115,63 @@ def get_top_tokens_last_7_days(es):
     return top_tokens
 
 def createAIPlanner(OPEN_AI_KEY, payload):
-
-    # OpenAI API 키 설정
-    openai.api_key = OPEN_AI_KEY
-
-    # 프롬프트 구성
-    prompt = PROMPT_TEMPLATE.format(
-        background=", ".join(payload.background),
-        service_intro=", ".join(payload.service_intro),
-        target_users=", ".join(payload.target_users),
-        expected_effects=", ".join(payload.expected_effects)
+    client = OpenAI(
+        api_key = OPEN_AI_KEY
     )
 
-    # OpenAI API 호출
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are an AI assistant that drafts concise project proposal summaries."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=150,
-            temperature=0.7,
-        )
-        return response.choices[0].text.strip()
+    # 프롬프트 구성
+    prompt = f"""
+    You are an AI assistant that drafts a comprehensive project proposal summary in JSON format. For each section below, provide a summary in 1 to 3 full sentences that explains the purpose and key elements of the project. Ensure that each section contains meaningful content based on the provided keywords and must not be left empty. 
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"AI 응답 생성 중 오류 발생: {e}")
+    Avoid repeating keywords as they are provided and focus on crafting a natural, informative summary. Please return the response in the following JSON format:
+
+    {{
+        "background": "1~3 sentence summary for background",
+        "service_intro": "1~3 sentence summary for service introduction",
+        "target_users": "1~3 sentence summary for target users",
+        "expected_effects": "1~3 sentence summary for expected effects"
+    }}
+
+    Details for each section:
+
+    1. **Background**: 
+       - Describe the context and motivation behind this project, focusing on why this service is needed.
+       - Relate the project’s background to the main purpose described in the service introduction, explaining why this service was created to address the issues at hand.
+
+    2. **Service Introduction**: 
+       - Provide a brief overview of the service offered by this project. Explain the primary goals and key features of the service, such as {", ".join(payload["service_intro"])}.
+       - Describe how each main service feature contributes to the overall goals of the project without repeating the keywords.
+
+    3. **Target Users**: 
+       - Define the primary users of this service and describe how it will benefit each user group, specifically mentioning groups like {", ".join(payload["target_users"])}.
+       - Ensure each target user group is explained in terms of the project’s objectives and potential benefits for them.
+
+    4. **Expected Effects**: 
+       - Summarize the expected positive outcomes or impacts of this project, explaining any specific improvements, awareness, or behaviors that the project aims to foster.
+       - Each effect should directly relate to the benefits for the target users and broader societal impact, without merely listing keywords.
+
+    Provide answers in JSON format and in Korean, ensuring each section is concise yet descriptive for direct inclusion in a professional project proposal document.
+    """
+
+
+    # OpenAI API 호출 (ChatCompletion 사용)
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are an AI assistant that drafts concise project proposal summaries. Each section (Background, Service Introduction, Target Users, Expected Effects) must be filled out with meaningful content."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.7,
+    )
+    
+    # 응답 텍스트를 분리하여 딕셔너리 형태로 반환
+    text_response = response.choices[0].message.content.strip()
+    print(text_response)  # 전체 응답 내용 출력
+
+    try:
+        response_dict = eval(text_response)  # JSON 문자열을 딕셔너리로 변환
+    except SyntaxError:
+        response_dict = {"background": "", "service_intro": "", "target_users": "", "expected_effects": ""}
+
+    return response_dict
+    
