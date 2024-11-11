@@ -63,7 +63,8 @@ async def trainingALL():
 async def training():
     page_size = 1000
     page = 0
-    
+    yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y%m%d")
+
     while True:
         try:
             data = es.search(
@@ -82,6 +83,7 @@ async def training():
                 size=page_size,
                 from_=page * page_size
             )
+            
         except Exception as e:
             break
         
