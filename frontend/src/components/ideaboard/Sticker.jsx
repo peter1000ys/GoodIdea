@@ -11,6 +11,7 @@ const Sticker = ({
   onClick,
   animation,
   onMoveSticker,
+  containerRef, // 컨테이너 참조를 받음
 }) => {
   const [animate, setAnimate] = useState(false);
 
@@ -27,12 +28,20 @@ const Sticker = ({
     }),
   });
 
+  // Sticker.js에서의 drop 함수 설정
   const [, drop] = useDrop({
     accept: "sticker",
     drop: (item, monitor) => {
       const delta = monitor.getDifferenceFromInitialOffset();
-      const newX = parseFloat(item.x) + (delta.x / window.innerWidth) * 100;
-      const newY = parseFloat(item.y) + (delta.y / window.innerHeight) * 100;
+
+      // containerRef를 통해 부모 요소의 너비와 높이 가져오기
+      const containerWidth = containerRef.current.offsetWidth;
+      const containerHeight = containerRef.current.offsetHeight;
+
+      // 픽셀 이동값을 퍼센트로 변환하여 새로운 좌표 설정
+      const newX = parseFloat(item.x) + (delta.x / containerWidth) * 100;
+      const newY = parseFloat(item.y) + (delta.y / containerHeight) * 100;
+      console.log(newX, newY);
       onMoveSticker(item.id, newX, newY);
     },
   });
@@ -46,7 +55,7 @@ const Sticker = ({
         left: x,
         top: y,
         position: "absolute",
-        opacity: isDragging ? 0.5 : 1,
+        opacity: isDragging ? 1 : 1,
       }}
       onClick={onClick}
       ref={(node) => drag(drop(node))}
