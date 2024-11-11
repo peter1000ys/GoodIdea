@@ -15,10 +15,12 @@ import {
 const helper = async (cbFunc, type = "미입력") => {
   if (!cbFunc) return { ok: false };
   try {
-    return { ok: true, data: (await cbFunc()).data }; // 비동기 호출에 await 추가
+    const response = await cbFunc();
+
+    return { ok: true, data: response.data }; // 비동기 호출에 await 추가
   } catch (error) {
     console.error("에러: ", type, "/ status: ", error); // 에러를 한 줄로 처리
-    return { ok: false };
+    return { ok: false, message: error?.response?.data?.message };
   }
 };
 
@@ -51,10 +53,10 @@ export const createProject = async (projectData) => {
     () => authAxiosInstance.post("api/v1/project/create", projectData),
     "프로젝트 생성"
   );
-  if (!response.ok) return;
+  if (!response.ok) return { status: false, message: response?.message };
 
   console.log("프로젝트 생성", response.data);
-  return true;
+  return { status: true, data: response.data };
 };
 
 export const deleteProject = async (projectId) => {
@@ -209,6 +211,17 @@ export const fetchMindMapSubKeyword = async (keyword) => {
   const response = await helper(
     () => AIAxios.get(`api/v1/search/recommend?keyword=${keyword}`),
     "마인드맵 서브 키워드 조회"
+  );
+  if (!response.ok) return;
+  // console.log(response.data);
+  return response?.data?.data;
+};
+
+// 마인드맵 핫힌 키워드 조회
+export const fetchMindMapHotKeyword = async () => {
+  const response = await helper(
+    () => AIAxios.get(`api/v1/search/hot-keyword`),
+    "마인드맵 핫힌 키워드 조회"
   );
   if (!response.ok) return;
   // console.log(response.data);

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { createProject, fetchGitlabProjectList } from "../../api/axios";
+import { useNavigate } from "react-router-dom";
+import { useProjectListStore } from "../../store/useProjectListStore";
 
 const ProjectCard = ({ title, handleReader }) => {
   return (
@@ -29,6 +31,7 @@ const ReaderWritePage = ({ title }) => {
     projectType: title.split(" ")[0], // title에서 첫 단어 추출하여 저장
   });
 
+  const navigate = useNavigate();
   // GitLab 프로젝트 목록을 가져오는 useEffect
   useEffect(() => {
     const fetchProjects = async () => {
@@ -58,12 +61,18 @@ const ReaderWritePage = ({ title }) => {
 
   // 프로젝트 생성 버튼 클릭 시 호출되는 함수
   const handleButtonClick = async () => {
-    console.log("프로젝트 데이터:", projectData);
     const isCreate = await createProject(projectData);
-    if (isCreate) {
-      window.location.reload();
+    if (isCreate?.status) {
+      if (isCreate.data?.data)
+        useProjectListStore.setState({
+          projects: [
+            ...useProjectListStore.getState().projects,
+            isCreate.data?.data,
+          ],
+        });
+      navigate(`/project/${isCreate?.data?.project_id?.id}`);
     } else {
-      window.alert("프로젝트 생성에 실패했습니다.");
+      window.alert("프로젝트 생성에 실패했습니다. " + isCreate?.message);
     }
   };
 

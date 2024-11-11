@@ -1,10 +1,10 @@
 import { Helmet } from "react-helmet-async";
+import React from "react";
 import MindMap from "../../components/brainstorming/MindMap";
 import { useCallback, useEffect, useState } from "react";
 import { mindMapColorData } from "../../dummy/brainstorming";
 import AIPlanForm from "../../components/brainstorming/AIPlanForm";
 import PortalModal from "../../components/common/PortalModal";
-import DefaultButton from "../../components/common/DefaultButton";
 import {
   createMindMap,
   fetchAllGenGithubPJTtoKeyword,
@@ -19,12 +19,12 @@ import SearchBar from "../../components/brainstorming/SearchBar";
 import NotYetSearchText from "../../components/brainstorming/NoSearchText";
 import GithubCarousel from "../../components/brainstorming/GithubCarousel";
 import NewsCarousel from "../../components/brainstorming/NewsCarousel";
+import CarouselItemSkeleton from "../../components/skeleton/CarouselItemSkeleton";
 
 function MindMapPage() {
   const params = useParams();
   const [isPlanOpen, setIsPlanOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
-  // const [selectedKeyword, setSelectedKeyword] = useState(null);
   const [selectedDetail, setSelectedDetail] = useState(null);
   const [newsIndex, setNewsIndex] = useState(0); // 현재 뉴스 인덱스
   const [githubIndex, setGithubIndex] = useState(0); // 현재 GitHub 링크 인덱스
@@ -44,10 +44,37 @@ function MindMapPage() {
         `detail-${selectedDetail.id}`
       );
       if (detailElement) {
-        detailElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        detailElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
     }
   }, [selectedDetail]);
+
+  const handleDetailClick = useCallback(
+    async (detail, type = null, selected = null) => {
+      if (!type && selected && selected?.id === detail.id) {
+        setSelectedDetail(null);
+        return;
+      }
+      setSelectedDetail(detail);
+      try {
+        setDataLoading(true);
+
+        setNewsIndex(0); // 선택할 때 뉴스 인덱스 초기화
+        setGithubIndex(0); // 선택할 때 GitHub 링크 인덱스 초기화
+        const [newGitDatas, newNewsDatas] = await Promise.all([
+          fetchAllGenGithubPJTtoKeyword(detail.id),
+          fetchNewstoKeyword(detail.id),
+        ]);
+
+        // 데이터가 존재하는 경우 각각 상태 업데이트
+        if (newGitDatas) setGithubdatas(newGitDatas?.repositories ?? []);
+        if (newNewsDatas) setNewsdatas(newNewsDatas?.items ?? []);
+      } finally {
+        setDataLoading(false);
+      }
+    },
+    [] // 최소화된 의존성 배열
+  );
 
   useEffect(() => {
     const init = async () => {
@@ -65,11 +92,15 @@ function MindMapPage() {
           nodes: newNodes,
           links: newLinks,
         });
+        handleDetailClick(newNodes[0], "init");
+        setSearchKeyword(newNodes[0]?.id);
       }
     };
     if (params.id === undefined) return;
+
+    if (!handleDetailClick) return;
     init();
-  }, [params.id]);
+  }, [params.id, handleDetailClick]);
 
   // 마인드맵 검색
   const handleSearch = async () => {
@@ -99,34 +130,12 @@ function MindMapPage() {
         nodes: newNodes,
         links: newLinks,
       });
+
+      // setSelectedDetail(newNodes[0]);
+      handleDetailClick(newNodes[0], "init");
     } else {
       alert("서버 에러");
-    }
-
-    setSelectedDetail(null);
-  };
-
-  const handleDetailClick = async (detail) => {
-    if (selectedDetail && selectedDetail.id === detail.id) {
       setSelectedDetail(null);
-      return;
-    }
-    setSelectedDetail(detail);
-    try {
-      setDataLoading(true);
-
-      setNewsIndex(0); // 선택할 때 뉴스 인덱스 초기화
-      setGithubIndex(0); // 선택할 때 GitHub 링크 인덱스 초기화
-      const [newGitDatas, newNewsDatas] = await Promise.all([
-        fetchAllGenGithubPJTtoKeyword(detail.id),
-        fetchNewstoKeyword(detail.id),
-      ]);
-
-      // 데이터가 존재하는 경우 각각 상태 업데이트
-      if (newGitDatas) setGithubdatas(newGitDatas?.repositories ?? []);
-      if (newNewsDatas) setNewsdatas(newNewsDatas?.items ?? []);
-    } finally {
-      setDataLoading(false);
     }
   };
 
@@ -162,7 +171,11 @@ function MindMapPage() {
 
         <div className="m-auto w-full my-2 max-w-5xl relative">
           {/* 추천키워드, AI플랜버튼 영역 */}
-          <CloudOverlay setIsPlanOpen={setIsPlanOpen} />
+          <CloudOverlay
+            setSearchKeyword={setSearchKeyword}
+            handleRecommend={handleSearch}
+            setIsPlanOpen={setIsPlanOpen}
+          />
         </div>
 
         {/* 컨텐츠 레이아웃 */}
@@ -182,81 +195,176 @@ function MindMapPage() {
                 />
                 {/* 관련 뉴스 리스트 영역 */}
                 <div className="w-1/3 p-6 bg-blue-100 border-l border-gray-300">
-                  <h2 className="text-center font-bold mb-4">asdf</h2>
-                  {/* {mindMapData.nodes} */}
-                  <h2 className="text-center font-bold mb-4">
+                  <h2 className="text-center font-bold text-2xl ">
+                    검색한 키워드
+                  </h2>
+
+                  {/* 내가 검색한 키워드 영역 */}
+                  <div>
+                    <div
+                      id={`detail-${mindMapData?.nodes[0]?.id}`}
+                      onClick={() =>
+                        handleDetailClick(
+                          mindMapData?.nodes[0],
+                          null,
+                          selectedDetail
+                        )
+                      }
+                      className="cursor-pointer my-2 ml-2 p-4 rounded-lg bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100  "
+                    >
+                      <div className="flex items-center space-x-3 border-b pb-2 border-blue-300 hover:border-pink-700 transition-all duration-300 ">
+                        {/* 아이콘 추가 */}
+                        <div className="text-blue-500 text-2xl">🔍</div>
+
+                        {/* 키워드 강조 */}
+                        <h2 className="font-bold text-xl text-blue-600">
+                          {mindMapData?.nodes[0]?.id}
+                        </h2>
+                      </div>
+                    </div>
+
+                    {/* 뉴스 및 GitHub 링크 섹션 */}
+                    {selectedDetail === mindMapData?.nodes[0] && (
+                      <div className="items-center my-2 space-y-4">
+                        {/* 관련 뉴스 카드 */}
+                        <div className="p-4 bg-white shadow-sm rounded-lg border border-gray-200">
+                          <h3 className="font-bold text-base text-gray-800 mb-2">
+                            관련 뉴스
+                          </h3>
+                          {dataLoading && (
+                            <>
+                              <CarouselItemSkeleton />
+                            </>
+                          )}
+                          {!dataLoading &&
+                            (newsDatas.length ? (
+                              <div>
+                                <NewsCarousel
+                                  slides={newsDatas}
+                                  currentIndex={newsIndex}
+                                  setCurrentIndex={setNewsIndex}
+                                />
+                                <div className="text-end">
+                                  {newsIndex + 1} / {newsDatas.length}
+                                </div>
+                              </div>
+                            ) : (
+                              <>
+                                <p className="text-gray-400">
+                                  뉴스 정보가 없습니다
+                                </p>
+                              </>
+                            ))}
+                        </div>
+
+                        {/* GitHub 링크 카드 */}
+                        <div className="p-4 bg-white shadow-sm rounded-lg border border-gray-200">
+                          <h3 className="font-bold text-base text-gray-800 mb-2">
+                            GitHub 링크
+                          </h3>
+                          {dataLoading && (
+                            <>
+                              <CarouselItemSkeleton />
+                            </>
+                          )}
+                          {!dataLoading &&
+                            (githubDatas.length ? (
+                              <GithubCarousel
+                                slides={githubDatas}
+                                currentIndex={githubIndex}
+                                setCurrentIndex={setGithubIndex}
+                              />
+                            ) : (
+                              <p className="text-gray-400">
+                                링크 정보가 없습니다
+                              </p>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  {/* 내가 검색한 키워드 영역 끝 */}
+
+                  {/* 연관 키워드 영역 끝 */}
+                  <h2 className="text-center font-bold my-4">
                     키워드와 관련된 정보
                   </h2>
                   <div className="space-y-4 text-gray-700">
-                    {mindMapData.nodes?.map((item, index) => (
-                      <div key={item.id}>
-                        <div
-                          id={`detail-${item.id}`}
-                          onClick={() => handleDetailClick(item)}
-                          className="cursor-pointer font-semibold text-lg hover:text-blue-500 transition-colors duration-200"
-                        >
-                          {index + 1}. {item.id}
-                        </div>
-
-                        {/* 뉴스 및 GitHub 링크 섹션 */}
-                        {selectedDetail === item && (
-                          <div className="items-center my-2 space-y-4">
-                            {/* 관련 뉴스 카드 */}
-                            <div className="p-4 bg-white shadow-sm rounded-lg border border-gray-200">
-                              <h3 className="font-bold text-base text-gray-800 mb-2">
-                                관련 뉴스
-                              </h3>
-                              {dataLoading && (
-                                <p className="text-gray-400">
-                                  데이터 로딩 중...
-                                </p>
-                              )}
-                              {!dataLoading &&
-                                (newsDatas.length ? (
-                                  <div>
-                                    <NewsCarousel
-                                      slides={newsDatas}
-                                      currentIndex={newsIndex}
-                                      setCurrentIndex={setNewsIndex}
-                                    />
-                                    <div className="text-end">
-                                      {newsIndex + 1} / {newsDatas.length}
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <p className="text-gray-400">
-                                    뉴스 정보가 없습니다
-                                  </p>
-                                ))}
-                            </div>
-
-                            {/* GitHub 링크 카드 */}
-                            <div className="p-4 bg-white shadow-sm rounded-lg border border-gray-200">
-                              <h3 className="font-bold text-base text-gray-800 mb-2">
-                                GitHub 링크
-                              </h3>
-                              {dataLoading && (
-                                <p className="text-gray-400">
-                                  데이터 로딩 중...
-                                </p>
-                              )}
-                              {!dataLoading &&
-                                (githubDatas.length ? (
-                                  <GithubCarousel
-                                    slides={githubDatas}
-                                    currentIndex={githubIndex}
-                                    setCurrentIndex={setGithubIndex}
-                                  />
-                                ) : (
-                                  <p className="text-gray-400">
-                                    링크 정보가 없습니다
-                                  </p>
-                                ))}
-                            </div>
+                    {mindMapData.nodes?.map((item, index) => {
+                      if (index === 0)
+                        return <React.Fragment key={item?.id}></React.Fragment>;
+                      return (
+                        <div key={item.id}>
+                          <div
+                            id={`detail-${item.id}`}
+                            onClick={() =>
+                              handleDetailClick(item, null, selectedDetail)
+                            }
+                            className="cursor-pointer font-semibold text-lg hover:text-blue-500 transition-colors duration-200"
+                          >
+                            {index}. {item.id}
                           </div>
-                        )}
-                      </div>
-                    ))}
+
+                          {/* 뉴스 및 GitHub 링크 섹션 */}
+                          {selectedDetail === item && (
+                            <div className="items-center my-2 space-y-4">
+                              {/* 관련 뉴스 카드 */}
+                              <div className="p-4 bg-white shadow-sm rounded-lg border border-gray-200">
+                                <h3 className="font-bold text-base text-gray-800 mb-2">
+                                  관련 뉴스
+                                </h3>
+                                {dataLoading && (
+                                  <>
+                                    <CarouselItemSkeleton />
+                                  </>
+                                )}
+                                {!dataLoading &&
+                                  (newsDatas.length ? (
+                                    <div>
+                                      <NewsCarousel
+                                        slides={newsDatas}
+                                        currentIndex={newsIndex}
+                                        setCurrentIndex={setNewsIndex}
+                                      />
+                                      <div className="text-end">
+                                        {newsIndex + 1} / {newsDatas.length}
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <p className="text-gray-400">
+                                      뉴스 정보가 없습니다
+                                    </p>
+                                  ))}
+                              </div>
+
+                              {/* GitHub 링크 카드 */}
+                              <div className="p-4 bg-white shadow-sm rounded-lg border border-gray-200">
+                                <h3 className="font-bold text-base text-gray-800 mb-2">
+                                  GitHub 링크
+                                </h3>
+                                {dataLoading && (
+                                  <>
+                                    <CarouselItemSkeleton />
+                                  </>
+                                )}
+                                {!dataLoading &&
+                                  (githubDatas.length ? (
+                                    <GithubCarousel
+                                      slides={githubDatas}
+                                      currentIndex={githubIndex}
+                                      setCurrentIndex={setGithubIndex}
+                                    />
+                                  ) : (
+                                    <p className="text-gray-400">
+                                      링크 정보가 없습니다
+                                    </p>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </>

@@ -90,6 +90,14 @@ function ProjectEssentialPage() {
     fields[field].insert(0, value); // 새 텍스트 삽입
   };
 
+  const deleteProjectHandler = async () => {
+    if (confirm("정말로 삭제하시겠습니까?")) {
+      const res = await deleteProject(projectId);
+      if (res) {
+        navigate("/projectlist");
+      }
+    }
+  };
   return (
     <>
       <Helmet>
@@ -145,10 +153,7 @@ function ProjectEssentialPage() {
             </div>
             <div className="flex flex-1 justify-end px-8 mb-8">
               <DefaultButton
-                onClick={() => {
-                  deleteProject(projectId);
-                  navigate("/projectlist");
-                }}
+                onClick={deleteProjectHandler}
                 className=""
                 theme="alert"
                 text={"프로젝트 삭제"}
