@@ -12,7 +12,6 @@ elastic-transport
 elasticsearch
 fastapi
 filelock
-json
 regex
 fsspec
 h11
