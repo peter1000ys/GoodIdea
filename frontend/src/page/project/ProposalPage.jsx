@@ -1,11 +1,10 @@
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { WebSocketProvider } from "../../components/websocket/WebSocketProvider";
-import { DOCUMENT_TYPES, API_ENDPOINTS } from "../../components/websocket/constants";
+import { useEffect, useRef } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect, useRef } from "react";
-import { useWebSocket } from "../../components/websocket/WebSocketProvider";
+import { WebSocketProvider, useWebSocket } from "../../components/websocket/WebSocketProvider";
+import { DOCUMENT_TYPES, API_ENDPOINTS } from "../../components/websocket/constants";
 import authAxiosInstance from "../../api/http-commons/authAxios";
 import "./ProposalPage.module.css";
 
@@ -25,13 +24,12 @@ function ProposalEditor() {
     },
   });
 
-  // 초기 콘텐츠 로딩
   useEffect(() => {
     const loadInitialContent = async () => {
       try {
-        console.log("Loading content for ideaId:", ideaId);
-        const response = await authAxiosInstance.get(`/api/v1/planner/${ideaId}`);
-        console.log("Loaded content:", response.data);
+        const response = await authAxiosInstance.get(
+          API_ENDPOINTS[DOCUMENT_TYPES.PROPOSAL](ideaId)
+        );
 
         if (editor && response.data.data?.content) {
           isLocalUpdate.current = true;
@@ -39,22 +37,12 @@ function ProposalEditor() {
           isLocalUpdate.current = false;
         }
       } catch (error) {
-        console.error("Failed to load content:", error.response?.data || error);
+        console.error("Failed to load content:", error);
       }
     };
 
     loadInitialContent();
   }, [ideaId, editor]);
-
-  const handleMessageReceived = (data) => {
-    if (editor && data.data?.content) {
-      isLocalUpdate.current = true;
-      const { from, to } = editor.state.selection;
-      editor.commands.setContent(data.data.content);
-      editor.commands.setTextSelection({ from, to });
-      isLocalUpdate.current = false;
-    }
-  };
 
   return (
     <EditorContent
@@ -67,12 +55,22 @@ function ProposalEditor() {
 function ProposalPage() {
   const { projectId, ideaId } = useParams();
 
+  const handleMessageReceived = (data) => {
+    const parsedData = JSON.parse(data.data);
+    if (parsedData.content) {
+      // 에디터 내용 업데이트
+      const editor = document.querySelector('.ProseMirror')?.editor;
+      if (editor) {
+        editor.commands.setContent(parsedData.content);
+      }
+    }
+  };
+
   return (
-    <WebSocketProvider 
+    <WebSocketProvider
       projectId={projectId}
       ideaId={ideaId}
-      documentType={DOCUMENT_TYPES.PROPOSAL}
-      apiEndpoint={API_ENDPOINTS[DOCUMENT_TYPES.PROPOSAL](ideaId)}
+      documentType={"planner"}
       onMessageReceived={handleMessageReceived}
     >
       <Helmet>

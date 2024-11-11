@@ -1,6 +1,7 @@
-import { createContext, useContext, useRef, useEffect } from 'react';
-import { Client } from '@stomp/stompjs';
-import { DOCUMENT_TYPES } from './constants';
+import { createContext, useContext, useRef, useEffect } from "react";
+import { Client } from "@stomp/stompjs";
+import PropTypes from 'prop-types';
+import { DOCUMENT_TYPES } from "./constants";
 
 const WebSocketContext = createContext(null);
 
@@ -8,40 +9,44 @@ export function useWebSocket() {
   return useContext(WebSocketContext);
 }
 
-export function WebSocketProvider({ 
-  children, 
-  projectId,  // 프로젝트 ID 추가
-  ideaId, 
-  documentType, 
-  onMessageReceived 
+export function WebSocketProvider({
+  children,
+  projectId,
+  ideaId,
+  documentType,
+  onMessageReceived,
 }) {
   const stompClient = useRef(null);
   const clientId = useRef(`client-${Math.random().toString(36).substr(2, 9)}`);
 
   useEffect(() => {
     const client = new Client({
-      webSocketFactory: () => {
-        const socket = new WebSocket("wss://oracle1.mypjt.xyz/ws");
-        socket.onerror = (error) => {
-          console.error("WebSocket native error:", error);
-        };
-        return socket;
-      },
-      
+        webSocketFactory: () => {
+          // 개발/프로덕션 환경에 따른 WebSocket URL
+          const wsUrl = window.location.hostname === 'localhost'
+            ? 'ws://localhost:8080/ws'
+            : 'wss://oracle1.mypjt.xyz/ws';
+            
+          const socket = new WebSocket(wsUrl);
+          socket.onerror = (error) => {
+            console.error("WebSocket Error:", error);
+          };
+          return socket;
+        },
+
       connectHeaders: {
-        'Origin': window.location.origin
+        Origin: window.location.origin,
       },
-      
+
       reconnectDelay: 5000,
       maxRetries: 5,
-      heartbeatIncoming: 10000,
-      heartbeatOutgoing: 10000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
 
       onConnect: () => {
         console.log(`Connected to WebSocket for ${documentType}`);
-        
-        // projectId와 ideaId를 포함한 토픽 구독
-        client.subscribe(`/topic/project/${projectId}/idea/${ideaId}/${documentType}`, (message) => {
+
+        client.subscribe(`/topic/${documentType}/${ideaId}`, (message) => {
           try {
             const data = JSON.parse(message.body);
             if (data.data.clientId === clientId.current) return;
@@ -88,7 +93,7 @@ export function WebSocketProvider({
     };
 
     stompClient.current.publish({
-      destination: `/app/project/${projectId}/idea/${ideaId}/${documentType}`,
+      destination: `/app/${documentType}/${ideaId}`,
       body: JSON.stringify(operation),
     });
   };
@@ -99,3 +104,11 @@ export function WebSocketProvider({
     </WebSocketContext.Provider>
   );
 }
+
+WebSocketProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+  projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  ideaId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  documentType: PropTypes.oneOf(Object.values(DOCUMENT_TYPES)).isRequired,
+  onMessageReceived: PropTypes.func.isRequired,
+};
