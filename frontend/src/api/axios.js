@@ -125,11 +125,7 @@ export const fetchIdeaDetail = async (projectId, ideaId) => {
 
 export const updateIdea = async (ideaId, x, y) => {
   const response = await helper(
-    () =>
-      authAxiosInstance.put(
-        `gateway/project-service/api/v1/idea/${ideaId}/update`,
-        { x, y }
-      ),
+    () => authAxiosInstance.put(`api/v1/idea/${ideaId}/update`, { x, y }),
     "아이디어 수정"
   );
   if (!response.ok) return;
