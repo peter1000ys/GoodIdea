@@ -20,7 +20,7 @@ const LoginPage = () => {
         try {
           // 프로필 정보 요청
           const profileResponse = await axios.get(
-            `https://goodidea.world/api/user-service/api/v1/user/profile`,
+            `https://goodidea.world/gateway/user-service/api/v1/user/profile`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
