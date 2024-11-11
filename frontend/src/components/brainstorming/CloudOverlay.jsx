@@ -1,13 +1,34 @@
-import React, { useRef, useState } from "react";
-import DefaultButton from "../common/DefaultButton";
+import React, { useEffect, useRef, useState } from "react";
+import { fetchMindMapHotKeyword } from "../../api/axios";
 
-const CloudOverlay = ({ setIsPlanOpen }) => {
-  const containerRef = useRef(null);
+const CloudOverlay = ({ setIsPlanOpen, handleRecommend, setSearchKeyword }) => {
+  const [textArray, setTextArray] = useState([]);
   const [visible, setVisible] = useState(false);
-  const textArray = ["1번", "2번", "3번", "4번", "5번"];
+  const [selectedRecommendText, setSelectedRecommendText] = useState("");
+
+  useEffect(() => {
+    fetchMindMapHotKeyword().then((item) => {
+      const getRandomElements = (arr, count) => {
+        return arr
+          ?.sort(() => Math.random() - 0.5) // 무작위로 섞기
+          ?.slice(0, count); // 원하는 개수만큼 선택
+      };
+      if (item.length === 0) return;
+      const randomFive = getRandomElements(item, 5);
+      setTextArray(randomFive);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (selectedRecommendText) {
+      handleRecommend();
+    }
+  }, [selectedRecommendText, handleRecommend]);
+
+  const containerRef = useRef(null);
 
   const handleClick = (evt) => {
-    evt.preventDefault();
+    evt?.preventDefault();
     if (!containerRef.current) return;
 
     // 모달이 열려 있을 때 -> 닫기 애니메이션 실행
@@ -27,6 +48,12 @@ const CloudOverlay = ({ setIsPlanOpen }) => {
     containerRef.current.classList.add("modal-active");
   };
 
+  const selectKeyword = async (text) => {
+    setSearchKeyword(text);
+    setSelectedRecommendText(text);
+    handleClick();
+  };
+
   return (
     <>
       <div className="text-end space-x-3">
@@ -39,18 +66,11 @@ const CloudOverlay = ({ setIsPlanOpen }) => {
         </button>
         <button
           onClick={() => setIsPlanOpen(true)}
-          // onClick={handleClick}
           className="px-4 py-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 text-white font-bold rounded-full hover:from-blue-400 hover:via-cyan-300 hover:to-blue-400
         border-blue-800 focus:outline-none focus:ring-4 focus:ring-yellow-500"
         >
           <span className="text-xs tracking-wider">AI Support</span>
         </button>
-
-        {/* <DefaultButton
-          // theme="bright"
-          text="AI Support"
-          onClick={() => setIsPlanOpen(true)}
-        /> */}
       </div>
       <div className="flex items-center justify-center">
         {
@@ -59,7 +79,7 @@ const CloudOverlay = ({ setIsPlanOpen }) => {
             title="클릭하면 창이 닫힙니다."
             ref={containerRef}
             onClick={handleClick}
-            className={`fixed cursor-pointer table h-full w-full justify-center top-0 left-0 transform scale-0 transition-opacity duration-700`}
+            className={`z-50 fixed cursor-pointer table h-full w-full justify-center top-0 left-0 transform scale-0 transition-opacity duration-700`}
             style={{ backgroundColor: "#f0faff", opacity: 0.91 }}
           >
             {/* background */}
@@ -71,6 +91,7 @@ const CloudOverlay = ({ setIsPlanOpen }) => {
                 className="bg-white cursor-auto p-12 inline-block rounded-lg relative modal"
               >
                 <h2
+                  onClick={() => selectKeyword("test")}
                   className="text-3xl font-bold mb-6 
               text-transparent bg-clip-text bg-gradient-to-l from-indigo-500 via-purple-500 to-pink-500"
                 >
@@ -81,7 +102,7 @@ const CloudOverlay = ({ setIsPlanOpen }) => {
                     textArray.map((text, index) => (
                       <span
                         key={index}
-                        className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-5xl font-extrabold opacity-0"
+                        className="text-transparent cursor-pointer bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-5xl font-extrabold opacity-0"
                         style={{
                           animation: "textPop 1.5s ease forwards",
                           animationDelay: `${index * 0.4 + 1.5}s`,

@@ -44,7 +44,7 @@ function MindMapPage() {
         `detail-${selectedDetail.id}`
       );
       if (detailElement) {
-        detailElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        detailElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
     }
   }, [selectedDetail]);
@@ -93,6 +93,7 @@ function MindMapPage() {
           links: newLinks,
         });
         handleDetailClick(newNodes[0], "init");
+        setSearchKeyword(newNodes[0]?.id);
       }
     };
     if (params.id === undefined) return;
@@ -170,7 +171,11 @@ function MindMapPage() {
 
         <div className="m-auto w-full my-2 max-w-5xl relative">
           {/* 추천키워드, AI플랜버튼 영역 */}
-          <CloudOverlay setIsPlanOpen={setIsPlanOpen} />
+          <CloudOverlay
+            setSearchKeyword={setSearchKeyword}
+            handleRecommend={handleSearch}
+            setIsPlanOpen={setIsPlanOpen}
+          />
         </div>
 
         {/* 컨텐츠 레이아웃 */}
@@ -205,10 +210,9 @@ function MindMapPage() {
                           selectedDetail
                         )
                       }
-                      className="cursor-pointer ml-2 p-4 rounded-lg bg-gradient-to-r from-blue-100 to-blue-200 border border-blue-300
-    transition-transform duration-200 hover:shadow-xl"
+                      className="cursor-pointer my-2 ml-2 p-4 rounded-lg bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100  "
                     >
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-3 border-b pb-2 border-blue-300 hover:border-pink-700 transition-all duration-300 ">
                         {/* 아이콘 추가 */}
                         <div className="text-blue-500 text-2xl">🔍</div>
 
@@ -217,9 +221,6 @@ function MindMapPage() {
                           {mindMapData?.nodes[0]?.id}
                         </h2>
                       </div>
-
-                      {/* 하단 라인 추가 */}
-                      <div className="mt-2 border-t border-blue-300" />
                     </div>
 
                     {/* 뉴스 및 GitHub 링크 섹션 */}

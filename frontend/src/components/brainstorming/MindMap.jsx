@@ -135,7 +135,7 @@ const MindMap = ({ mindMapData, mindMapColorData, onClick }) => {
   }, [clickHandle, mindMapColorData, mindMapData]);
 
   return (
-    <div className="flex justify-center items-center w-full h-screen">
+    <div className="flex justify-center items-center w-2/3 h-screen">
       {/* 컨테이너의 너비와 높이에 맞춰 SVG 100% 적용 */}
       <svg ref={svgRef}></svg>
     </div>
