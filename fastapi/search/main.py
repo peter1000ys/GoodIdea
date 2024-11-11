@@ -28,10 +28,10 @@ app.add_middleware(
 )
 
 class PlannerPayload(BaseModel):
-    background: list[str]
-    service_intro: list[str]
-    target_users: list[str]
-    expected_effects: list[str]
+    background: List[str]
+    service_intro: List[str]
+    target_users: List[str]
+    expected_effects: List[str]
 
 # .env 불러오기
 env_path = Path(__file__).parent / ".env"
