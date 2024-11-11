@@ -1,13 +1,15 @@
 import { Helmet } from "react-helmet-async";
 import Sticker from "../../components/ideaboard/Sticker";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import StickerModal from "../../components/ideaboard/StickerModal";
 import DefaultButton from "../../components/common/DefaultButton";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
-import { coordinates as initCoordinates } from "../../components/ideaboard/variable";
+import { createIdea, deleteIdea, fetchIdea } from "../../api/axios";
+import { useParams } from "react-router-dom";
 
 function IdeaBoardPage() {
+  const param = useParams();
   const [selectedSticker, setSelectedSticker] = useState(null); // 선택된 스티커
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [scale, setScale] = useState(1); // 확대/축소 비율
@@ -15,9 +17,10 @@ function IdeaBoardPage() {
   const [translate, setTranslate] = useState({ x: 0, y: 0 }); // 이동 비율
   const [spacePressed, setSpacePressed] = useState(false);
   const containerRef = useRef(null);
+  const [coordinates, setCoordinates] = useState([]); // 스티커 상태
 
+  // 기본 브라우저 확대/축소 막기
   useEffect(() => {
-    // 기본 브라우저 확대/축소 막기
     const preventDefaultZoom = (e) => {
       if (e.ctrlKey && e.type === "wheel") {
         e.preventDefault();
@@ -33,40 +36,7 @@ function IdeaBoardPage() {
     };
   }, []);
 
-  // 첫 6개 좌표를 각 섹션 범위 내에서 랜덤으로 생성
-  // const generateSectionCoordinates = () => {
-  //   const coordinates = [
-  //     { xRange: [0, 14], yRange: [0, 28] },
-  //     { xRange: [28, 43], yRange: [0, 28] },
-  //     { xRange: [57, 86], yRange: [0, 28] },
-  //     { xRange: [0, 14], yRange: [41, 71] },
-  //     { xRange: [28, 43], yRange: [41, 71] },
-  //     { xRange: [57, 86], yRange: [41, 71] },
-  //   ];
-
-  //   return coordinates.map(({ xRange, yRange }, index) => ({
-  //     x: `${xRange[0] + Math.random() * (xRange[1] - xRange[0])}%`,
-  //     y: `${yRange[0] + Math.random() * (yRange[1] - yRange[0])}%`,
-  //     delay: index * 100,
-  //   }));
-  // };
-
-  // 나머지 좌표는 전체 범위에서 랜덤으로 생성
-  // const generateRandomCoordinates = (count) => {
-  //   const coordinates = [];
-  //   for (let i = 0; i < count; i++) {
-  //     coordinates.push({
-  //       x: `${Math.random() * 86}%`, // x 범위 0% ~ 86%
-  //       y: `${Math.random() * 71}%`, // y 범위 0% ~ 71%
-  //       delay: (i + 6) * 100,
-  //     });
-  //   }
-  //   return coordinates;
-  // };
-
-  // 첫 6개의 섹션 랜덤 좌표 + 나머지 전체 범위 랜덤 좌표
-  const [coordinates, setCoordinates] = useState(initCoordinates);
-
+  // 마우스로 화면 끌 때 스페이스바 누르고 움직임
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === " ") {
@@ -90,15 +60,27 @@ function IdeaBoardPage() {
     };
   }, []);
 
+  const fetchIdeas = useCallback(async () => {
+    const data = await fetchIdea(param?.id);
+    if (data) {
+      setCoordinates(data);
+    }
+  }, [param?.id]);
+
+  // 아이디어 목록 조회
+  useEffect(() => {
+    fetchIdeas();
+  }, [param?.id, fetchIdeas]);
+
   const handleMoveSticker = (id, newXPercent, newYPercent) => {
     setCoordinates((prevCoordinates) =>
-      prevCoordinates.map((sticker) =>
+      prevCoordinates.map((sticker) => {
+        console.log(sticker, prevCoordinates);
         sticker.id === id
           ? { ...sticker, x: `${newXPercent}%`, y: `${newYPercent}%` }
-          : sticker
-      )
+          : sticker;
+      })
     );
-    console.log(id, newXPercent, newYPercent);
   };
 
   // 스티커 클릭 시 선택 상태 변경
@@ -107,18 +89,16 @@ function IdeaBoardPage() {
   };
 
   // 스티커 추가 함수
-  const handleAddSticker = () => {
-    console.log("아이디어(스티커) 생성");
+  const handleAddSticker = async () => {
+    await createIdea(param?.id);
+    fetchIdeas();
   };
 
   // 스티커 삭제 함수
-  const handleDeleteSticker = () => {
-    if (selectedSticker) {
-      setCoordinates((prev) =>
-        prev.filter((sticker) => sticker !== selectedSticker)
-      );
-      setSelectedSticker(null); // 삭제 후 선택 해제
-    }
+  const handleDeleteSticker = async () => {
+    await deleteIdea(selectedSticker?.ideaId);
+    fetchIdeas();
+    setSelectedSticker(null); // 선택된 스티커 초기화
   };
 
   // 마우스로 화면을 드래그하여 이동하는 기능
@@ -160,7 +140,6 @@ function IdeaBoardPage() {
       window.removeEventListener("mouseup", handleMouseUp); // 마우스 버튼 떼기 이벤트 제거
     };
 
-    // 드래그 시작 시 이벤트 리스너 추가
     window.addEventListener("mousemove", handleMouseMove); // 마우스 이동 감지
     window.addEventListener("mouseup", handleMouseUp); // 마우스 버튼 떼기 감지
   };
@@ -234,12 +213,15 @@ function IdeaBoardPage() {
         >
           {coordinates.map(
             ({ id, x, y, delay, color, darkColor, animation }, index) => (
-              <div key={id} style={{ left: x, top: y, position: "absolute" }}>
+              <div
+                key={id}
+                style={{ left: `${x}%`, top: `${y}%`, position: "absolute" }}
+              >
                 <Sticker
                   id={id}
                   delay={delay}
-                  x={x}
-                  y={y}
+                  x={`${x}%`}
+                  y={`${y}%`}
                   color={color}
                   darkColor={darkColor}
                   animation={animation}
@@ -253,7 +235,7 @@ function IdeaBoardPage() {
                     className="absolute flex flex-row items-center space-x-2 z-10"
                     style={{
                       top: "-1.2rem",
-                      left: "4.5rem",
+                      left: "5rem",
                       transform: "translate(-50%, -50%)",
                     }}
                   >
