@@ -1,129 +1,77 @@
-import { createContext, useContext, useRef, useEffect } from "react";
-import { Client } from "@stomp/stompjs";
-import PropTypes from 'prop-types';
-import { DOCUMENT_TYPES } from "./constants";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import * as Y from "yjs";
+import { WebsocketProvider } from "y-websocket";
+import PropTypes from "prop-types";
 
 const WebSocketContext = createContext(null);
 
-export function useWebSocket() {
-  return useContext(WebSocketContext);
-}
-
 export function WebSocketProvider({
   children,
-  projectId,
   ideaId,
   documentType,
   onMessageReceived,
 }) {
-  const stompClient = useRef(null);
-  const clientId = useRef(`client-${Math.random().toString(36).substr(2, 9)}`);
+  const ydoc = useRef(null);
+  const wsProvider = useRef(null);
+  const ytext = useRef(null);
+  const [connectionStatus, setConnectionStatus] = useState("disconnected");
 
   useEffect(() => {
-    const client = new Client({
-        webSocketFactory: () => {
-          const wsUrl = import.meta.env.VITE_WEBSOCKET_URL;
-            
-          console.log("Attempting to connect to:", wsUrl);
-          
-          const socket = new WebSocket(wsUrl);
-          
-          socket.onopen = () => {
-            console.log("WebSocket connection established");
-          };
+    // YJS 문서 초기화
+    ydoc.current = new Y.Doc();
+    ytext.current = ydoc.current.getText("content");
 
-          socket.onerror = (error) => {
-            console.error("WebSocket Error:", error);
-            console.error("Connection State:", {
-              readyState: socket.readyState,
-              url: socket.url,
-              protocol: socket.protocol,
-              bufferedAmount: socket.bufferedAmount
-            });
-          };
-          
-          socket.onclose = (event) => {
-            console.log("WebSocket closed:", {
-              code: event.code,
-              reason: event.reason,
-              wasClean: event.wasClean
-            });
-          };
-          
-          return socket;
-        },
-
-      connectHeaders: {
-        Origin: window.location.origin,
-      },
-
-      reconnectDelay: 5000,
-      maxRetries: 5,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
-
-      onConnect: () => {
-        console.log(`Connected to WebSocket for ${documentType}`);
-
-        client.subscribe(`/topic/${documentType}/${ideaId}`, (message) => {
-          try {
-            const data = JSON.parse(message.body);
-            if (data.data.clientId === clientId.current) return;
-            onMessageReceived(data);
-          } catch (error) {
-            console.error("Parsing error details:", {
-              error: error.message,
-              step: error.stack,
-              rawMessage: message.body,
-            });
-          }
-        });
-      },
-      onError: (error) => {
-        console.error("WebSocket Error:", error);
-      },
-      onDisconnect: () => {
-        console.log("Disconnected from WebSocket");
-      },
-      debug: (str) => {
-        console.log(`STOMP Debug [${new Date().toISOString()}]:`, str);
+    // WebSocket 연결
+    wsProvider.current = new WebsocketProvider(
+      `${import.meta.env.VITE_WEBSOCKET_URL}`,
+      `${documentType}-${ideaId}`,
+      ydoc.current,
+      {
+        connect: true,
+        WebSocketPolyfill: WebSocket,
       }
+    );
+
+    // 연결 상태 모니터링
+    wsProvider.current.on("status", (event) => {
+      setConnectionStatus(event.status);
     });
 
-    client.activate();
-    stompClient.current = client;
+    // 텍스트 변경 관찰
+    ytext.current.observe((event) => {
+      if (event.transaction.local) return; // 로컬 변경사항은 무시
 
-    return () => {
-      if (stompClient.current) {
-        stompClient.current.deactivate();
-      }
-    };
-  }, [projectId, ideaId, documentType, onMessageReceived]);
-
-  const sendMessage = useCallback((content) => {
-    if (!stompClient.current?.connected) return;
-
-    const operation = {
-      projectId: Number(projectId),
-      ideaId: Number(ideaId),
-      data: JSON.stringify({
+      const content = ytext.current.toString();
+      onMessageReceived({
         content,
         timestamp: Date.now(),
-        clientId: clientId.current,
         documentType,
-      }),
-    };
-
-    stompClient.current.publish({
-      destination: `/app/${documentType}/${ideaId}`,
-      body: JSON.stringify(operation),
+        ideaId,
+      });
     });
-  }, [projectId, ideaId, documentType]);
+
+    return () => {
+      if (wsProvider.current) {
+        wsProvider.current.destroy();
+      }
+      if (ydoc.current) {
+        ydoc.current.destroy();
+      }
+    };
+  }, [ideaId, documentType, onMessageReceived]);
+
+  const sendMessage = (content) => {
+    if (!ytext.current) return;
+
+    // YJS 문서 업데이트
+    ydoc.current.transact(() => {
+      ytext.current.delete(0, ytext.current.length);
+      ytext.current.insert(0, content);
+    });
+  };
 
   return (
-    <WebSocketContext.Provider
-      value={{ sendMessage, clientId: clientId.current }}
-    >
+    <WebSocketContext.Provider value={{ sendMessage, connectionStatus }}>
       {children}
     </WebSocketContext.Provider>
   );
@@ -131,8 +79,13 @@ export function WebSocketProvider({
 
 WebSocketProvider.propTypes = {
   children: PropTypes.node.isRequired,
-  projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
   ideaId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  documentType: PropTypes.oneOf(Object.values(DOCUMENT_TYPES)).isRequired,
+  documentType: PropTypes.string.isRequired,
   onMessageReceived: PropTypes.func.isRequired,
 };
+
+export function useWebSocket() {
+  return useContext(WebSocketContext);
+}
