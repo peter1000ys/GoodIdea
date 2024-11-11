@@ -182,18 +182,6 @@ function IdeaBoardPage() {
     }
   };
 
-  // 스티커 모달을 여는 함수 - 스티커를 클릭했을 때 호출
-  const openModal = (sticker) => {
-    setSelectedSticker(sticker); // 선택된 스티커 정보를 상태에 저장
-    setIsModalOpen(true); // 모달 열기
-  };
-
-  // 스티커 모달을 닫는 함수 - 모달을 닫는 버튼이나 배경을 클릭했을 때 호출
-  const closeModal = () => {
-    setSelectedSticker(null); // 선택된 스티커 정보를 초기화
-    setIsModalOpen(false); // 모달 닫기
-  };
-
   // 마우스로 화면을 드래그하여 이동하는 기능
   const handleMouseDown = (e) => {
     setIsDragging(true);
