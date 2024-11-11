@@ -197,47 +197,44 @@ function IdeaBoardPage() {
               "radial-gradient(circle, #a5a5a5 1px, transparent 1px) 0 0 / 20px 20px",
           }}
         >
-          {coordinates.map(
-            ({ ideaId, x, y, color, darkColor, animation }, index) => (
-              <div
-                key={ideaId}
-                style={{ left: `${x}%`, top: `${y}%`, position: "absolute" }}
-              >
-                <Sticker
-                  x={`${x}%`}
-                  y={`${y}%`}
-                  color={color}
-                  darkColor={darkColor}
-                  animation={animation}
-                  isSelected={coordinates[index] === selectedSticker}
-                  onClick={() => handleStickerClick(index)}
-                />
-                {coordinates[index] === selectedSticker && (
-                  <div
-                    className="absolute flex flex-row items-center space-x-2 z-10"
-                    style={{
-                      top: "-1.2rem",
-                      left: "5rem",
-                      transform: "translate(-50%, -50%)",
-                    }}
+          {coordinates.map((coordinate, index) => (
+            <div
+              key={coordinate.ideaId}
+              style={{
+                left: `${coordinate.x}%`,
+                top: `${coordinate.y}%`,
+                position: "absolute",
+              }}
+            >
+              <Sticker
+                coordinate={coordinate}
+                onClick={() => handleStickerClick(index)}
+              />
+              {coordinate === selectedSticker && (
+                <div
+                  className="absolute flex flex-row items-center space-x-2 z-10"
+                  style={{
+                    top: "-1.2rem",
+                    left: "5rem",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <button
+                    className="px-2 py-1 bg-blue-500 text-white rounded text-xs whitespace-nowrap"
+                    onClick={() => setIsModalOpen(true)}
                   >
-                    <button
-                      className="px-2 py-1 bg-blue-500 text-white rounded text-xs whitespace-nowrap"
-                      onClick={() => setIsModalOpen(true)}
-                    >
-                      상세보기
-                    </button>
-                    <button
-                      className="px-2 py-1 bg-red-500 text-white rounded text-xs whitespace-nowrap"
-                      onClick={handleDeleteSticker}
-                    >
-                      삭제
-                    </button>
-                  </div>
-                )}
-              </div>
-            )
-          )}
+                    상세보기
+                  </button>
+                  <button
+                    className="px-2 py-1 bg-red-500 text-white rounded text-xs whitespace-nowrap"
+                    onClick={handleDeleteSticker}
+                  >
+                    삭제
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
       {isModalOpen && selectedSticker && (
