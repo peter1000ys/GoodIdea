@@ -151,7 +151,7 @@ function MindMapPage() {
         <title>마인드맵페이지</title>
       </Helmet>
 
-      <div className="h-full w-full flex flex-col relative">
+      <div className="h-full w-full flex flex-col relative pb-10">
         {/* 검색창 */}
         <SearchBar
           handleInfoClick={handeInfoClick}
@@ -214,11 +214,16 @@ function MindMapPage() {
                               )}
                               {!dataLoading &&
                                 (newsDatas.length ? (
-                                  <NewsCarousel
-                                    slides={newsDatas}
-                                    currentIndex={newsIndex}
-                                    setCurrentIndex={setNewsIndex}
-                                  />
+                                  <div>
+                                    <NewsCarousel
+                                      slides={newsDatas}
+                                      currentIndex={newsIndex}
+                                      setCurrentIndex={setNewsIndex}
+                                    />
+                                    <div className="text-end">
+                                      {newsIndex + 1} / {newsDatas.length}
+                                    </div>
+                                  </div>
                                 ) : (
                                   <p className="text-gray-400">
                                     뉴스 정보가 없습니다
