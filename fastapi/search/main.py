@@ -6,11 +6,12 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import os
 import httpx
+from pydantic import BaseModel
 from pathlib import Path
 import requests
 import json
 from typing import Any, Dict, List
-from recommend import hybrid_search, generate_embedding
+from recommend import hybrid_search, generate_embedding, get_top_tokens_last_7_days
 from elasticsearch import Elasticsearch
 
 app = FastAPI()
@@ -25,6 +26,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class PlannerPayload(BaseModel):
+    background: list[str]
+    service_intro: list[str]
+    target_users: list[str]
+    expected_effects: list[str]
+
 # .env 불러오기
 env_path = Path(__file__).parent / ".env"
 load_dotenv(dotenv_path=env_path)
@@ -37,6 +44,9 @@ NAVER_API_SECRET = os.getenv("NAVER_API_SECRET")
 # ELASTIC ID, PW 설정
 ELASTIC_ID = os.getenv("ELASTIC_ID")
 ELASTIC_PW = os.getenv("ELASTIC_PW")
+
+# OPEN AI KEY SETTING
+OPEN_AI_KEY = os.getenv("GPT_KEY")
 
 # Elasticsearch 인스턴스
 es = Elasticsearch("http://elasticsearch:9200", basic_auth=(ELASTIC_ID, ELASTIC_PW))
@@ -112,7 +122,14 @@ async def recommend(keyword: str = Query(..., description="검색어")):
     
     return {"data": recommended_tokens}
 
-@app.get("/api/v1/search/chatbot")
-async def recommend(keyword: str = Query(..., description="검색어")):
+@app.post("/api/v1/search/ai-planner")
+async def createAIPlanner(api_key: str, payload: PlannerPayload):
+    api_key = OPEN_AI_KEY
+    result = createAIPlanner(api_key, payload)
+    return {"data": result}
+
+@app.get("/api/v1/search/hot-keyword")
+async def hotKeyword():
+    recommended_tokens = get_top_tokens_last_7_days(es)
     
-    return {"message": "서버 점검중입니다. ~11. 18(화)"}
+    return {"data": recommended_tokens}

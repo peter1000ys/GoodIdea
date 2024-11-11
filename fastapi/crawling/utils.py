@@ -22,7 +22,7 @@ okt = Okt()
 stopwords = load_stopwords()
 
 def extract_meaningful_tokens(text):
-    tokens = [word for word, pos in okt.pos(text) if pos == "Noun" and word not in stopwords and len(word) > 1 and word not in ["포토", "사진", "종합", "오늘", "내일", "내년", "한국", "개최", "글로벌", "공개", "사업"] ]
+    tokens = [word for word, pos in okt.pos(text) if pos == "Noun" and word not in stopwords and len(word) > 1 and word not in ["포토", "사진", "종합", "오늘", "내일", "내년", "한국", "개최", "글로벌", "공개", "사업", "속보"] ]
     return tokens
 
 def get_last_page(target_date):
