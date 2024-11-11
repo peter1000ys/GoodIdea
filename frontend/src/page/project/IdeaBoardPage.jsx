@@ -9,15 +9,12 @@ import { DndProvider } from "react-dnd";
 function IdeaBoardPage() {
   const [selectedSticker, setSelectedSticker] = useState(null); // 선택된 스티커
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [scale, setScale] = useState(1.5); // 확대/축소 비율
+  const [scale, setScale] = useState(1); // 확대/축소 비율
   const [isDragging, setIsDragging] = useState(false);
   const [translate, setTranslate] = useState({ x: 0, y: 0 }); // 이동 비율
   const [spacePressed, setSpacePressed] = useState(false);
   const containerRef = useRef(null);
 
-  useEffect(() => {
-    console.log(selectedSticker);
-  }, [selectedSticker]);
   useEffect(() => {
     // 기본 브라우저 확대/축소 막기
     const preventDefaultZoom = (e) => {
@@ -153,33 +150,6 @@ function IdeaBoardPage() {
     },
   ]);
 
-  // 애니메이션
-  const animations = [
-    "animate-tinDownIn",
-    "animate-tinUpIn",
-    "animate-tinRightIn",
-    "animate-tinLeftIn",
-  ];
-
-  // 색상 배열 정의
-  const colors = [
-    "#FFF8B7",
-    "#CFF3FF",
-    "#C6FFDC",
-    "#FCCDF7",
-    "#E8CAFC",
-    "#D2D2F8",
-  ];
-
-  const darkColors = [
-    "#E8DB78",
-    "#A4E1F5",
-    "#77FAA9",
-    "#EF99E6",
-    "#D2A3F1",
-    "#B1B1EE",
-  ];
-
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === " ") {
@@ -211,6 +181,7 @@ function IdeaBoardPage() {
           : sticker
       )
     );
+    console.log(id, newXPercent, newYPercent);
   };
 
   // 스티커 클릭 시 선택 상태 변경
@@ -284,7 +255,7 @@ function IdeaBoardPage() {
       e.preventDefault(); // 기본 확대/축소 동작 막기
       const zoomIntensity = 0.2; // 확대/축소 강도
       let newScale = scale - e.deltaY * zoomIntensity * 0.01; // 스케일 조정
-      newScale = Math.min(Math.max(newScale, 1), 4); // 스케일을 최소 1배, 최대 3배로 제한
+      newScale = Math.min(Math.max(newScale, 1), 3); // 스케일을 최소 1배, 최대 3배로 제한
 
       // 부모 요소의 크기를 참조하여 새 스케일에 맞는 이동 범위 설정
       const { offsetWidth: parentWidth, offsetHeight: parentHeight } =
@@ -346,11 +317,7 @@ function IdeaBoardPage() {
         >
           {coordinates.map(
             ({ id, x, y, delay, color, darkColor, animation }, index) => (
-              <div
-                key={id}
-                className="relative"
-                style={{ left: x, top: y, position: "absolute" }}
-              >
+              <div key={id} style={{ left: x, top: y, position: "absolute" }}>
                 <Sticker
                   id={id}
                   delay={delay}
