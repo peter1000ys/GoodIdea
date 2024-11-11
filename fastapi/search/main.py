@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Query, BackgroundTasks
-from typing import List
+from typing import List, Any, Dict
 from fastapi.middleware.cors import CORSMiddleware
 from github import Github, GithubException
 import asyncio
@@ -7,11 +7,9 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import os
 import httpx
-from pydantic import BaseModel
 from pathlib import Path
 import requests
 import json
-from typing import Any, Dict, List
 from recommend import hybrid_search, generate_embedding, get_top_tokens_last_7_days, createAIPlanner
 from elasticsearch import Elasticsearch
 
@@ -26,12 +24,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-class PlannerPayload(BaseModel):
-    background: List[str]
-    service_intro: List[str]
-    target_users: List[str]
-    expected_effects: List[str]
 
 # .env 불러오기
 env_path = Path(__file__).parent / ".env"
@@ -124,7 +116,7 @@ async def recommend(keyword: str = Query(..., description="검색어")):
     return {"data": recommended_tokens}
 
 @app.post("/api/v1/search/ai-planner")
-async def createPlanner(payload: PlannerPayload):
+async def createPlanner(payload: dict):
     api_key = OPEN_AI_KEY
     result = createAIPlanner(api_key, payload)
     return {"data": result}
