@@ -93,7 +93,7 @@ function ProjectEssentialPage() {
   const deleteProjectHandler = async () => {
     if (confirm("정말로 삭제하시겠습니까?")) {
       const res = await deleteProject(projectId);
-      if (res.status === 200) {
+      if (res) {
         navigate("/projectlist");
       }
     }
