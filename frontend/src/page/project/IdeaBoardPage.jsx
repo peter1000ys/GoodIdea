@@ -3,6 +3,8 @@ import Sticker from "../../components/ideaboard/Sticker";
 import { useEffect, useRef, useState } from "react";
 import StickerModal from "../../components/ideaboard/StickerModal";
 import DefaultButton from "../../components/common/DefaultButton";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
 
 function IdeaBoardPage() {
   const [selectedSticker, setSelectedSticker] = useState(null); // 선택된 스티커
@@ -68,6 +70,7 @@ function IdeaBoardPage() {
     // ...generateSectionCoordinates(),
     // ...generateRandomCoordinates(2),
     {
+      id: 1,
       x: "4%",
       y: "0%",
       delay: 0,
@@ -76,6 +79,7 @@ function IdeaBoardPage() {
       animation: "animate-tinDownIn",
     },
     {
+      id: 2,
       x: "30%",
       y: "8%",
       delay: 100,
@@ -84,6 +88,7 @@ function IdeaBoardPage() {
       animation: "animate-tinUpIn",
     },
     {
+      id: 3,
       x: "67%",
       y: "20%",
       delay: 200,
@@ -92,6 +97,7 @@ function IdeaBoardPage() {
       animation: "animate-tinRightIn",
     },
     {
+      id: 4,
       x: "8%",
       y: "70%",
       delay: 300,
@@ -100,6 +106,7 @@ function IdeaBoardPage() {
       animation: "animate-tinLeftIn",
     },
     {
+      id: 5,
       x: "33%",
       y: "55%",
       delay: 400,
@@ -108,6 +115,7 @@ function IdeaBoardPage() {
       animation: "animate-tinDownIn",
     },
     {
+      id: 6,
       x: "86%",
       y: "41%",
       delay: 500,
@@ -116,6 +124,7 @@ function IdeaBoardPage() {
       animation: "animate-tinUpIn",
     },
     {
+      id: 7,
       x: "56%",
       y: "54%",
       delay: 600,
@@ -124,6 +133,7 @@ function IdeaBoardPage() {
       animation: "animate-tinRightIn",
     },
     {
+      id: 8,
       x: "12%",
       y: "38%",
       delay: 700,
@@ -132,6 +142,7 @@ function IdeaBoardPage() {
       animation: "animate-tinLeftIn",
     },
     {
+      id: 9,
       x: "40%",
       y: "71%",
       delay: 800,
@@ -168,7 +179,25 @@ function IdeaBoardPage() {
     "#B1B1EE",
   ];
 
-  // 스티커 클릭 시 선택 상태로 변경
+  // 스티커의 드래그 후 위치를 % 단위로 업데이트
+  const handleMoveSticker = (id, newX, newY) => {
+    const container = containerRef.current;
+    if (container) {
+      const { offsetWidth: containerWidth, offsetHeight: containerHeight } =
+        container;
+      const xPercent = (newX / containerWidth) * 100;
+      const yPercent = (newY / containerHeight) * 100;
+      setCoordinates((prevCoordinates) =>
+        prevCoordinates.map((sticker) =>
+          sticker.id === id
+            ? { ...sticker, x: `${xPercent}%`, y: `${yPercent}%` }
+            : sticker
+        )
+      );
+    }
+  };
+
+  // 스티커 클릭 시 선택 상태 변경
   const handleStickerClick = (index) => {
     setSelectedSticker(coordinates[index]);
   };
@@ -282,7 +311,7 @@ function IdeaBoardPage() {
     setScale(newScale);
   };
   return (
-    <>
+    <DndProvider backend={HTML5Backend}>
       <Helmet>
         <title>아이디어보드 페이지</title>
       </Helmet>
@@ -303,39 +332,41 @@ function IdeaBoardPage() {
           }}
         >
           {coordinates.map(
-            ({ x, y, delay, color, darkColor, animation }, index) => (
+            ({ id, x, y, delay, color, darkColor, animation }, index) => (
               <div
-                key={index}
+                key={id}
                 className="relative"
                 style={{ left: x, top: y, position: "absolute" }}
               >
                 <Sticker
+                  id={id}
                   delay={delay}
+                  x={x}
+                  y={y}
                   color={color}
                   darkColor={darkColor}
                   animation={animation}
                   isSelected={coordinates[index] === selectedSticker}
                   onClick={() => handleStickerClick(index)}
+                  onMoveSticker={handleMoveSticker}
                 />
                 {coordinates[index] === selectedSticker && (
                   <div
                     className="absolute flex flex-row items-center space-x-2 z-10"
                     style={{
-                      top: "-1.2rem", // 스티커의 상단에서 약간 위로
-                      left: "4.5rem", // 스티커의 중심을 기준으로 위치
-                      transform: "translate(-50%, -50%)", // 중앙 정렬 및 약간 위로 이동
+                      top: "-1.2rem",
+                      left: "4.5rem",
+                      transform: "translate(-50%, -50%)",
                     }}
                   >
                     <button
                       className="px-2 py-1 bg-blue-500 text-white rounded text-xs whitespace-nowrap"
-                      style={{ minWidth: "60px" }}
                       onClick={() => setIsModalOpen(true)}
                     >
                       상세보기
                     </button>
                     <button
                       className="px-2 py-1 bg-red-500 text-white rounded text-xs whitespace-nowrap"
-                      style={{ minWidth: "60px" }}
                       onClick={handleDeleteSticker}
                     >
                       삭제
@@ -399,7 +430,7 @@ function IdeaBoardPage() {
           -
         </button>
       </div>
-    </>
+    </DndProvider>
   );
 }
 
