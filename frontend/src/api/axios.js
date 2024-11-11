@@ -50,8 +50,8 @@ export const createProject = async (projectData) => {
   );
   if (!response.ok) return { status: false, message: response?.message };
 
-  console.log("프로젝트 생성", response.data?.data?.project_id);
-  return { status: true, id: response.data?.data?.project_id };
+  console.log("프로젝트 생성", response.data);
+  return { status: true, data: response.data };
 };
 
 export const deleteProject = async (projectId) => {

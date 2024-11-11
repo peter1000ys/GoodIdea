@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createProject, fetchGitlabProjectList } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import { useProjectListStore } from "../../store/useProjectListStore";
 
 const ProjectCard = ({ title, handleReader }) => {
   return (
@@ -62,7 +63,14 @@ const ReaderWritePage = ({ title }) => {
   const handleButtonClick = async () => {
     const isCreate = await createProject(projectData);
     if (isCreate?.status) {
-      navigate(`/project/${isCreate?.id}`);
+      if (isCreate.data?.data)
+        useProjectListStore.setState({
+          projects: [
+            ...useProjectListStore.getState().projects,
+            isCreate.data?.data,
+          ],
+        });
+      navigate(`/project/${isCreate?.data?.project_id?.id}`);
     } else {
       window.alert("프로젝트 생성에 실패했습니다. " + isCreate?.message);
     }
