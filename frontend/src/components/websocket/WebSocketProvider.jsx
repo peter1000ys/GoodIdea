@@ -99,7 +99,9 @@ export function WebSocketProvider({
   };
 
   return (
-    <WebSocketContext.Provider value={{ sendMessage, clientId: clientId.current }}>
+    <WebSocketContext.Provider
+      value={{ sendMessage, clientId: clientId.current }}
+    >
       {children}
     </WebSocketContext.Provider>
   );
