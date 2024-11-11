@@ -103,11 +103,11 @@ def get_top_tokens_last_7_days(es):
     
     return top_tokens
 
-def createAIPlanner(OPEN_AI_KEY, payload):
+def createAIPlanner(OPEN_AI_KEY, payload:dict):
     client = OpenAI(
         api_key = OPEN_AI_KEY
     )
-
+    payload_dict = payload.dict()
     # 프롬프트 구성
     prompt = f"""
     You are an AI assistant that drafts a comprehensive project proposal summary in JSON format. For each section below, provide a summary in 1 to 3 full sentences that explains the purpose and key elements of the project. Ensure that each section contains meaningful content based on the provided keywords and must not be left empty. 
@@ -128,11 +128,11 @@ def createAIPlanner(OPEN_AI_KEY, payload):
        - Relate the project’s background to the main purpose described in the service introduction, explaining why this service was created to address the issues at hand.
 
     2. **Service Introduction**: 
-       - Provide a brief overview of the service offered by this project. Explain the primary goals and key features of the service, such as {", ".join(payload["service_intro"])}.
+       - Provide a brief overview of the service offered by this project. Explain the primary goals and key features of the service, such as {", ".join(payload_dict["service_intro"])}.
        - Describe how each main service feature contributes to the overall goals of the project without repeating the keywords.
 
     3. **Target Users**: 
-       - Define the primary users of this service and describe how it will benefit each user group, specifically mentioning groups like {", ".join(payload["target_users"])}.
+       - Define the primary users of this service and describe how it will benefit each user group, specifically mentioning groups like {", ".join(payload_dict["target_users"])}.
        - Ensure each target user group is explained in terms of the project’s objectives and potential benefits for them.
 
     4. **Expected Effects**: 
