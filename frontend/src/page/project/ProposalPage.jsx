@@ -12,22 +12,38 @@ function ProposalEditor() {
   const { sendMessage } = useWebSocket();
   const isLocalUpdate = useRef(false);
   const { ideaId } = useParams();
+  const saveTimeoutRef = useRef(null);
 
   const editor = useEditor({
     autofocus: true,
     extensions: [StarterKit.configure({ history: true })],
     editorProps: {
       attributes: {
-        class: `${styles.tiptap} prose max-w-none w-full focus:outline-none`, // styles 적용
+        class: `${styles.tiptap} prose max-w-none w-full focus:outline-none`,
       },
     },
     onUpdate: ({ editor }) => {
       const content = editor.getHTML();
       if (!isLocalUpdate.current) {
-        sendMessage(content);
+        if (saveTimeoutRef.current) {
+          clearTimeout(saveTimeoutRef.current);
+        }
+        
+        saveTimeoutRef.current = setTimeout(() => {
+          const operation = {
+            ideaId: ideaId,
+            data: JSON.stringify({
+              content: content,
+              timestamp: Date.now()
+            })
+          };
+          console.log('Sending operation:', operation); // 디버깅용
+          sendMessage(operation);
+        }, 500);
       }
     },
   });
+
 
   useEffect(() => {
     const loadInitialContent = async () => {

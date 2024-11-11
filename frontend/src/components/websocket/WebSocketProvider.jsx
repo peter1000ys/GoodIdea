@@ -100,7 +100,7 @@ export function WebSocketProvider({
     };
   }, [projectId, ideaId, documentType, onMessageReceived]);
 
-  const sendMessage = (content) => {
+  const sendMessage = useCallback((content) => {
     if (!stompClient.current?.connected) return;
 
     const operation = {
@@ -118,7 +118,7 @@ export function WebSocketProvider({
       destination: `/app/${documentType}/${ideaId}`,
       body: JSON.stringify(operation),
     });
-  };
+  }, [projectId, ideaId, documentType]);
 
   return (
     <WebSocketContext.Provider
