@@ -10,7 +10,9 @@ import authAxiosInstance from "./http-commons/authAxios";
 const helper = async (cbFunc, type = "미입력") => {
   if (!cbFunc) return { ok: false };
   try {
-    return { ok: true, data: (await cbFunc()).data }; // 비동기 호출에 await 추가
+    const response = await cbFunc();
+
+    return { ok: true, data: response.data }; // 비동기 호출에 await 추가
   } catch (error) {
     console.error("에러: ", type, "/ status: ", error); // 에러를 한 줄로 처리
     return { ok: false, message: error?.response?.data?.message };
@@ -48,8 +50,8 @@ export const createProject = async (projectData) => {
   );
   if (!response.ok) return { status: false, message: response?.message };
 
-  console.log("프로젝트 생성", response.data);
-  return { status: true };
+  console.log("프로젝트 생성", response.data?.data?.project_id);
+  return { status: true, id: response.data?.data?.project_id };
 };
 
 export const deleteProject = async (projectId) => {
