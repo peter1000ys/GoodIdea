@@ -24,7 +24,7 @@ export function WebSocketProvider({
         webSocketFactory: () => {
           const wsUrl = window.location.hostname === 'localhost'
             ? 'ws://localhost:8080/ws'
-            : `wss://${window.location.hostname}:8080/ws`;
+            : `wss://${window.location.hostname}/ws`;
             
           console.log("Attempting to connect to:", wsUrl);
           
