@@ -8,17 +8,6 @@ from fastapi import HTTPException
 tokenizer = AutoTokenizer.from_pretrained("beomi/KcELECTRA-base-v2022")
 model = AutoModel.from_pretrained("beomi/KcELECTRA-base-v2022")
 
-PROMPT_TEMPLATE = """
-You are an AI assistant that helps in drafting a project proposal. Based on the provided information, write a concise and relevant summary for each section in 1 to 3 sentences.
-
-- Background: {background}
-- Service Introduction: {service_intro}
-- Target Users: {target_users}
-- Expected Effects: {expected_effects}
-
-Please provide answers in Korean, and ensure each response is brief and to the point for easy incorporation into a proposal document.
-"""
-
 # 단어 임베딩 벡터 생성 함수
 def generate_embedding(token):
     if not isinstance(token, str):
@@ -166,7 +155,6 @@ def createAIPlanner(OPEN_AI_KEY, payload):
     
     # 응답 텍스트를 분리하여 딕셔너리 형태로 반환
     text_response = response.choices[0].message.content.strip()
-    print(text_response)  # 전체 응답 내용 출력
 
     try:
         response_dict = eval(text_response)  # JSON 문자열을 딕셔너리로 변환
