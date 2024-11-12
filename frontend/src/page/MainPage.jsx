@@ -454,21 +454,27 @@ function MainPage() {
         font-family: 'Maplestory', sans-serif;
         }
         
-        ::-webkit-scrollbar {
-            background-color: #000;
-            width: 12px;
-            // border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            // border-radius: 10px;
-            box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
-        }
-        
-        ::-webkit-scrollbar-thumb {  
+::-webkit-scrollbar {
+  background-color: #000; /* WebKit 브라우저에서만 적용 */
+  width: 12px;
+  border-radius:0px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+        ::-webkit-scrollbar-thumb {
+        border-radius:0px;
+  background-image: linear-gradient(
+    to top, 
+    #ff5722, 
+    #a520ca 50%,
+    #2681cc
+  );
+}
 
-            background-image: -webkit-gradient(linear, left bottom, left top,color-stop(1, #ff5733), color-stop(.5, #a520ca), color-stop(0, #2681cc));
-            `}
+
+`}
       </style>
     </>
   );

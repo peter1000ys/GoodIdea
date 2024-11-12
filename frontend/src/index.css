@@ -3,115 +3,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/*
-Main Scrollbar
-*/
-* :not(.main-page) *::-webkit-scrollbar {
-  width: 0.8em;
+html {
+  -webkit-text-size-adjust: none;
 }
-
-/*
-Vertical Scrollbar (RIGHT SIDE)
-*/
-* :not(.main-page) *::-webkit-scrollbar-track:vertical {
-  background: -webkit-linear-gradient(
-    180deg,
-    #fff,
-    #fff,
-    #fff,
-    #fff,
-    rgba(0, 0, 255, 0.5),
-    rgba(0, 0, 255, 0.5),
-    rgba(0, 0, 255, 0.5),
-    #fff,
-    #fff,
-    #fff
-  );
-  border-radius: 10px;
+::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+  border-radius: 6px;
+  background-color: transparent;
 }
-
-/*
-Horizontal Scrollbar (BOTTOM SIDE)
-*/
-* :not(.main-page) *::-webkit-scrollbar-track:horizontal {
-  background: -webkit-linear-gradient(
-    90deg,
-    #fff,
-    #fff,
-    #fff,
-    #fff,
-    rgba(0, 0, 255, 0.5),
-    rgba(0, 0, 255, 0.5),
-    rgba(0, 0, 255, 0.5),
-    #fff,
-    #fff,
-    #fff
-  );
-  border-radius: 10px;
+::-webkit-scrollbar-thumb {
+  background: #e4e4e4;
+  border-radius: 6px;
 }
-
-/*
-Scrollbar Thumb
-*/
-* :not(.main-page) *::-webkit-scrollbar-thumb {
-  background: rgba(112, 178, 243, 0.75);
-  border-radius: 2em;
-}
-
-/*
-Horiontal Scrollbar button (TOP-RIGHT aKa START)
-*/
-* :not(.main-page) *::-webkit-scrollbar-button:horizontal:single-button:start {
-  position: absolute;
-  content: "";
-  border-bottom: 20px solid transparent;
-  border-right: 42px solid #7082f3;
-  border-left: 20px solid transparent;
-  border-top: 20px solid transparent;
-}
-
-/*
-Vertical Scrollbar button (BOTTOM-LEFT aKa START)
-*/
-* :not(.main-page) *::-webkit-scrollbar-button:vertical:single-button:start {
-  position: absolute;
-  content: "";
-  border-right: 20px solid transparent;
-  border-bottom: 62px solid #7082f3;
-  border-left: 20px solid transparent;
-  border-top: 20px solid transparent;
-}
-
-/*
-Horiontal Scrollbar button (BOTTOM-RIGHT aKa END)
-*/
-* :not(.main-page) *::-webkit-scrollbar-button:horizontal:single-button:end {
-  position: absolute;
-  overflow: hidden;
-  content: "";
-  border-bottom: 20px solid transparent;
-  border-left: 42px solid #7082f3;
-  border-right: 20px solid transparent;
-  border-top: 20px solid transparent;
-}
-
-/*
-Vertical Scrollbar button (BOTTOM-RIGHT aKa END)
-*/
-* :not(.main-page) *::-webkit-scrollbar-button:vertical:single-button:end {
-  position: absolute;
-  overflow: hidden;
-  content: "";
-  border-bottom: 20px solid transparent;
-  border-top: 62px solid #7082f3;
-  border-right: 20px solid transparent;
-  border-left: 20px solid transparent;
-}
-
-/*
-Scrollbar corner which is totally at bottom-right
-*/
-* :not(.main-page) *::-webkit-scrollbar-corner {
-  background: rgba(112, 178, 243, 0.75);
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 6px;
 }
