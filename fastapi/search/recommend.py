@@ -110,39 +110,53 @@ def createAIPlanner(OPEN_AI_KEY, payload_dict:dict):
         api_key = OPEN_AI_KEY
     )
     # 프롬프트 구성
-    prompt = f"""
-    You are an AI assistant that drafts a comprehensive project proposal summary in JSON format. For each section below, provide a summary in 1 to 3 full sentences that explains the purpose and key elements of the project. Ensure that each section contains meaningful content based on the provided keywords and must not be left empty. 
-
-    Avoid repeating keywords as they are provided and focus on crafting a natural, informative summary. Please return the response in the following JSON format:
-
+        prompt = f"""
+    You are an AI assistant responsible for drafting a professional and comprehensive project proposal summary. Your goal is to write a highly detailed response with the same depth and clarity as the provided examples. For each section, deliver a clear, structured, and insightful summary that explains the project’s purpose, core components, and expected impact. Make the content sophisticated and meaningful, using high-level language, logical flow, and ensuring each section is well-developed with nuanced, domain-specific details.
+    
+    Please return the response in the following JSON format in Korean:
+    
     {{
-        "background": "1~3 sentence summary for background",
-        "service_intro": "1~3 sentence summary for service introduction",
-        "target_users": "1~3 sentence summary for target users",
-        "expected_effects": "1~3 sentence summary for expected effects"
+        "background": "Sophisticated 1-3 sentence summary for background in Korean, including project motivations, relevant challenges, and the problem it seeks to solve.",
+        "service_intro": "Detailed 1-3 sentence summary for service introduction in Korean, emphasizing the core service goals and key features with domain-specific insights.",
+        "target_users": "1-3 sentence summary for target users in Korean, clearly explaining user benefits and how each user group gains value from the service.",
+        "expected_effects": "Well-developed 1-3 sentence summary for expected effects in Korean, summarizing anticipated impacts on users and the broader industry/society.",
+        "project_topics": "6-9 sentence summary recommending three nuanced, domain-specific project topics suitable for six junior developers, highlighting key points for each topic in sophisticated language.",
+        "tech_stack": "In-depth 6-sentence summary recommending a tech stack for each topic, tailored to the project goals and featuring notable frameworks, libraries, and technologies.",
+        "advanced_stack": "Challenging tech stack recommendations with advanced options for each topic, including libraries or CS-based technologies with concise, meaningful descriptions."
     }}
-
-    Details for each section:
-
+    
+    Detailed guidelines for each section:
+    
     1. **Background**: 
-       - Describe the context and motivation behind this project, focusing on why this service is needed.
-       - Relate the project’s background to the main purpose described in the service introduction, explaining why this service was created to address the issues at hand.
-       - Use the following background keywords to structure this section: {", ".join(payload_dict["background"])}.
-
+       - Provide a nuanced, sophisticated description of the project's motivation, background, and necessity.
+       - Connect the problem being addressed to the project’s purpose, emphasizing why this service is essential for the target audience.
+       - Use the following keywords to shape this section: {", ".join(payload_dict["background"])}.
+    
     2. **Service Introduction**: 
-       - Provide a brief overview of the service offered by this project. Explain the primary goals and key features of the service, such as {", ".join(payload_dict["service_intro"])}.
-       - Describe how each main service feature contributes to the overall goals of the project without repeating the keywords.
-
+       - Give a well-developed overview of the service's main goals and features, emphasizing their value and role in addressing the problem.
+       - Explain how each main feature contributes to solving the problem or achieving the project’s goals, using high-level terminology to avoid repetitive phrasing.
+    
     3. **Target Users**: 
-       - Define the primary users of this service and describe how it will benefit each user group, specifically mentioning groups like {", ".join(payload_dict["target_users"])}.
-       - Ensure each target user group is explained in terms of the project’s objectives and potential benefits for them.
-
+       - Identify the primary user groups for this service and describe how each group will benefit, focusing on how this service addresses specific user needs.
+       - Relate each user group’s benefits to the project’s objectives, explaining how they gain lasting value from this service.
+    
     4. **Expected Effects**: 
-       - Summarize the expected positive outcomes or impacts of this project, explaining any specific improvements, awareness, or behaviors that the project aims to foster.
-       - Each effect should directly relate to the benefits for the target users and broader societal impact, using the following expected effects keywords: {", ".join(payload_dict["expected_effects"])}.
-
-    Provide answers in JSON format and in Korean, ensuring each section is concise yet descriptive for direct inclusion in a professional project proposal document.
+       - Summarize the anticipated impacts of this project in a nuanced way, including specific improvements, awareness, or behavioral changes it aims to foster.
+       - Describe the broader societal or industry impact expected from this project, using the following keywords: {", ".join(payload_dict["expected_effects"])}.
+    
+    5. **Project Topics**: 
+       - Based on the content above, recommend three project topics suitable for six junior developers.
+       - Briefly describe each topic in sophisticated language, with key points that give each topic depth and structure.
+    
+    6. **Tech Stack Recommendations**: 
+       - For each recommended topic in section 5, provide an in-depth description of the basic tech stack.
+       - Include one-sentence descriptions of each component, emphasizing their relevance to the project and why they are suitable.
+    
+    7. **Challenging Stack/Technology Recommendations**: 
+       - Recommend a more challenging tech stack for each topic, featuring creative options or CS-based technologies.
+       - Describe each recommended technology with concise yet sophisticated explanations that highlight their advanced uses.
     """
+
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
