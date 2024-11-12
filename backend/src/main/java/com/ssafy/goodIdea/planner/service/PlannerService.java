@@ -13,6 +13,7 @@ import com.ssafy.goodIdea.planner.entity.Planner;
 import com.ssafy.goodIdea.planner.repository.PlannerRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,34 +33,36 @@ public class PlannerService {
     @Transactional
     public PlannerUpdateResponseDto updateContent(DocumentOperationDto operationDto) {
         try {
-            Long ideaId = Long.parseLong(operationDto.getIdeaId());
+            Long ideaId = operationDto.getIdeaId();
             Planner planner = plannerRepository.findById(ideaId)
                     .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
 
-            // YJS 업데이트 데이터 파싱
-            JsonNode updateData = objectMapper.readTree(operationDto.getData());
-            
-            // content 직접 추출 (YJS는 단순 텍스트로 전송)
-            String content = updateData.path("content").asText();
+            // HTTP 요청을 위한 간단한 데이터 처리
+            String content;
+            String clientId;
+            if (operationDto.getData().startsWith("{")) {
+                // JSON 형식일 경우 (WebSocket)
+                JsonNode updateData = objectMapper.readTree(operationDto.getData());
+                content = updateData.path("content").asText();
+                clientId = updateData.path("clientId").asText();
+            } else {
+                // 단순 문자열일 경우 (HTTP)
+                content = operationDto.getData();
+                clientId = UUID.randomUUID().toString();
+            }
 
             // 컨텐츠 업데이트
             planner.updateContent(content);
-
-            // 변경사항 저장
             plannerRepository.save(planner);
             
-            // 응답 생성 (YJS 형식에 맞춤)
-            PlannerUpdateResponseDto response = PlannerUpdateResponseDto.from(
+            return PlannerUpdateResponseDto.from(
                 planner, 
-                updateData.path("clientId").asText(),
+                clientId,
                 System.currentTimeMillis()
             );
 
-            log.debug("Updated planner content for ideaId: {}", ideaId);
-            return response;
-
         } catch (Exception e) {
-            log.error("Error updating planner content", e);
+            log.error("Error updating planner content: {}", e.getMessage(), e);
             throw new BaseException(ErrorType.SERVER_ERROR);
         }
     }

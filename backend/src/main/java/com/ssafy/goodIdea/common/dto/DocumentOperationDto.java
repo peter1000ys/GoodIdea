@@ -1,17 +1,17 @@
 package com.ssafy.goodIdea.common.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class DocumentOperationDto {
-    private String documentId;
-    private String userId;
-    private String ideaId;
+    private Long documentId;
+    private Long userId;
+    private Long ideaId;
     private DocumentType documentType;
     private String operation;
     private String data;
@@ -24,18 +24,5 @@ public class DocumentOperationDto {
         // API_DOCS,
         // ERD,
         // FLOWCHART
-    }
-
-    public void setIdeaId(String ideaId) {
-        this.ideaId = ideaId;
-    }
-
-    public String getIdeaId() {
-        return ideaId;
-    }
-
-    public void setData(String jsonData) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setData'");
     }
 }
