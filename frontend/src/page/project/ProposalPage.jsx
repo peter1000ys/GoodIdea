@@ -34,7 +34,7 @@ function ProposalEditor() {
       try {
         console.log("Loading content for ideaId:", ideaId);
         const response = await authAxiosInstance.get(
-          `/api/v1/planner/${ideaId}`
+          `gateway/project-service/api/v1/planner/${ideaId}`
         );
         console.log("Loaded content:", response.data);
 
