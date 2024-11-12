@@ -43,16 +43,16 @@ function ProjectEssentialPage() {
   });
 
   useEffect(() => {
-    const provider = new HocuspocusProvider({
-      url: `wss://oracle1.pjt.xyz/ws`, // WebSocket URL
-      document: doc,
-      // appId: "7j9y6m10",
-      name: "projectEssential_private", // 문서의 고유 식별자
-      token: "notoken", // JWT 토큰 (필요에 따라 설정)
-      onSynced: () => {
-        console.log("Synced with server");
-      },
-    });
+    // const provider = new HocuspocusProvider({
+    //   url: `wss://oracle1.pjt.xyz/ws`, // WebSocket URL
+    //   document: doc,
+    //   // appId: "7j9y6m10",
+    //   name: "projectEssential_private", // 문서의 고유 식별자
+    //   token: "notoken", // JWT 토큰 (필요에 따라 설정)
+    //   onSynced: () => {
+    //     console.log("Synced with server");
+    //   },
+    // });
 
     // Yjs 문서의 변경 사항을 React 상태와 동기화
     const updateFieldValues = () => {
