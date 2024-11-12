@@ -26,6 +26,8 @@ public class UserService {
 
     @Transactional
     public UserDto changeUserLocation(User user, ChangeUserLocationRequestDto dto) {
+        if ( dto.getName() != null )
+            user.setName(dto.getName());
         if ( dto.getGrade() != null )
             user.setGrade(dto.getGrade());
         if ( dto.getLocationType() != null)
@@ -34,6 +36,7 @@ public class UserService {
 
         return UserDto.builder()
                 .id(user.getId())
+                .name(user.getName())
                 .username(user.getUsername())
                 .grade(user.getGrade())
                 .locationType(user.getLocationType())
@@ -52,6 +55,7 @@ public class UserService {
         return userRepository.findById(userId)
                 .map(user -> UserDto.builder()
                         .id(user.getId())
+                        .name(user.getName())
                         .username(user.getUsername())
                         .grade(user.getGrade())
                         .locationType(user.getLocationType())
@@ -64,6 +68,7 @@ public class UserService {
         return userRepository.findByUsername(username)
                 .map(user -> UserDto.builder()
                         .id(user.getId())
+                        .name(user.getName())
                         .username(user.getUsername())
                         .grade(user.getGrade())
                         .locationType(user.getLocationType())
