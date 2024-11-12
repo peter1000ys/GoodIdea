@@ -157,7 +157,7 @@ function Nav() {
             {/* 브레인 스토밍 메뉴 */}
             <li>
               <div
-                className={`text-xl flex justify-between items-center cursor-pointer border shadow-sm select-none p-2 my-2 rounded-lg transition-all duration-500 ${
+                className={`text-xl flex justify-between items-center cursor-pointer border shadow-sm select-none p-2 mt-2 rounded-lg transition-all duration-500 ${
                   isBrainstormingOpen
                     ? "bg-slate-100 border-slate-300  font-semibold shadow-inner"
                     : "border-slate-200  hover:bg-slate-100 hover:border-slate-300"
