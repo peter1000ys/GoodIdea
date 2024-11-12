@@ -9,20 +9,14 @@ function ProjectEssentialPage() {
   const navigate = useNavigate();
   const params = useParams();
   const projectId = params?.id;
-  const { project } = useProjectStore();
-
-  useEffect(() => {
-    console.log("프로젝트 정보", project);
-  }, [project]);
+  const { gitlabName, members, leader } = useProjectStore();
 
   const [fieldValues, setFieldValues] = useState({
     teamGitlabCode: "",
     teamName: "",
-    teamMembers: "",
     projectName: "",
     figmaLink: "",
     jiraLink: "",
-    gitlabLink: "",
     teamInfo: "",
   });
 
@@ -60,12 +54,24 @@ function ProjectEssentialPage() {
                 </div>
                 <div className="col-span-2">
                   <div className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md">
-                    asdasdasdsa
+                    {gitlabName}
+                  </div>
+                </div>
+                <div className="col-span-1 flex items-center">팀 구성원</div>
+                <div className="col-span-2">
+                  <div className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md space-x-2 flex flex-row">
+                    {members
+                      .filter((member) => !member.username.includes("bot"))
+                      .map((member) => (
+                        <p key={member.id}>
+                          {member.username}
+                          {member.username === leader ? "(팀장)" : ""}
+                        </p>
+                      ))}
                   </div>
                 </div>
                 {[
                   { label: "팀 명", name: "teamName" },
-                  { label: "팀 구성원", name: "teamMembers" },
                   { label: "프로젝트 명", name: "projectName" },
                   { label: "피그마 링크", name: "figmaLink" },
                   { label: "지라 링크", name: "jiraLink" },
