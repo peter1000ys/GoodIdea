@@ -41,9 +41,11 @@ export function WebSocketProvider({
       {
         connect: true,
         WebSocketPolyfill: WebSocket,
-        // 연결 재시도 설정 추가
-        maxBackoffTime: 3000,
-        reconnectInterval: 1000,
+        // 연결 유지 설정 추가
+        maxBackoffTime: 10000,        // 최대 재연결 대기 시간
+        reconnectInterval: 3000,      // 재연결 시도 간격
+        disableBc: true,             // 브로드캐스트 채널 비활성화
+        keepAliveInterval: 30000,     // keepAlive 간격
       }
     );
 

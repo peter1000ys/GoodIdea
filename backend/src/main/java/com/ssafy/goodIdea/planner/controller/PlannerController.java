@@ -1,6 +1,8 @@
 package com.ssafy.goodIdea.planner.controller;
 
+import com.ssafy.goodIdea.planner.dto.response.PlannerResponseDto;
 import com.ssafy.goodIdea.planner.dto.response.PlannerUpdateResponseDto;
+import com.ssafy.goodIdea.planner.entity.Planner;
 import com.ssafy.goodIdea.planner.service.PlannerService;
 import lombok.RequiredArgsConstructor;
 
@@ -20,20 +22,9 @@ public class PlannerController {
      * 플래너 조회
      */
     @GetMapping("/{ideaId}")
-    public ApiResponse<PlannerUpdateResponseDto> getPlanner(@PathVariable(name = "ideaId") Long ideaId) {
-        PlannerUpdateResponseDto planner = plannerService.getPlanner(ideaId);
-        return ApiResponse.ok(planner);
-    }
-
-    /*
-     * 플래너 수정 (WebSocket)
-     */
-    @MessageMapping("/{ideaId}/ws")
-    public ApiResponse<PlannerUpdateResponseDto> updatePlannerWebSocket(
-        @DestinationVariable Long ideaId,
-        DocumentOperationDto operation
-    ) {
-        operation.setIdeaId(ideaId);
-        return ApiResponse.ok(plannerService.updateContentWebSocket(operation));
+    public ApiResponse<PlannerResponseDto> getPlanner(@PathVariable(name = "ideaId") Long ideaId) {
+        // PlannerService를 통해 플래너 조회
+        PlannerResponseDto plannerResponseDto = plannerService.getPlanner(ideaId);
+        return ApiResponse.ok(plannerResponseDto);
     }
 }
