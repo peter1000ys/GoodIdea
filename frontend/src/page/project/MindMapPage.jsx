@@ -44,7 +44,7 @@ function MindMapPage() {
         `detail-${selectedDetail.id}`
       );
       if (detailElement) {
-        detailElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        detailElement.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   }, [selectedDetail]);
@@ -55,6 +55,8 @@ function MindMapPage() {
         setSelectedDetail(null);
         return;
       }
+      setGithubdatas([]);
+      setNewsdatas([]);
       setSelectedDetail(detail);
       try {
         setDataLoading(true);
@@ -149,9 +151,11 @@ function MindMapPage() {
         setSelectedDetail(null);
         return;
       }
-      setSelectedDetail(mindMapData.nodes.find((node) => node.id === itemId));
+      const item = mindMapData.nodes.find((node) => node.id === itemId);
+      setSelectedDetail(item);
+      handleDetailClick(item);
     },
-    [selectedDetail, mindMapData]
+    [selectedDetail, mindMapData, handleDetailClick]
   );
 
   return (
@@ -269,11 +273,16 @@ function MindMapPage() {
                           )}
                           {!dataLoading &&
                             (githubDatas.length ? (
-                              <GithubCarousel
-                                slides={githubDatas}
-                                currentIndex={githubIndex}
-                                setCurrentIndex={setGithubIndex}
-                              />
+                              <div>
+                                <GithubCarousel
+                                  slides={githubDatas}
+                                  currentIndex={githubIndex}
+                                  setCurrentIndex={setGithubIndex}
+                                />
+                                <div className="text-end">
+                                  {githubIndex + 1} / {githubDatas.length}
+                                </div>
+                              </div>
                             ) : (
                               <p className="text-gray-400">
                                 링크 정보가 없습니다
@@ -287,7 +296,7 @@ function MindMapPage() {
 
                   {/* 연관 키워드 영역 끝 */}
                   <h2 className="text-center text-xl font-bold mb-4 mt-6">
-                    키워드와 관련된 정보
+                    키워드 같이보기
                   </h2>
                   <div className="space-y-4 text-gray-700">
                     {mindMapData.nodes?.map((item, index) => {
@@ -338,28 +347,24 @@ function MindMapPage() {
                               </div>
 
                               {/* GitHub 링크 카드 */}
-                              <div className="p-4 bg-white shadow-sm rounded-lg border border-gray-200">
-                                <h3 className="font-bold text-base text-gray-800 mb-2">
-                                  GitHub 링크
-                                </h3>
-                                {dataLoading && (
-                                  <>
-                                    <CarouselItemSkeleton />
-                                  </>
-                                )}
-                                {!dataLoading &&
-                                  (githubDatas.length ? (
+                              {githubDatas.length > 0 && (
+                                <div className="p-4 bg-white shadow-sm rounded-lg border border-gray-200">
+                                  <h3 className="font-bold text-base text-gray-800 mb-2">
+                                    GitHub 링크
+                                  </h3>
+
+                                  <div>
                                     <GithubCarousel
                                       slides={githubDatas}
                                       currentIndex={githubIndex}
                                       setCurrentIndex={setGithubIndex}
                                     />
-                                  ) : (
-                                    <p className="text-gray-400">
-                                      링크 정보가 없습니다
-                                    </p>
-                                  ))}
-                              </div>
+                                    <div className="text-end">
+                                      {githubIndex + 1} / {githubDatas.length}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>

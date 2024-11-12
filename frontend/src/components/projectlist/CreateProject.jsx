@@ -70,7 +70,8 @@ const ReaderWritePage = ({ title }) => {
             isCreate.data?.data,
           ],
         });
-      navigate(`/project/${isCreate?.data?.project_id?.id}`);
+      console.log(isCreate.data?.data);
+      navigate(`/project/${isCreate?.data?.data?.project_id}`);
     } else {
       window.alert("프로젝트 생성에 실패했습니다. " + isCreate?.message);
     }
@@ -113,10 +114,10 @@ const ReaderWritePage = ({ title }) => {
           />
         </label>
 
-        <label className="flex items-center space-x-2">
+        {/* <label className="flex items-center space-x-2">
           <input type="checkbox" />
           <span className="text-gray-600">정보가 정확한가요?</span>
-        </label>
+        </label> */}
       </div>
 
       <button

@@ -2,29 +2,39 @@ import React, { Suspense } from "react";
 import "./App.css";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import CommonLayout from "./components/CommonLayout";
+
+// default 페이지
 import MainPage from "./page/MainPage";
 import NotFoundPage from "./page/NotFoundPage";
-import CommonLayout from "./components/CommonLayout";
-import ApiSpecificationPage from "./page/project/ApiSpecificationPage";
-import MindMapPage from "./page/project/MindMapPage";
-import ERDPage from "./page/project/ERDPage";
-import IdeaBoardPage from "./page/project/IdeaBoardPage";
-// import ProjectEssentialPage from "./page/project/ProjectEssentialPage";
-import ProposalPage from "./page/project/ProposalPage";
-import RequirementsSpecificationPage from "./page/project/RequirementsSpecificationPage";
-import FlowChartPage from "./page/project/FlowChartPage";
-import ProjectListPage from "./page/ProjectListPage";
 import LoginPage from "./page/LoginPage";
 
+import LoadingSpinner from "./components/common/LoadingSpinner";
+
+// 프로젝트 정보
+const ProjectListPage = React.lazy(() => import("./page/ProjectListPage"));
 const ProjectEssentialPage = React.lazy(() =>
   import("./page/project/ProjectEssentialPage")
 );
+
+// 산출물 목록들 페이지
+const MindMapPage = React.lazy(() => import("./page/project/MindMapPage"));
+const IdeaBoardPage = React.lazy(() => import("./page/project/IdeaBoardPage"));
+const ProposalPage = React.lazy(() => import("./page/project/ProposalPage"));
+const ApiSpecificationPage = React.lazy(() =>
+  import("./page/project/ApiSpecificationPage")
+);
+const ERDPage = React.lazy(() => import("./page/project/ERDPage"));
+const RequirementsSpecificationPage = React.lazy(() =>
+  import("./page/project/RequirementsSpecificationPage")
+);
+const FlowChartPage = React.lazy(() => import("./page/project/FlowChartPage"));
 
 function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
-        <Suspense fallback={<div>로딩 중...</div>}>
+        <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="" element={<CommonLayout />}>
               {/* 메인 페이지 */}
