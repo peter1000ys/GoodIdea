@@ -25,58 +25,49 @@ public class PlannerService {
     public PlannerUpdateResponseDto getPlanner(Long ideaId) {
         Planner planner = plannerRepository.findById(ideaId)
             .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
-        
+
         return PlannerUpdateResponseDto.from(planner, null, 0L);
-    }
-
-    @Transactional
-    public Planner updateContent(Long ideaId, String content) {
-        try {
-            Planner planner = plannerRepository.findById(ideaId)
-                    .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
-            
-            planner.updateContent(content);
-            plannerRepository.save(planner);
-            
-            return planner;
-
-        } catch (Exception e) {
-            log.error("Error updating planner content: {}", e.getMessage(), e);
-            throw new BaseException(ErrorType.SERVER_ERROR);
-        }
     }
 
     @Transactional
     public PlannerUpdateResponseDto updateContentWebSocket(DocumentOperationDto operationDto) {
         try {
-            log.debug("Received operation DTO: {}", operationDto);
-            
+            System.out.println("=== WebSocket 업데이트 시작 ===");
+            System.out.println("수신된 DTO: " + operationDto);
+
             Long ideaId = operationDto.getIdeaId();
+            System.out.println("조회 시도 - ideaId: " + ideaId);
+            
             Planner planner = plannerRepository.findById(ideaId)
                     .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
+            System.out.println("플래너 조회 성공 - 현재 내용: " + planner.getContent());
 
             String content = operationDto.getData();
-            log.info("Saving content: {}", content);
+            System.out.println("저장 시도할 새로운 내용: " + content);
 
             if (content != null && !content.isEmpty()) {
                 planner.updateContent(content);
-                plannerRepository.save(planner);
+                System.out.println("내용 업데이트 완료, DB 저장 시도");
                 
-                log.info("Content saved successfully for ideaId: {}", ideaId);
-                
-                return PlannerUpdateResponseDto.from(
-                    planner, 
+                Planner savedPlanner = plannerRepository.saveAndFlush(planner);
+                System.out.println("DB 저장 완료 - 저장된 내용: " + savedPlanner.getContent());
+
+                PlannerUpdateResponseDto response = PlannerUpdateResponseDto.from(
+                    savedPlanner,
                     UUID.randomUUID().toString(),
                     System.currentTimeMillis()
                 );
+                System.out.println("=== WebSocket 업데이트 완료 ===");
+                return response;
             } else {
-                log.warn("Received empty content for ideaId: {}", ideaId);
+                System.out.println("빈 내용 수신됨 - ideaId: " + ideaId);
                 throw new BaseException(ErrorType.SERVER_ERROR);
             }
 
         } catch (Exception e) {
-            log.error("Error handling websocket operation for ideaId {}: {}", 
-                     operationDto.getIdeaId(), e.getMessage(), e);
+            System.out.println("=== WebSocket 업데이트 실패 ===");
+            System.out.println("에러 발생 ideaId: " + operationDto.getIdeaId() + ", 에러 메시지: " + e.getMessage());
+            e.printStackTrace();
             throw new BaseException(ErrorType.SERVER_ERROR);
         }
     }

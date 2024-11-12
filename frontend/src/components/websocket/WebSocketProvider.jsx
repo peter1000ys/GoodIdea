@@ -47,17 +47,20 @@ export function WebSocketProvider({
       }
     );
 
+    console.log("===== WebSocket 연결 시도 =====");
+    console.log("연결 URL:", `ws://localhost:8080/ws/${documentType}/${ideaId}`);
+
     wsProvider.current = wsProvider;
 
     // 연결 상태 모니터링
     wsProvider.on("status", ({ status }) => {
-      console.log("WebSocket status:", status);
+      console.log("WebSocket 상태 변경:", status);
       setConnectionStatus(status);
     });
 
     // 에러 핸들링 추가
     wsProvider.on("connection-error", (error) => {
-      console.error("WebSocket connection error:", error);
+      console.error("WebSocket 연결 에러:", error);
     });
 
     // 텍스트 변경 관찰
@@ -91,10 +94,8 @@ export function WebSocketProvider({
           timestamp: Date.now()
         };
         
-        console.log("WebSocket sending message:", {
-          content: content,
-          timestamp: Date.now()
-        });
+        console.log("===== WebSocket 메시지 전송 시도 =====");
+        console.log("전송할 메시지:", message);
         
         // ytext를 통해 실시간 업데이트
         ytext.current.delete(0, ytext.current.length);
@@ -102,12 +103,16 @@ export function WebSocketProvider({
         
         // 웹소켓으로 메시지 전송
         wsProvider.current.send(JSON.stringify(message));
+        console.log("메시지 전송 완료");
         
         // 디바운스된 콜백 실행
         debouncedCallback(content);
+      } else {
+        console.error("WebSocket이 연결되어 있지 않음!");
+        console.log("wsProvider 상태:", wsProvider.current);
       }
     } catch (error) {
-      console.error("Error sending WebSocket message:", error);
+      console.error("WebSocket 메시지 전송 중 에러:", error);
     }
   }, 100); // 100ms 디바운스로 빠른 실시간 업데이트 유지
 
