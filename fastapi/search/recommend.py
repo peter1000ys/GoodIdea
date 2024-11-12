@@ -21,7 +21,7 @@ def generate_embedding(token):
         embedding = outputs.last_hidden_state[:, 0, :].squeeze().numpy()
     return embedding.tolist()
 
-def hybrid_search(keyword, es, alpha=0.85):
+def hybrid_search(keyword, es, alpha=0.90):
     keyword_embedding = generate_embedding(f"{keyword}")
     
     knn_query = {
@@ -117,12 +117,12 @@ def createAIPlanner(OPEN_AI_KEY, payload_dict:dict):
     
     {{
         "background": "Sophisticated 1-3 sentence summary for background in Korean, including project motivations, relevant challenges, and the problem it seeks to solve.",
-        "service_intro": "Detailed 1-3 sentence summary for service introduction in Korean, emphasizing the core service goals and key features with domain-specific insights.",
-        "target_users": "1-3 sentence summary for target users in Korean, clearly explaining user benefits and how each user group gains value from the service.",
-        "expected_effects": "Well-developed 1-3 sentence summary for expected effects in Korean, summarizing anticipated impacts on users and the broader industry/society.",
-        "project_topics": "6-9 sentence summary recommending three nuanced, domain-specific project topics suitable for six junior developers, highlighting key points for each topic in sophisticated language.",
-        "tech_stack": "In-depth 6-sentence summary recommending a tech stack for each topic, tailored to the project goals and featuring notable frameworks, libraries, and technologies.",
-        "advanced_stack": "Challenging tech stack recommendations with advanced options for each topic, including libraries or CS-based technologies with concise, meaningful descriptions."
+        "introduction": "Detailed 1-3 sentence summary for service introduction in Korean, emphasizing the core service goals and key features with domain-specific insights.",
+        "target": "1-3 sentence summary for target users in Korean, clearly explaining user benefits and how each user group gains value from the service.",
+        "expectedEffect": "Well-developed 1-3 sentence summary for expected effects in Korean, summarizing anticipated impacts on users and the broader industry/society.",
+        "projectTopic": "6-9 sentence summary recommending three nuanced, domain-specific project topics suitable for six junior developers, highlighting key points for each topic in sophisticated language.",
+        "techStack": "In-depth 6-sentence summary recommending a tech stack for each topic, tailored to the project goals and featuring notable frameworks, libraries, and technologies.",
+        "advancedStack": "Challenging tech stack recommendations with advanced options for each topic, including libraries or CS-based technologies with concise, meaningful descriptions."
     }}
     
     Detailed guidelines for each section:
