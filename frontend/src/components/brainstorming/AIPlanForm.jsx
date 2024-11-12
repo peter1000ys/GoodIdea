@@ -16,7 +16,15 @@ const AIPlanForm = ({ onClose }) => {
     기대효과: "",
   });
 
-  const [generatedPlan, setGeneratedPlan] = useState(null); // 초기값 null
+  const [generatedPlan, setGeneratedPlan] = useState({
+    background: "",
+    service_intro: "",
+    target_users: "",
+    expected_effects: "",
+    project_topics: "",
+    tech_stack: "",
+    advanced_stack: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -43,6 +51,34 @@ const AIPlanForm = ({ onClose }) => {
     });
   };
 
+  const handleGeneratedPlanChange = (event, key) => {
+    setGeneratedPlan({
+      ...generatedPlan,
+      [key]: event.target.value,
+    });
+  };
+
+  const generatePlanHandler = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const plan = await generatePlan(tags);
+      setGeneratedPlan({
+        background: plan.background,
+        service_intro: plan.service_intro,
+        target_users: plan.target_users,
+        expected_effects: plan.expected_effects,
+        project_topics: plan.project_topics,
+        tech_stack: plan.tech_stack,
+        advanced_stack: plan.advanced_stack,
+      });
+    } catch (err) {
+      setError("기획서 생성에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex justify-center p-8 bg-gray-100 h-full">
       <div className="w-full bg-white shadow-lg rounded-lg border">
@@ -53,7 +89,7 @@ const AIPlanForm = ({ onClose }) => {
         </div>
 
         {/* 폼 영역 */}
-        <div className="p-8 grid grid-cols-2 gap-8" style={{ height: "500px" }}>
+        <div className="p-8 grid grid-cols-2 gap-8" style={{ height: "600px" }}>
           {/* 좌측: 태그 입력 영역 */}
           <div
             className="space-y-0 overflow-y-auto px-1"
@@ -97,32 +133,42 @@ const AIPlanForm = ({ onClose }) => {
           >
             {isLoading && <p>기획서를 생성 중입니다...</p>}
             {error && <p className="text-red-500">{error}</p>}
-            {generatedPlan ? (
-              Object.keys(generatedPlan).map((key) => (
-                <div key={key} className="grid grid-rows-[auto_1fr] gap-2">
-                  <label className="text-gray-700 font-medium">
-                    {key === "background"
-                      ? "기획배경"
-                      : key === "service_intro"
-                      ? "서비스소개"
-                      : key === "target_users"
-                      ? "타겟유저"
-                      : key === "expected_effects"
-                      ? "기대효과"
-                      : key}
-                  </label>
-                  <div className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-600">
-                    {typeof generatedPlan[key] === "string"
-                      ? generatedPlan[key]
-                      : JSON.stringify(generatedPlan[key])}
+            {!isLoading && !error && (
+              <>
+                {[
+                  "background",
+                  "service_intro",
+                  "target_users",
+                  "expected_effects",
+                  "project_topics",
+                  "tech_stack",
+                  "advanced_stack",
+                ].map((key, index) => (
+                  <div key={index}>
+                    <label className="text-gray-700 font-medium">
+                      {key === "background"
+                        ? "기획배경"
+                        : key === "service_intro"
+                        ? "서비스소개"
+                        : key === "target_users"
+                        ? "타겟유저"
+                        : key === "expected_effects"
+                        ? "기대효과"
+                        : key === "project_topics"
+                        ? "주제추천"
+                        : key === "tech_stack"
+                        ? "기술스택추천"
+                        : "도전적인기술스택추천"}
+                    </label>
+                    <textarea
+                      value={generatedPlan[key]}
+                      onChange={(e) => handleGeneratedPlanChange(e, key)}
+                      className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-600"
+                      rows={3}
+                    />
                   </div>
-                </div>
-              ))
-            ) : (
-              <p>
-                생성된 기획서 내용이 없습니다. 키워드를 입력하고 기획서를
-                생성하세요.
-              </p>
+                ))}
+              </>
             )}
           </div>
         </div>
@@ -132,21 +178,9 @@ const AIPlanForm = ({ onClose }) => {
           <DefaultButton onClick={onClose} text="닫기" />
           <DefaultButton
             text={isLoading ? "기획서 생성 중..." : "기획서 생성"}
-            onClick={async () => {
-              setIsLoading(true);
-              setError(null);
-              try {
-                const plan = await generatePlan(tags);
-                console.log("Generated Plan:", plan); // 디버깅을 위한 로그
-                setGeneratedPlan(plan);
-              } catch (err) {
-                setError("기획서 생성에 실패했습니다. 다시 시도해주세요.");
-              } finally {
-                setIsLoading(false);
-              }
-            }}
-            type="button" // 폼 제출 방지
-            disabled={isLoading} // 로딩 중 버튼 비활성화
+            onClick={generatePlanHandler}
+            type="button"
+            disabled={isLoading}
           />
         </div>
       </div>

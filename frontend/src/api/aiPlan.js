@@ -19,7 +19,7 @@ export const generatePlan = async (tags) => {
 
   try {
     const response = await axios.post(API_URL, payload);
-    return response.data; // 백엔드의 응답 구조에 맞게 조정
+    return response.data.data; // 백엔드의 응답 구조에 맞게 조정
   } catch (error) {
     console.error("기획서 생성 중 오류 발생:", error);
     throw error;
