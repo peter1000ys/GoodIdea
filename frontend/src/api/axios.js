@@ -28,7 +28,8 @@ const helper = async (cbFunc, type = "미입력") => {
 // gitlab의프로젝트 목록 조회
 export const fetchGitlabProjectList = async () => {
   const response = await helper(
-    () => authAxiosInstance.get("api/v1/project/gitlab"),
+    () =>
+      authAxiosInstance.get("gateway/project-service/api/v1/project/gitlab"),
     "gitlab 프로젝트 목록"
   );
   if (!response.ok) return;
@@ -39,7 +40,7 @@ export const fetchGitlabProjectList = async () => {
 // 우리 서비스의 자신의 프로젝트 리스트 조회
 export const fetchProjectList = async () => {
   const response = await helper(
-    () => authAxiosInstance.get("api/v1/project"),
+    () => authAxiosInstance.get("gateway/project-service/api/v1/project"),
     "프로젝트 목록"
   );
   if (!response.ok) return;
@@ -50,7 +51,11 @@ export const fetchProjectList = async () => {
 // 우리 서비스의 자신의 프로젝트 생성
 export const createProject = async (projectData) => {
   const response = await helper(
-    () => authAxiosInstance.post("api/v1/project/create", projectData),
+    () =>
+      authAxiosInstance.post(
+        "gateway/project-service/api/v1/project/create",
+        projectData
+      ),
     "프로젝트 생성"
   );
   if (!response.ok) return { status: false, message: response?.message };
@@ -61,7 +66,10 @@ export const createProject = async (projectData) => {
 
 export const deleteProject = async (projectId) => {
   const response = await helper(
-    () => authAxiosInstance.delete(`api/v1/project/${projectId}/delete`),
+    () =>
+      authAxiosInstance.delete(
+        `gateway/project-service/api/v1/project/${projectId}/delete`
+      ),
     "프로젝트 삭제"
   );
   if (!response.ok) return;
@@ -91,7 +99,11 @@ export const createIdea = async (projectId) => {
   };
   console.log(data);
   const response = await helper(
-    () => authAxiosInstance.post(`api/v1/idea/${projectId}/create`, data),
+    () =>
+      authAxiosInstance.post(
+        `gateway/project-service/api/v1/idea/${projectId}/create`,
+        data
+      ),
     "아이디어 생성"
   );
   if (!response.ok) return;
@@ -102,7 +114,8 @@ export const createIdea = async (projectId) => {
 
 export const fetchIdea = async (projectId) => {
   const response = await helper(
-    () => authAxiosInstance.get(`api/v1/idea/${projectId}`),
+    () =>
+      authAxiosInstance.get(`gateway/project-service/api/v1/idea/${projectId}`),
     "아이디어 목록 조회"
   );
   if (!response.ok) return;
@@ -127,7 +140,11 @@ export const fetchIdeaDetail = async (projectId, ideaId) => {
 
 export const updateIdea = async (ideaId, x, y) => {
   const response = await helper(
-    () => authAxiosInstance.put(`api/v1/idea/${ideaId}/update`, { x, y }),
+    () =>
+      authAxiosInstance.put(
+        `gateway/project-service/api/v1/idea/${ideaId}/update`,
+        { x, y }
+      ),
     "아이디어 수정"
   );
   if (!response.ok) return;
@@ -139,7 +156,10 @@ export const updateIdea = async (ideaId, x, y) => {
 export const deleteIdea = async (ideaId) => {
   console.log(ideaId);
   const response = await helper(
-    () => authAxiosInstance.delete(`api/v1/idea/${ideaId}/delete`),
+    () =>
+      authAxiosInstance.delete(
+        `gateway/project-service/api/v1/idea/${ideaId}/delete`
+      ),
     "아이디어 삭제"
   );
   if (!response.ok) return;
@@ -182,7 +202,10 @@ export const unselectIdea = async (ideaId) => {
 // 마인드맵 조회
 export const fetchMindMap = async (projectId) => {
   const response = await helper(
-    () => authAxiosInstance.get(`api/v1/mindmap/${projectId}`),
+    () =>
+      authAxiosInstance.get(
+        `gateway/project-service/api/v1/mindmap/${projectId}`
+      ),
     "마인드맵 조회"
   );
   if (!response.ok) return;
@@ -194,10 +217,13 @@ export const fetchMindMap = async (projectId) => {
 export const createMindMap = async ({ projectId, mainKeyword, keywords }) => {
   const response = await helper(
     () =>
-      authAxiosInstance.post(`api/v1/mindmap/${projectId}/create`, {
-        mainKeyword,
-        keywords,
-      }),
+      authAxiosInstance.post(
+        `gateway/project-service/api/v1/mindmap/${projectId}/create`,
+        {
+          mainKeyword,
+          keywords,
+        }
+      ),
     "마인드맵 생성"
   );
   if (!response.ok) return;
@@ -255,7 +281,8 @@ export const fetchNewstoKeyword = async (keyword) => {
 
 export const getProposal = async (ideaId) => {
   const response = await helper(
-    () => authAxiosInstance.get(`api/v1/planner/${ideaId}`),
+    () =>
+      authAxiosInstance.get(`gateway/project-service/api/v1/planner/${ideaId}`),
     "기획서 조회"
   );
   if (!response.ok) return;

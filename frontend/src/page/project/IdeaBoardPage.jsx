@@ -10,7 +10,7 @@ function IdeaBoardPage() {
   const param = useParams();
   const [selectedSticker, setSelectedSticker] = useState(null); // 선택된 스티커
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [scale, setScale] = useState(1); // 확대/축소 비율
+  const [scale, setScale] = useState(2); // 확대/축소 비율
   const [isDragging, setIsDragging] = useState(false);
   const [translate, setTranslate] = useState({ x: 0, y: 0 }); // 이동 비율
   const [spacePressed, setSpacePressed] = useState(false);
@@ -137,7 +137,7 @@ function IdeaBoardPage() {
       // ctrl 키와 함께 휠을 움직일 때만 확대/축소 적용
       const zoomIntensity = 0.2; // 확대/축소 강도
       let newScale = scale - e.deltaY * zoomIntensity * 0.01; // 스케일 조정
-      newScale = Math.min(Math.max(newScale, 1), 3); // 스케일을 최소 1배, 최대 3배로 제한
+      newScale = Math.min(Math.max(newScale, 1), 4); // 스케일을 최소 1배, 최대 3배로 제한
 
       // 부모 요소의 크기를 참조하여 새 스케일에 맞는 이동 범위 설정
       const { offsetWidth: parentWidth, offsetHeight: parentHeight } =
@@ -158,7 +158,7 @@ function IdeaBoardPage() {
   // 확대/축소 버튼 클릭 핸들러
   const handleZoom = (zoomIn) => {
     let newScale = zoomIn ? scale + 0.2 : scale - 0.2;
-    newScale = Math.min(Math.max(newScale, 1), 3);
+    newScale = Math.min(Math.max(newScale, 1), 4);
     updateTranslate(newScale);
   };
 
@@ -214,19 +214,19 @@ function IdeaBoardPage() {
                 <div
                   className="absolute flex flex-row items-center space-x-2 z-10"
                   style={{
-                    top: "-1.2rem",
-                    left: "5rem",
+                    top: "-1rem",
+                    left: "3.3rem",
                     transform: "translate(-50%, -50%)",
                   }}
                 >
                   <button
-                    className="px-2 py-1 bg-blue-500 text-white rounded text-xs whitespace-nowrap"
+                    className="px-2 py-1 bg-blue-500 text-white rounded text-[8px] whitespace-nowrap"
                     onClick={() => setIsModalOpen(true)}
                   >
                     상세보기
                   </button>
                   <button
-                    className="px-2 py-1 bg-red-500 text-white rounded text-xs whitespace-nowrap"
+                    className="px-2 py-1 bg-red-500 text-white rounded text-[8px] whitespace-nowrap"
                     onClick={handleDeleteSticker}
                   >
                     삭제
@@ -237,6 +237,7 @@ function IdeaBoardPage() {
           ))}
         </div>
       </div>
+      {/* 스티커 상세 모달 */}
       {isModalOpen && selectedSticker && (
         <StickerModal
           closeModal={() => setIsModalOpen(false)}
@@ -277,7 +278,7 @@ function IdeaBoardPage() {
           <div
             className="absolute bottom-0 w-full bg-blue-500 transition-all duration-200 ease-in-out"
             style={{
-              height: `${((scale - 1) / 2) * 100} %`, // scale을 기반으로 높이 설정
+              height: `${((scale - 1) / 2) * 100}%`, // scale을 기반으로 높이 설정
             }}
           />
         </div>

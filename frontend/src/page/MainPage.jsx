@@ -11,10 +11,11 @@ function MainPage() {
   const [isLastSection, setIsLastSection] = useState(false);
   const { setLogin } = useUserStore();
   const navigate = useNavigate();
-  const REDIRECT_URI = "https://oracle1.mypjt.xyz/api/v1/auth/callback";
+  const REDIRECT_URI =
+    "https://goodidea.world/gateway/auth-service/api/v1/auth/callback";
 
   const handleGitLabLogin = () => {
-    window.location.href = `https://lab.ssafy.com/oauth/authorize?client_id=423f3efe4f264ff88416dc5ad049498edfaeaf5a68dcdb835ee4ce5b0bf48f32&redirect_uri=${REDIRECT_URI}&response_type=code&scope=read_user%20api&state=random_state_string`;
+    window.location.href = `https://lab.ssafy.com/oauth/authorize?client_id=6f0e2194257deee5608935898a17395f218031088862493f206ef8a9df28a90c&redirect_uri=${REDIRECT_URI}&response_type=code&scope=read_user%20api&state=random_state_string`;
   };
 
   // 테스트 드라이버용 함수 ----------------- 시작 -----------------
@@ -28,7 +29,7 @@ function MainPage() {
     try {
       // 프로필 정보 요청
       const profileResponse = await axios.get(
-        `https://oracle1.mypjt.xyz/api/v1/user/profile`,
+        `https://goodidea.world/gateway/auth-service/api/v1/user/profile`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
