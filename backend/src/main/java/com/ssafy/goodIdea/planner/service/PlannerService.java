@@ -56,19 +56,27 @@ public class PlannerService {
                     .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
 
             String content = operationDto.getData();
-            log.debug("Content to save: {}", content);
+            log.info("Saving content: {}", content);
 
-            planner.updateContent(content);
-            plannerRepository.save(planner);
-            
-            return PlannerUpdateResponseDto.from(
-                planner, 
-                UUID.randomUUID().toString(),
-                System.currentTimeMillis()
-            );
+            if (content != null && !content.isEmpty()) {
+                planner.updateContent(content);
+                plannerRepository.save(planner);
+                
+                log.info("Content saved successfully for ideaId: {}", ideaId);
+                
+                return PlannerUpdateResponseDto.from(
+                    planner, 
+                    UUID.randomUUID().toString(),
+                    System.currentTimeMillis()
+                );
+            } else {
+                log.warn("Received empty content for ideaId: {}", ideaId);
+                throw new BaseException(ErrorType.SERVER_ERROR);
+            }
 
         } catch (Exception e) {
-            log.error("Error handling websocket operation: {}", e.getMessage(), e);
+            log.error("Error handling websocket operation for ideaId {}: {}", 
+                     operationDto.getIdeaId(), e.getMessage(), e);
             throw new BaseException(ErrorType.SERVER_ERROR);
         }
     }
