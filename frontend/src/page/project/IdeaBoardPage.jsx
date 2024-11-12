@@ -262,11 +262,11 @@ function IdeaBoardPage() {
             />
           </svg>
         }
-        className="fixed top-20 right-4"
+        className="fixed top-[10%] right-4 !px-3"
         theme="default"
       />
-      {/* 확대/축소 컨트롤러: transform 외부에 위치 */}
-      <div className="fixed right-4 top-[25%] -translate-y-1/2 flex flex-col items-center gap-2 bg-white rounded-lg p-2 shadow-md select-none">
+      {/* 확대/축소 컨트롤러 */}
+      <div className="fixed right-4 top-[30%] -translate-y-1/2 flex flex-col items-center gap-2 bg-white rounded-lg p-2 shadow-md select-none">
         <button
           onClick={() => handleZoom(true)}
           className="text-lg font-semibold text-gray-700"
