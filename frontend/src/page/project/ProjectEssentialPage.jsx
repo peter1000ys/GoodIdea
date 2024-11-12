@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import * as Y from "yjs";
-import { HocuspocusProvider, TiptapCollabProvider } from "@hocuspocus/provider";
+// import { HocuspocusProvider, TiptapCollabProvider } from "@hocuspocus/provider";
 import DefaultButton from "../../components/common/DefaultButton";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { deleteProject } from "../../api/axios";
@@ -79,7 +79,7 @@ function ProjectEssentialPage() {
     doc.on("update", updateFieldValues);
 
     return () => {
-      provider.destroy();
+      // provider.destroy();
       doc.off("update", updateFieldValues);
     };
   }, [fieldValues]);
