@@ -106,6 +106,7 @@ public class ProjectService {
                                     UserDto us = up.getUser();
                                     return UserDto.builder()
                                             .id(us.getId())
+                                            .name(us.getName())
                                             .grade(us.getGrade())
                                             .locationType(us.getLocationType())
                                             .username(us.getUsername())
@@ -158,6 +159,7 @@ public class ProjectService {
                                         UserDto us = up.getUser();
                                         return UserDto.builder()
                                                 .id(us.getId())
+                                                .name(us.getName())
                                                 .grade(us.getGrade())
                                                 .locationType(us.getLocationType())
                                                 .username(us.getUsername())
