@@ -7,7 +7,7 @@ function Nav() {
   const location = useLocation();
   const navigate = useNavigate();
   const param = useParams();
-  
+
   // ProjectStore에서 필요한 정보 가져오기
   const { setProjectInfo, mainIdea, setMainIdea } = useProjectStore();
 
@@ -16,7 +16,7 @@ function Nav() {
     const fetchProjectInfo = async () => {
       try {
         const response = await authAxiosInstance.get(
-          `/api/v1/project/${param?.id}`
+          `gateway/project-service/api/v1/project/${param?.id}`
         );
         setProjectInfo(response.data.data);
       } catch (error) {
@@ -28,20 +28,6 @@ function Nav() {
       fetchProjectInfo();
     }
   }, [param?.id, setProjectInfo, setMainIdea]);
-  // useEffect(() => {
-  //   console.log(param?.id);
-  //   if (param?.id) {
-  //     console.log("프로젝트 리스트", projects);
-  //     projects.map((project) => {
-  //       console.log("반복문", project.project_id);
-  //       if (project.project_id === parseInt(param.id)) {
-  //         setContent(project.projectType);
-  //       }
-  //     });
-  //   } else {
-  //     setContent(null);
-  //   }
-  // }, [param]);
 
   const goHome = () => {
     // 프로젝트 리스트로 이동
