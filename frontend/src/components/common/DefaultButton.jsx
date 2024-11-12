@@ -30,6 +30,7 @@ function DefaultButton({
       "px-6 py-3 bg-blue-500 text-white rounded-full shadow hover:bg-blue-600 transition",
     alert:
       "px-6 py-3 border-2 border-red-500 text-red-500 rounded-full shadow hover:bg-red-500 hover:text-white transition",
+    none: "",
   };
   return (
     <button
