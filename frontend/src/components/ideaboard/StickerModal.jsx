@@ -16,7 +16,7 @@ const StickerModal = ({ closeModal, selectedSticker }) => {
           className="w-full h-full overflow-hidden"
           style={{ backgroundColor: selectedSticker.color }}
         >
-          <ModalPlanning />
+          <ModalPlanning selectedSticker={selectedSticker} />
         </div>
         <button
           className="absolute text-3xl top-4 right-7 text-gray-500 hover:text-gray-700 z-[100]"
