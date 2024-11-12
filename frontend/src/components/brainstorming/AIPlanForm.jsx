@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DefaultButton from "../common/DefaultButton";
+import { generatePlan } from "../../api/aiPlan";
 
 const AIPlanForm = ({ onClose }) => {
   const [tags, setTags] = useState({
@@ -14,6 +15,18 @@ const AIPlanForm = ({ onClose }) => {
     타겟유저: "",
     기대효과: "",
   });
+
+  const [generatedPlan, setGeneratedPlan] = useState({
+    background: "",
+    service_intro: "",
+    target_users: "",
+    expected_effects: "",
+    project_topics: "",
+    tech_stack: "",
+    advanced_stack: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleInputChange = (event, key) => {
     setInputs({ ...inputs, [key]: event.target.value });
@@ -31,6 +44,41 @@ const AIPlanForm = ({ onClose }) => {
     }
   };
 
+  const handleRemoveTag = (key, tagToRemove) => {
+    setTags({
+      ...tags,
+      [key]: tags[key].filter((tag) => tag !== tagToRemove),
+    });
+  };
+
+  const handleGeneratedPlanChange = (event, key) => {
+    setGeneratedPlan({
+      ...generatedPlan,
+      [key]: event.target.value,
+    });
+  };
+
+  const generatePlanHandler = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const plan = await generatePlan(tags);
+      setGeneratedPlan({
+        background: plan.background,
+        service_intro: plan.service_intro,
+        target_users: plan.target_users,
+        expected_effects: plan.expected_effects,
+        project_topics: plan.project_topics,
+        tech_stack: plan.tech_stack,
+        advanced_stack: plan.advanced_stack,
+      });
+    } catch (err) {
+      setError("기획서 생성에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex justify-center p-8 bg-gray-100 h-full">
       <div className="w-full bg-white shadow-lg rounded-lg border">
@@ -41,7 +89,7 @@ const AIPlanForm = ({ onClose }) => {
         </div>
 
         {/* 폼 영역 */}
-        <div className="p-8 grid grid-cols-2 gap-8" style={{ height: "500px" }}>
+        <div className="p-8 grid grid-cols-2 gap-8" style={{ height: "600px" }}>
           {/* 좌측: 태그 입력 영역 */}
           <div
             className="space-y-0 overflow-y-auto px-1"
@@ -66,12 +114,7 @@ const AIPlanForm = ({ onClose }) => {
                     >
                       {tag}
                       <button
-                        onClick={() =>
-                          setTags({
-                            ...tags,
-                            [key]: tags[key].filter((t) => t !== tag),
-                          })
-                        }
+                        onClick={() => handleRemoveTag(key, tag)}
                         className="ml-2 text-gray-500 hover:text-gray-700"
                       >
                         &times;
@@ -88,14 +131,45 @@ const AIPlanForm = ({ onClose }) => {
             className="space-y-6 overflow-y-auto pl-4"
             style={{ height: "100%" }}
           >
-            {Object.keys(tags).map((key) => (
-              <div key={key} className="grid grid-rows-[auto_1fr] gap-2">
-                <label className="text-gray-700 font-medium">{key}</label>
-                <div className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-600 h-20">
-                  인공지능이 작성해준 {key} 내용
-                </div>
-              </div>
-            ))}
+            {isLoading && <p>기획서를 생성 중입니다...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            {!isLoading && !error && (
+              <>
+                {[
+                  "background",
+                  "service_intro",
+                  "target_users",
+                  "expected_effects",
+                  "project_topics",
+                  "tech_stack",
+                  "advanced_stack",
+                ].map((key, index) => (
+                  <div key={index}>
+                    <label className="text-gray-700 font-medium">
+                      {key === "background"
+                        ? "기획배경"
+                        : key === "service_intro"
+                        ? "서비스소개"
+                        : key === "target_users"
+                        ? "타겟유저"
+                        : key === "expected_effects"
+                        ? "기대효과"
+                        : key === "project_topics"
+                        ? "주제추천"
+                        : key === "tech_stack"
+                        ? "기술스택추천"
+                        : "도전적인기술스택추천"}
+                    </label>
+                    <textarea
+                      value={generatedPlan[key]}
+                      onChange={(e) => handleGeneratedPlanChange(e, key)}
+                      className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-600"
+                      rows={3}
+                    />
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </div>
 
@@ -103,11 +177,10 @@ const AIPlanForm = ({ onClose }) => {
         <div className="flex justify-between p-8">
           <DefaultButton onClick={onClose} text="닫기" />
           <DefaultButton
-            text="기획서 생성"
-            onClick={() => {
-              // 기획서 생성 로직
-            }}
-            type="submit"
+            text={isLoading ? "기획서 생성 중..." : "기획서 생성"}
+            onClick={generatePlanHandler}
+            type="button"
+            disabled={isLoading}
           />
         </div>
       </div>
