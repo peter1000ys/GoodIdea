@@ -171,11 +171,6 @@ const AIPlanForm = ({ onClose }) => {
 
       <div className="flex justify-between items-center p-6">
         <DefaultButton onClick={onClose} text="닫기" />
-        {isCompleted && (
-          <span className="text-green-600 font-semibold text-lg">
-            기획서 생성 완료!
-          </span>
-        )}
         <div className="flex space-x-4">
           <DefaultButton
             text={
