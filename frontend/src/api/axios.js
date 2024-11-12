@@ -33,7 +33,6 @@ export const fetchGitlabProjectList = async () => {
     "gitlab 프로젝트 목록"
   );
   if (!response.ok) return;
-  // console.log(response.data.data);
   return response?.data?.data;
 };
 
@@ -44,7 +43,6 @@ export const fetchProjectList = async () => {
     "프로젝트 목록"
   );
   if (!response.ok) return;
-  // console.log(response.data);
   return response?.data?.data;
 };
 
@@ -64,6 +62,19 @@ export const createProject = async (projectData) => {
   return { status: true, data: response.data };
 };
 
+export const fetchProjectDetail = async (projectId) => {
+  const response = await helper(
+    () =>
+      authAxiosInstance.get(
+        `gateway/project-service/api/v1/project/${projectId}`
+      ),
+    "프로젝트 상세 조회"
+  );
+  if (!response.ok) return;
+  console.log("프로젝트 상세 조회", response.data);
+  return response?.data?.data;
+};
+
 export const deleteProject = async (projectId) => {
   const response = await helper(
     () =>
@@ -73,7 +84,6 @@ export const deleteProject = async (projectId) => {
     "프로젝트 삭제"
   );
   if (!response.ok) return;
-
   console.log("프로젝트 삭제", response.data);
   return true;
 };
