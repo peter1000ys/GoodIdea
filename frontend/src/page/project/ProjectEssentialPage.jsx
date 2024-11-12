@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import * as Y from "yjs";
-import { HocuspocusProvider, TiptapCollabProvider } from "@hocuspocus/provider";
+// import { HocuspocusProvider, TiptapCollabProvider } from "@hocuspocus/provider";
 import DefaultButton from "../../components/common/DefaultButton";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { deleteProject } from "../../api/axios";
@@ -43,16 +43,16 @@ function ProjectEssentialPage() {
   });
 
   useEffect(() => {
-    const provider = new HocuspocusProvider({
-      url: `wss://oracle1.pjt.xyz/ws`, // WebSocket URL
-      document: doc,
-      // appId: "7j9y6m10",
-      name: "projectEssential_private", // 문서의 고유 식별자
-      token: "notoken", // JWT 토큰 (필요에 따라 설정)
-      onSynced: () => {
-        console.log("Synced with server");
-      },
-    });
+    // const provider = new HocuspocusProvider({
+    //   url: `wss://oracle1.pjt.xyz/ws`, // WebSocket URL
+    //   document: doc,
+    //   // appId: "7j9y6m10",
+    //   name: "projectEssential_private", // 문서의 고유 식별자
+    //   token: "notoken", // JWT 토큰 (필요에 따라 설정)
+    //   onSynced: () => {
+    //     console.log("Synced with server");
+    //   },
+    // });
 
     // Yjs 문서의 변경 사항을 React 상태와 동기화
     const updateFieldValues = () => {
@@ -79,7 +79,7 @@ function ProjectEssentialPage() {
     doc.on("update", updateFieldValues);
 
     return () => {
-      provider.destroy();
+      // provider.destroy();
       doc.off("update", updateFieldValues);
     };
   }, [fieldValues]);
