@@ -258,7 +258,7 @@ function MainPage() {
         ></link>
       </Helmet>
 
-      <div className="min-h-screen font-serif relative overflow-x-hidden font-Maplestory">
+      <div className="min-h-screen font-serif relative overflow-x-hidden font-Maplestory main-page">
         {/* 고정된 GitLab 로그인 버튼: 마지막 섹션에서 안 보이게 */}
         {!isLastSection && (
           <div className="fixed top-8 right-8 z-[51] flex flex-col items-center animate-tinUpIn">

@@ -7,14 +7,14 @@
 /*
 Main Scrollbar
 */
-* ::-webkit-scrollbar {
+*:not(.main-page) *::-webkit-scrollbar {
   width: 0.8em;
 }
 
 /*
 Vertical Scrollbar (RIGHT SIDE)
 */
-* ::-webkit-scrollbar-track:vertical {
+*:not(.main-page) *::-webkit-scrollbar-track:vertical {
   background: -webkit-linear-gradient(
     180deg,
     #fff,
@@ -34,7 +34,7 @@ Vertical Scrollbar (RIGHT SIDE)
 /*
 Horizontal Scrollbar (BOTTOM SIDE)
 */
-* ::-webkit-scrollbar-track:horizontal {
+*:not(.main-page) *::-webkit-scrollbar-track:horizontal {
   background: -webkit-linear-gradient(
     90deg,
     #fff,
@@ -54,7 +54,7 @@ Horizontal Scrollbar (BOTTOM SIDE)
 /*
 Scrollbar Thumb
 */
-* ::-webkit-scrollbar-thumb {
+*:not(.main-page) *::-webkit-scrollbar-thumb {
   background: rgba(112, 178, 243, 0.75);
   border-radius: 2em;
 }
@@ -62,7 +62,7 @@ Scrollbar Thumb
 /*
 Horiontal Scrollbar button (TOP-RIGHT aKa START)
 */
-* ::-webkit-scrollbar-button:horizontal:single-button:start {
+*:not(.main-page) *::-webkit-scrollbar-button:horizontal:single-button:start {
   position: absolute;
   content: "";
   border-bottom: 20px solid transparent;
@@ -74,7 +74,7 @@ Horiontal Scrollbar button (TOP-RIGHT aKa START)
 /*
 Vertical Scrollbar button (BOTTOM-LEFT aKa START)
 */
-* ::-webkit-scrollbar-button:vertical:single-button:start {
+*:not(.main-page) *::-webkit-scrollbar-button:vertical:single-button:start {
   position: absolute;
   content: "";
   border-right: 20px solid transparent;
@@ -86,7 +86,7 @@ Vertical Scrollbar button (BOTTOM-LEFT aKa START)
 /*
 Horiontal Scrollbar button (BOTTOM-RIGHT aKa END)
 */
-* ::-webkit-scrollbar-button:horizontal:single-button:end {
+*:not(.main-page) *::-webkit-scrollbar-button:horizontal:single-button:end {
   position: absolute;
   overflow: hidden;
   content: "";
@@ -99,7 +99,7 @@ Horiontal Scrollbar button (BOTTOM-RIGHT aKa END)
 /*
 Vertical Scrollbar button (BOTTOM-RIGHT aKa END)
 */
-* ::-webkit-scrollbar-button:vertical:single-button:end {
+*:not(.main-page) *::-webkit-scrollbar-button:vertical:single-button:end {
   position: absolute;
   overflow: hidden;
   content: "";
@@ -112,6 +112,6 @@ Vertical Scrollbar button (BOTTOM-RIGHT aKa END)
 /*
 Scrollbar corner which is totally at bottom-right
 */
-* ::-webkit-scrollbar-corner {
+*:not(.main-page) *::-webkit-scrollbar-corner {
   background: rgba(112, 178, 243, 0.75);
 }
