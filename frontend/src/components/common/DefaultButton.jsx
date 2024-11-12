@@ -50,7 +50,7 @@ DefaultButton.propTypes = {
   text: PropTypes.node,
   children: PropTypes.node,
   className: PropTypes.string,
-  theme: PropTypes.oneOf(["default", "bright", "alert"]),
+  theme: PropTypes.oneOf(["default", "bright", "alert", "none"]),
 };
 
 export default DefaultButton;
