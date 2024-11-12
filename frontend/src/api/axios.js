@@ -202,7 +202,7 @@ export const unselectIdea = async (ideaId) => {
 export const createIdeaComment = async (ideaId) => {
   const response = await helper(
     () =>
-      authAxiosInstance.put(
+      authAxiosInstance.post(
         `gateway/project-service/api/v1/idea/comment/${ideaId}/create`
       ),
     "아이디어 댓글 작성"
