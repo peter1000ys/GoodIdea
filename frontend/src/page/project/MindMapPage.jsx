@@ -286,7 +286,7 @@ function MindMapPage() {
                   {/* 내가 검색한 키워드 영역 끝 */}
 
                   {/* 연관 키워드 영역 끝 */}
-                  <h2 className="text-center font-bold my-4">
+                  <h2 className="text-center text-xl font-bold mb-4 mt-6">
                     키워드와 관련된 정보
                   </h2>
                   <div className="space-y-4 text-gray-700">

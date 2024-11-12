@@ -23,8 +23,6 @@ function ProjectListPage() {
         setLoading(true);
         const gitlabProjectList = await fetchGitlabProjectList();
         const projectList = await fetchProjectList();
-        // console.log(projectList, "gitlabProjectlist");
-        // console.log(gitlabProjectList, "gitlabProjectlist");
         if (gitlabProjectList && projectList) {
           useProjectListStore.setState({
             projects: [...projectList],

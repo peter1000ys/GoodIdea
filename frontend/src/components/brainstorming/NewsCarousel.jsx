@@ -25,7 +25,7 @@ function NewsCarousel({ slides, currentIndex, setCurrentIndex }) {
                     href={slide.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full line-clamp-2 inline text-blue-300 hover:underline"
+                    className="w-full line-clamp-2 inline text-blue-500 hover:underline"
                     dangerouslySetInnerHTML={sanitizedDescription(slide.title)}
                   >
                     {/* <div */}
