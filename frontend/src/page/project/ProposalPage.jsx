@@ -28,6 +28,11 @@ function ProposalEditor({ initialContent }) {
     onUpdate: ({ editor }) => {
       if (!isLocalUpdate.current) {
         const content = editor.getHTML();
+        console.log("Sending websocket message:", {
+          content: content,
+          type: typeof content,
+          length: content.length
+        });
         sendMessage(content);
       }
     },

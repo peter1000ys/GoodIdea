@@ -9,14 +9,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 import com.ssafy.goodIdea.common.dto.DocumentOperationDto;
 import com.ssafy.goodIdea.common.exception.ApiResponse;
-import com.ssafy.goodIdea.common.exception.BaseException;
-import com.ssafy.goodIdea.common.exception.ErrorType;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.UUID;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +26,7 @@ public class PlannerController {
     }
 
     /*
-     * 플래너 수정 (WebSocket & HTTP)
+     * 플래너 수정 (WebSocket)
      */
     @MessageMapping("/{ideaId}/ws")
     public ApiResponse<PlannerUpdateResponseDto> updatePlannerWebSocket(
@@ -42,19 +34,6 @@ public class PlannerController {
         DocumentOperationDto operation
     ) {
         operation.setIdeaId(ideaId);
-        return ApiResponse.ok(plannerService.updateContent(operation));
-    }
-
-    @PutMapping("/{ideaId}")
-    public ApiResponse<PlannerUpdateResponseDto> updatePlannerHttp(
-        @PathVariable Long ideaId,
-        @RequestBody Map<String, String> payload
-    ) {
-        DocumentOperationDto operation = new DocumentOperationDto();
-        operation.setIdeaId(ideaId);
-        operation.setDocumentType(DocumentOperationDto.DocumentType.PLANNER);
-        operation.setOperation("update");
-        operation.setData(payload.get("content"));
-        return ApiResponse.ok(plannerService.updateContent(operation));
+        return ApiResponse.ok(plannerService.updateContentWebSocket(operation));
     }
 }

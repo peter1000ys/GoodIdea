@@ -3,7 +3,6 @@ import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 import { debounce } from "lodash";
 import PropTypes from "prop-types";
-import authAxiosInstance from "../../api/http-commons/authAxios";
 
 const WebSocketContext = createContext(null);
 
@@ -27,20 +26,6 @@ export function WebSocketProvider({
         ideaId,
       });
     }, 500)
-  ).current;
-
-  // 자동 저장을 위한 디바운스 함수
-  const debouncedSave = useRef(
-    debounce(async (content) => {
-      try {
-        await authAxiosInstance.put(`api/v1/planner/${ideaId}`, {
-          content: content,
-        });
-        console.log("Content saved successfully");
-      } catch (error) {
-        console.error("Failed to save content:", error);
-      }
-    }, 1000) // 1초 딜레이
   ).current;
 
   useEffect(() => {
@@ -85,7 +70,6 @@ export function WebSocketProvider({
 
     return () => {
       debouncedCallback.cancel();
-      debouncedSave.cancel();
       if (wsProvider) {
         wsProvider.disconnect();
         setTimeout(() => {
@@ -98,18 +82,34 @@ export function WebSocketProvider({
     };
   }, [ideaId, documentType, onMessageReceived, debouncedCallback]);
 
-  const sendMessage = (content) => {
-    if (!ytext.current) return;
-
-    // YJS 문서 업데이트
-    ydoc.current.transact(() => {
-      ytext.current.delete(0, ytext.current.length);
-      ytext.current.insert(0, content);
-    });
-
-    // 변경사항 자동 저장
-    debouncedSave(content);
-  };
+  const sendMessage = debounce((content) => {
+    try {
+      if (wsProvider.current && wsProvider.current.connected) {
+        const message = {
+          ideaId: ideaId,
+          content: content,
+          timestamp: Date.now()
+        };
+        
+        console.log("WebSocket sending message:", {
+          content: content,
+          timestamp: Date.now()
+        });
+        
+        // ytext를 통해 실시간 업데이트
+        ytext.current.delete(0, ytext.current.length);
+        ytext.current.insert(0, content);
+        
+        // 웹소켓으로 메시지 전송
+        wsProvider.current.send(JSON.stringify(message));
+        
+        // 디바운스된 콜백 실행
+        debouncedCallback(content);
+      }
+    } catch (error) {
+      console.error("Error sending WebSocket message:", error);
+    }
+  }, 100); // 100ms 디바운스로 빠른 실시간 업데이트 유지
 
   return (
     <WebSocketContext.Provider value={{ sendMessage, connectionStatus }}>

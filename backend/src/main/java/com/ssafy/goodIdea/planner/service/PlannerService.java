@@ -11,7 +11,6 @@ import com.ssafy.goodIdea.common.exception.ErrorType;
 import com.ssafy.goodIdea.planner.dto.response.PlannerUpdateResponseDto;
 import com.ssafy.goodIdea.planner.entity.Planner;
 import com.ssafy.goodIdea.planner.repository.PlannerRepository;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
 
@@ -31,38 +30,45 @@ public class PlannerService {
     }
 
     @Transactional
-    public PlannerUpdateResponseDto updateContent(DocumentOperationDto operationDto) {
+    public Planner updateContent(Long ideaId, String content) {
         try {
+            Planner planner = plannerRepository.findById(ideaId)
+                    .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
+            
+            planner.updateContent(content);
+            plannerRepository.save(planner);
+            
+            return planner;
+
+        } catch (Exception e) {
+            log.error("Error updating planner content: {}", e.getMessage(), e);
+            throw new BaseException(ErrorType.SERVER_ERROR);
+        }
+    }
+
+    @Transactional
+    public PlannerUpdateResponseDto updateContentWebSocket(DocumentOperationDto operationDto) {
+        try {
+            log.debug("Received operation DTO: {}", operationDto);
+            
             Long ideaId = operationDto.getIdeaId();
             Planner planner = plannerRepository.findById(ideaId)
                     .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
 
-            // HTTP 요청을 위한 간단한 데이터 처리
-            String content;
-            String clientId;
-            if (operationDto.getData().startsWith("{")) {
-                // JSON 형식일 경우 (WebSocket)
-                JsonNode updateData = objectMapper.readTree(operationDto.getData());
-                content = updateData.path("content").asText();
-                clientId = updateData.path("clientId").asText();
-            } else {
-                // 단순 문자열일 경우 (HTTP)
-                content = operationDto.getData();
-                clientId = UUID.randomUUID().toString();
-            }
+            String content = operationDto.getData();
+            log.debug("Content to save: {}", content);
 
-            // 컨텐츠 업데이트
             planner.updateContent(content);
             plannerRepository.save(planner);
             
             return PlannerUpdateResponseDto.from(
                 planner, 
-                clientId,
+                UUID.randomUUID().toString(),
                 System.currentTimeMillis()
             );
 
         } catch (Exception e) {
-            log.error("Error updating planner content: {}", e.getMessage(), e);
+            log.error("Error handling websocket operation: {}", e.getMessage(), e);
             throw new BaseException(ErrorType.SERVER_ERROR);
         }
     }
