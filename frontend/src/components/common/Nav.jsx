@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useProjectStore from "../../store/useProjectStore";
-import authAxiosInstance from "../../api/http-commons/authAxios";
+import { fetchProjectDetail } from "../../api/axios";
 
 function Nav() {
   const location = useLocation();
@@ -9,25 +9,19 @@ function Nav() {
   const param = useParams();
 
   // ProjectStore에서 필요한 정보 가져오기
-  const { setProjectInfo, mainIdea, setMainIdea } = useProjectStore();
+  const { setProjectInfo, mainIdea } = useProjectStore();
 
   // 프로젝트 정보 가져오기
   useEffect(() => {
     const fetchProjectInfo = async () => {
-      try {
-        const response = await authAxiosInstance.get(
-          `gateway/project-service/api/v1/project/${param?.id}`
-        );
-        setProjectInfo(response.data.data);
-      } catch (error) {
-        console.error("프로젝트 정보 조회 실패:", error);
-      }
+      const projectDetail = await fetchProjectDetail(param.id);
+      setProjectInfo(projectDetail);
     };
 
     if (param?.id) {
       fetchProjectInfo();
     }
-  }, [param?.id, setProjectInfo, setMainIdea]);
+  }, [param?.id, setProjectInfo]);
 
   const goHome = () => {
     // 프로젝트 리스트로 이동
