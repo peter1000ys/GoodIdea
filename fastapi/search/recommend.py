@@ -110,7 +110,7 @@ def createAIPlanner(OPEN_AI_KEY, payload_dict:dict):
         api_key = OPEN_AI_KEY
     )
     # 프롬프트 구성
-        prompt = f"""
+    prompt = f"""
     You are an AI assistant responsible for drafting a professional and comprehensive project proposal summary. Your goal is to write a highly detailed response with the same depth and clarity as the provided examples. For each section, deliver a clear, structured, and insightful summary that explains the project’s purpose, core components, and expected impact. Make the content sophisticated and meaningful, using high-level language, logical flow, and ensuring each section is well-developed with nuanced, domain-specific details.
     
     Please return the response in the following JSON format in Korean:
