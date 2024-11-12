@@ -19,7 +19,7 @@ function ProposalEditor({ initialContent }) {
   const editor = useEditor({
     autofocus: true,
     extensions: [StarterKit.configure({ history: true })],
-    content: initialContent || '',
+    content: initialContent || "",
     editorProps: {
       attributes: {
         class: `${styles.tiptap} prose max-w-none w-full focus:outline-none`,
@@ -31,7 +31,7 @@ function ProposalEditor({ initialContent }) {
         console.log("Sending websocket message:", {
           content: content,
           type: typeof content,
-          length: content.length
+          length: content.length,
         });
         sendMessage(content);
       }
@@ -64,7 +64,7 @@ ProposalEditor.defaultProps = {
 
 function ProposalPage() {
   const { projectId, ideaId } = useParams();
-  const [plannerData, setPlannerData] = useState('');
+  const [plannerData, setPlannerData] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,10 +73,10 @@ function ProposalPage() {
           `api/v1/planner/${ideaId}`
         );
         console.log("Loaded planner data:", response.data);
-        setPlannerData(response.data.data.content || '');
+        setPlannerData(response.data.data.content || "");
       } catch (error) {
         console.error("기획서 데이터 로딩 실패:", error);
-        setPlannerData('');
+        setPlannerData("");
       }
     };
 
