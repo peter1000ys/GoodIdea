@@ -10,7 +10,6 @@ function Header() {
   const param = useParams();
   const [content, setContent] = useState(null);
   const { projects } = useProjectListStore();
-  console.log(projects);
 
   useEffect(() => {
     if (param?.id) {
