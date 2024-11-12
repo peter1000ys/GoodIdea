@@ -1,35 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import * as Y from "yjs";
-// import { HocuspocusProvider, TiptapCollabProvider } from "@hocuspocus/provider";
 import DefaultButton from "../../components/common/DefaultButton";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { deleteProject } from "../../api/axios";
-// Yjs 문서 생성 및 필드 초기화
-const doc = new Y.Doc();
-const fields = {
-  teamGitlabCode: doc.getText("teamGitlabCode"),
-  teamName: doc.getText("teamName"),
-  teamMembers: doc.getText("teamMembers"),
-  projectName: doc.getText("projectName"),
-  figmaLink: doc.getText("figmaLink"),
-  jiraLink: doc.getText("jiraLink"),
-  gitlabLink: doc.getText("gitlabLink"),
-  teamInfo: doc.getText("teamInfo"),
-};
-
-// // 초기값 설정
-// Object.keys(fields).forEach((key) => {
-//   console.log(fields[key].toString());
-//   if (fields[key].toString() === "") {
-//     fields[key].insert(0, ""); // 필요시 초기값 설정
-//   }
-// });
+import useProjectStore from "../../store/useProjectStore";
 
 function ProjectEssentialPage() {
   const navigate = useNavigate();
   const params = useParams();
   const projectId = params?.id;
+  const { project } = useProjectStore();
+
+  useEffect(() => {
+    console.log("프로젝트 정보", project);
+  }, [project]);
 
   const [fieldValues, setFieldValues] = useState({
     teamGitlabCode: "",
@@ -42,52 +26,8 @@ function ProjectEssentialPage() {
     teamInfo: "",
   });
 
-  useEffect(() => {
-    // const provider = new HocuspocusProvider({
-    //   url: `wss://oracle1.pjt.xyz/ws`, // WebSocket URL
-    //   document: doc,
-    //   // appId: "7j9y6m10",
-    //   name: "projectEssential_private", // 문서의 고유 식별자
-    //   token: "notoken", // JWT 토큰 (필요에 따라 설정)
-    //   onSynced: () => {
-    //     console.log("Synced with server");
-    //   },
-    // });
-
-    // Yjs 문서의 변경 사항을 React 상태와 동기화
-    const updateFieldValues = () => {
-      console.log("updateFieldValues called");
-      const newFieldValues = {
-        teamGitlabCode: fields.teamGitlabCode.toString(),
-        teamName: fields.teamName.toString(),
-        teamMembers: fields.teamMembers.toString(),
-        projectName: fields.projectName.toString(),
-        figmaLink: fields.figmaLink.toString(),
-        jiraLink: fields.jiraLink.toString(),
-        gitlabLink: fields.gitlabLink.toString(),
-        teamInfo: fields.teamInfo.toString(),
-      };
-
-      // 변경이 있을 때만 상태 업데이트
-      if (JSON.stringify(newFieldValues) !== JSON.stringify(fieldValues)) {
-        setFieldValues(newFieldValues);
-      }
-    };
-    doc.on("load", updateFieldValues);
-
-    // Yjs 문서 변경 시 updateFieldValues 실행
-    doc.on("update", updateFieldValues);
-
-    return () => {
-      // provider.destroy();
-      doc.off("update", updateFieldValues);
-    };
-  }, [fieldValues]);
-
-  // 입력 필드 변경 시 Yjs 문서 업데이트
-  const handleChange = (field, value) => {
-    fields[field].delete(0, fields[field].length); // 이전 텍스트 제거
-    fields[field].insert(0, value); // 새 텍스트 삽입
+  const handleChange = (e) => {
+    console.log("안쓰는거", e);
   };
 
   const deleteProjectHandler = async () => {
@@ -115,8 +55,15 @@ function ProjectEssentialPage() {
                 REGISTRATION FORM
               </h2>
               <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="col-span-1 flex items-center">
+                  GITLAB Repository
+                </div>
+                <div className="col-span-2">
+                  <div className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md">
+                    asdasdasdsa
+                  </div>
+                </div>
                 {[
-                  { label: "팀 깃랩 코드", name: "teamGitlabCode" },
                   { label: "팀 명", name: "teamName" },
                   { label: "팀 구성원", name: "teamMembers" },
                   { label: "프로젝트 명", name: "projectName" },
@@ -132,9 +79,7 @@ function ProjectEssentialPage() {
                         className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
                         // placeholder={field.label}
                         value={fieldValues[field.name]}
-                        onChange={(e) =>
-                          handleChange(field.name, e.target.value)
-                        }
+                        onChange={(e) => handleChange(e)}
                       />
                     </div>
                   </React.Fragment>
