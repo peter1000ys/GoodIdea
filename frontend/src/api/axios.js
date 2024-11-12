@@ -134,7 +134,10 @@ export const fetchIdeaDetail = async (projectId, ideaId) => {
   );
   if (!response.ok) return;
 
-  console.log("아이디어 상세 조회", response.data);
+  console.log(
+    "아이디어 상세 조회(여기에 있는 comment 필드로 댓글 조회 가능)",
+    response.data
+  );
   return response?.data?.data;
 };
 
@@ -193,6 +196,20 @@ export const unselectIdea = async (ideaId) => {
   if (!response.ok) return;
 
   console.log("아이디어 채택 취소", response.data);
+  return true;
+};
+
+export const createIdeaComment = async (ideaId) => {
+  const response = await helper(
+    () =>
+      authAxiosInstance.put(
+        `gateway/project-service/api/v1/idea/comment/${ideaId}/create`
+      ),
+    "아이디어 댓글 작성"
+  );
+  if (!response.ok) return;
+
+  console.log("아이디어 댓글 작성", response.data);
   return true;
 };
 
