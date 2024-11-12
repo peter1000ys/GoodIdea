@@ -60,18 +60,17 @@ async def search(keyword: str = Query(..., description="검색에 사용할 단�
         results = []
         tasks = []
 
-        async with httpx.AsyncClient() as client:
-            # 첫 번째 쿼리 결과 처리
-            if repos_ssafy.totalCount > 0:
-                for repo in repos_ssafy:  # 최대 15개의 결과만 처리
-                    tasks.append(fetch_repo_info(client, repo))
+        # 첫 번째 쿼리 결과 처리
+        if repos_ssafy.totalCount > 0:
+            for repo in repos_ssafy[:15]:  # 최대 15개의 결과만 처리
+                tasks.append(fetch_repo_info(repo))
 
-            # 두 번째 쿼리 결과 처리
-            if repos_싸피.totalCount > 0:
-                for repo in repos_싸피:  # 최대 15개의 결과만 처리
-                    tasks.append(fetch_repo_info(client, repo))
+        # 두 번째 쿼리 결과 처리
+        if repos_싸피.totalCount > 0:
+            for repo in repos_싸피[:15]:  # 최대 15개의 결과만 처리
+                tasks.append(fetch_repo_info(repo))
 
-            results = await asyncio.gather(*tasks)
+        results = await asyncio.gather(*tasks)
 
         total_count = len(results)  # 최종 병합된 결과 수 계산
 
