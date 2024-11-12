@@ -74,7 +74,9 @@ const CloudOverlay = ({ setIsPlanOpen, handleRecommend, setSearchKeyword }) => {
           className="px-4 py-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 text-white font-bold rounded-full hover:from-blue-400 hover:via-cyan-300 hover:to-blue-400
         border-blue-800 focus:outline-none focus:ring-4 focus:ring-yellow-500"
         >
-          <span className="text-xs tracking-wider uppercase">Keyword추천</span>
+          <span className="text-xs tracking-wider uppercase">
+            오늘의Keyword
+          </span>
         </button>
         <button
           onClick={() => setIsPlanOpen(true)}

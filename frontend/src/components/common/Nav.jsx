@@ -91,7 +91,7 @@ function Nav() {
   }, [location.pathname]);
 
   return (
-    <div className="fixed w-64 min-h-screen bg-gradient-to-b from-[#999999] to-[#333333] text-white p-4 flex flex-col justify-between rounded-tr-[20px]">
+    <div className="fixed z-10 w-64 min-h-screen bg-gradient-to-b from-[#999999] to-[#333333] text-white p-4 flex flex-col justify-between rounded-tr-[20px]">
       <div>
         <div className="flex flex-row justify-between mb-3">
           <img
