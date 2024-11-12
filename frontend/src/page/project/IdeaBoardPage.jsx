@@ -10,7 +10,7 @@ function IdeaBoardPage() {
   const param = useParams();
   const [selectedSticker, setSelectedSticker] = useState(null); // 선택된 스티커
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [scale, setScale] = useState(2); // 확대/축소 비율
+  const [scale, setScale] = useState(1); // 확대/축소 비율
   const [isDragging, setIsDragging] = useState(false);
   const [translate, setTranslate] = useState({ x: 0, y: 0 }); // 이동 비율
   const [spacePressed, setSpacePressed] = useState(false);
@@ -72,7 +72,10 @@ function IdeaBoardPage() {
 
   // 스티커 클릭 시 선택 상태 변경
   const handleStickerClick = (index) => {
-    setSelectedSticker(coordinates[index]);
+    const clickedSticker = coordinates[index];
+    setSelectedSticker((prevSelectedSticker) =>
+      prevSelectedSticker === clickedSticker ? null : clickedSticker
+    );
   };
 
   // 스티커 추가 함수
@@ -220,13 +223,13 @@ function IdeaBoardPage() {
                   }}
                 >
                   <button
-                    className="px-2 py-1 bg-blue-500 text-white rounded text-[8px] whitespace-nowrap"
+                    className="px-2 py-1 bg-blue-500 text-white rounded text-[8px] whitespace-nowrap z-40"
                     onClick={() => setIsModalOpen(true)}
                   >
                     상세보기
                   </button>
                   <button
-                    className="px-2 py-1 bg-red-500 text-white rounded text-[8px] whitespace-nowrap"
+                    className="px-2 py-1 bg-red-500 text-white rounded text-[8px] whitespace-nowrap z-40"
                     onClick={handleDeleteSticker}
                   >
                     삭제
