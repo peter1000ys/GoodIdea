@@ -9,13 +9,17 @@ import CreateProject from "../components/projectlist/CreateProject";
 import { useProjectListStore } from "../store/useProjectListStore";
 import { fetchGitlabProjectList, fetchProjectList } from "../api/axios";
 import ProjectListItemSkeleton from "../components/skeleton/ProjectListItemSkeleton";
+import UpdateUser from "../components/projectlist/UpdateUser";
+import { useUserStore } from "../store/useUserStore";
 
 function ProjectListPage() {
   const [loading, setLoading] = useState(true);
   const [filter1, setFilter1] = useState({ value: "ALL", showOptions: false });
   const [filter2, setFilter2] = useState({ value: "ALL", showOptions: false });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const { projects } = useProjectListStore();
+  const { userInfo } = useUserStore();
 
   useEffect(() => {
     const init = async () => {
@@ -35,6 +39,16 @@ function ProjectListPage() {
 
     init();
   }, []);
+
+  useEffect(() => {
+    if (
+      userInfo.name === null ||
+      userInfo.locationType === null ||
+      userInfo.grade === null
+    ) {
+      setIsUpdateModalOpen(true);
+    }
+  }, [userInfo.name, userInfo.locationType, userInfo.grade]);
 
   // 프로젝트가 없을 시 이거
   const noProject = (
@@ -116,7 +130,7 @@ function ProjectListPage() {
       </div>
       {/* createProject Modal */}
       <PortalModal
-        className="p-0"
+        className="!p-0"
         isOpen={isCreateModalOpen}
         onClose={() => {
           setIsCreateModalOpen(false);
@@ -124,6 +138,18 @@ function ProjectListPage() {
       >
         <div className="w-full h-full flex flex-col">
           <CreateProject />
+        </div>
+      </PortalModal>
+      {/* updateUser Modal */}
+      <PortalModal
+        className="!p-0"
+        isOpen={isUpdateModalOpen}
+        onClose={() => {
+          setIsUpdateModalOpen(false);
+        }}
+      >
+        <div className="w-full h-full flex flex-col">
+          <UpdateUser />
         </div>
       </PortalModal>
     </>

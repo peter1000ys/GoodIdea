@@ -44,9 +44,13 @@ export const fetchUserInfo = async () => {
 };
 
 // 유저 정보 수정
-export const updateUserInfo = async () => {
+export const updateUserInfo = async (userProfile) => {
   const response = await helper(
-    () => authAxiosInstance.put("gateway/user-service/api/v1/user/update"),
+    () =>
+      authAxiosInstance.put(
+        "gateway/user-service/api/v1/user/update",
+        userProfile
+      ),
     "유저 정보 수정"
   );
 

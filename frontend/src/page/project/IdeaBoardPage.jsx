@@ -294,46 +294,48 @@ function IdeaBoardPage() {
           -
         </button>
       </div>
-      <div
-        className="fixed right-[2.1%] top-[43%] bg-blue-500 text-white rounded-full shadow hover:bg-blue-600 transition"
-        onMouseOver={() => {
-          setIsTipOpen(true);
-        }}
-        onMouseOut={() => {
-          setIsTipOpen(false);
-        }}
-      >
-        <svg
-          width="28"
-          height="28"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+      <div className="fixed right-[2.1%] top-[43%] flex">
+        {isTipOpen && (
+          <div className=" bg-blue-500 rounded-md p-4 text-white -translate-y-1/3  -translate-x-10">
+            <ul className="relative list-disc list-inside space-y-2">
+              <li>
+                Ctrl을 누르고 마우스휠을 굴리면 화면을 확대 및 축소할 수 있어요.
+              </li>
+              <li>
+                확대 후 SpaceBar를 누르고 마우스로 화면을 끌면 화면을 움직일 수
+                있어요.
+              </li>
+              <li>상세보기에서 아이디어를 채택할 수 있어요.</li>
+            </ul>
+            <div className="absolute top-1/2 right-3 transform -translate-y-1/2 w-0 h-0 border-t-[17.5px] border-t-transparent border-b-[17.5px] border-b-transparent border-l-[35px] border-l-blue-500 -mr-[35px] "></div>
+          </div>
+        )}
+        <div
+          className=" bg-blue-500 text-white rounded-full shadow h-[28px] hover:bg-blue-600 transition translate-y-1/3"
+          onMouseOver={() => {
+            setIsTipOpen(true);
+          }}
+          onMouseOut={() => {
+            setIsTipOpen(false);
+          }}
         >
-          <path d="M10.75 15.75H13.25V18.25H10.75V15.75Z" fill="white" />
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M12 8C10.805 8 10 9.086 10 10H8C8 8.198 9.496 6 12 6C14.496 6 16 8.142 16 10C16 11.578 14.892 12.378 14.206 12.873L14.09 12.957C13.335 13.509 13 13.823 13 14.5H11C11 12.738 12.161 11.89 12.907 11.345L12.91 11.343C13.742 10.734 14 10.503 14 10C14 9.05 13.204 8 12 8Z"
-            fill="white"
-          />
-        </svg>
-      </div>
-      {isTipOpen && (
-        <div className="fixed right-[5.5%] top-[38%] bg-blue-500 rounded-md p-4 text-white">
-          <ul className="relative list-disc list-inside space-y-2">
-            <li>
-              Ctrl을 누르고 마우스휠을 굴리면 화면을 확대 및 축소할 수 있어요.
-            </li>
-            <li>
-              확대 후 SpaceBar를 누르고 마우스로 화면을 끌면 화면을 움직일 수
-              있어요.
-            </li>
-            <li>상세보기에서 아이디어를 채택할 수 있어요.</li>
-          </ul>
-          <div className="absolute top-1/2 right-3 transform -translate-y-1/2 w-0 h-0 border-t-[17.5px] border-t-transparent border-b-[17.5px] border-b-transparent border-l-[35px] border-l-blue-500 -mr-[35px]"></div>
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M10.75 15.75H13.25V18.25H10.75V15.75Z" fill="white" />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M12 8C10.805 8 10 9.086 10 10H8C8 8.198 9.496 6 12 6C14.496 6 16 8.142 16 10C16 11.578 14.892 12.378 14.206 12.873L14.09 12.957C13.335 13.509 13 13.823 13 14.5H11C11 12.738 12.161 11.89 12.907 11.345L12.91 11.343C13.742 10.734 14 10.503 14 10C14 9.05 13.204 8 12 8Z"
+              fill="white"
+            />
+          </svg>
         </div>
-      )}
+      </div>
     </>
   );
 }
