@@ -19,6 +19,7 @@ const LoginPage = () => {
 
         // 프로필 정보 요청
         const profileResponse = await fetchUserInfo();
+        console.log(profileResponse);
         setLogin(profileResponse); // userInfo 저장
 
         // 프로젝트 리스트 페이지로 리디렉트
