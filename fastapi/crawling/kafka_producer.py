@@ -10,6 +10,7 @@ producer = Producer(conf)
 def send_to_kafka(article):
     try:
         producer.produce(TOPIC, key=str(article["title"]), value=json.dumps(article, ensure_ascii=False))
+        print(article["date"])
         producer.flush()
     except KafkaError as e:
         print(f"Kafka Error: {e}")
