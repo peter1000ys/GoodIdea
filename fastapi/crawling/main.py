@@ -19,6 +19,7 @@ app.add_middleware(
 @app.post("/api/v1/crawling/news")
 async def start_news_crawling():
     try:
+        print((datetime.now() - timedelta(days=1)).strftime("%Y%m%d"))
         crawl_daum_news((datetime.now() - timedelta(days=1)).strftime("%Y%m%d"))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
