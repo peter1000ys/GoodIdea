@@ -23,6 +23,38 @@ const helper = async (cbFunc, type = "미입력") => {
     return { ok: false, message: error?.response?.data?.message };
   }
 };
+//   {
+// 	// 지역
+//   LocationType locationType;
+
+//   // 기수
+//   Integer grade;
+// }
+// --------------------유저 api 시작---------------------
+
+// 유저 정보 조회
+export const fetchUserInfo = async () => {
+  const response = await helper(
+    () => authAxiosInstance.get("gateway/user-service/api/v1/user/profile"),
+    "유저 정보 조회"
+  );
+
+  if (!response.ok) return;
+  return response?.data?.data;
+};
+
+// 유저 정보 수정
+export const updateUserInfo = async () => {
+  const response = await helper(
+    () => authAxiosInstance.put("gateway/user-service/api/v1/user/update"),
+    "유저 정보 수정"
+  );
+
+  if (!response.ok) return;
+  return response?.data?.data;
+};
+
+// --------------------유저 api 끝---------------------
 
 // --------------------프로젝트 api 시작---------------------
 // gitlab의프로젝트 목록 조회
@@ -58,7 +90,6 @@ export const createProject = async (projectData) => {
   );
   if (!response.ok) return { status: false, message: response?.message };
 
-  console.log("프로젝트 생성", response.data);
   return { status: true, data: response.data };
 };
 
@@ -71,7 +102,6 @@ export const fetchProjectDetail = async (projectId) => {
     "프로젝트 상세 조회"
   );
   if (!response.ok) return;
-  console.log("프로젝트 상세 조회", response.data);
   return response?.data?.data;
 };
 
@@ -84,7 +114,6 @@ export const deleteProject = async (projectId) => {
     "프로젝트 삭제"
   );
   if (!response.ok) return;
-  console.log("프로젝트 삭제", response.data);
   return true;
 };
 
@@ -117,8 +146,6 @@ export const createIdea = async (projectId) => {
     "아이디어 생성"
   );
   if (!response.ok) return;
-
-  console.log("아이디어 생성", response.data);
   return true;
 };
 
@@ -161,8 +188,6 @@ export const updateIdea = async (ideaId, x, y) => {
     "아이디어 수정"
   );
   if (!response.ok) return;
-
-  console.log("아이디어 수정", response.data);
   return response?.data?.data;
 };
 
@@ -176,8 +201,6 @@ export const deleteIdea = async (ideaId) => {
     "아이디어 삭제"
   );
   if (!response.ok) return;
-
-  console.log("아이디어 삭제", response.data);
   return true;
 };
 
@@ -190,8 +213,6 @@ export const selectIdea = async (ideaId) => {
     "아이디어 채택"
   );
   if (!response.ok) return;
-
-  console.log("아이디어 채택", response.data);
   return true;
 };
 
@@ -204,8 +225,6 @@ export const unselectIdea = async (ideaId) => {
     "아이디어 채택 취소"
   );
   if (!response.ok) return;
-
-  console.log("아이디어 채택 취소", response.data);
   return true;
 };
 
@@ -218,8 +237,6 @@ export const createIdeaComment = async (ideaId) => {
     "아이디어 댓글 작성"
   );
   if (!response.ok) return;
-
-  console.log("아이디어 댓글 작성", response.data);
   return true;
 };
 

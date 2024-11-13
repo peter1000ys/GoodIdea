@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
-import axios from "axios";
+import { fetchUserInfo } from "../api/axios";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -16,26 +16,13 @@ const LoginPage = () => {
       if (accessToken && refreshToken) {
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
-        // 인증된 axios 인스턴스 생성
-        try {
-          // 프로필 정보 요청
-          const profileResponse = await axios.get(
-            `https://goodidea.world/gateway/user-service/api/v1/user/profile`,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
-          console.log("정보:", profileResponse.data.data);
-          const userInfo = profileResponse.data.data;
-          setLogin(userInfo); // userInfo 저장
 
-          // 메인 페이지로 리디렉트
-          navigate("/projectlist");
-        } catch (error) {
-          console.error("프로필 정보 가져오기 실패:", error);
-        }
+        // 프로필 정보 요청
+        const profileResponse = await fetchUserInfo();
+        setLogin(profileResponse); // userInfo 저장
+
+        // 프로젝트 리스트 페이지로 리디렉트
+        navigate("/projectlist");
       } else {
         console.log("리디렉트된 URL에 토큰이 없습니다.");
       }
