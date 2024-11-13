@@ -153,7 +153,7 @@ function Nav() {
               <div
                 className={`text-xl flex justify-between items-center cursor-pointer border shadow-md backdrop-blur-md select-none p-2 mt-2 rounded-lg transition-all duration-500 ${
                   isBrainstormingOpen
-                    ? "bg-[#bfdbfe] border-slate-300  font-semibold shadow-inner text-[#00008b"
+                    ? "bg-[#bfdbfe] border-slate-300  font-semibold shadow-inner text-[#00008b]"
                     : "bg-slate-100 hover:bg-[#bfdbfe]"
                 }`}
                 onClick={toggleBrainstorming}
