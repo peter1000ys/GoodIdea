@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -61,7 +62,7 @@ public class UserController {
         return userService.findUserByUsername(username);
     }
 
-    /*
+    /**
      * 유저Id로 유저 검색
      * */
     @GetMapping("/getUser/Id/{userId}")
@@ -69,6 +70,15 @@ public class UserController {
         System.out.println("UserController: Received request for user with ID " + userId);
         return userService.findUserByUserId(userId);
     }
+
+    /**
+     * RoleType이 컨설턴트인 유저 리스트 조회
+     * */
+    @GetMapping("/getUser/Consultants")
+    public List<UserDto> getAllConsultants() {
+        return userService.findAllConsultantUsers();
+    }
+
 
     @PostMapping(value = "/join", produces = "application/json")
     public Optional<UserDto> joinMember(@RequestBody ResponseUser response) {
