@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const Sticker = ({ coordinate, onClick, onDragEnd }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -19,32 +19,33 @@ const Sticker = ({ coordinate, onClick, onDragEnd }) => {
     });
   };
 
-  // 드래그 중 스티커 위치를 실시간으로 업데이트
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
+  // 드래그 중 위치 업데이트 (useCallback으로 메모이제이션)
+  const handleMouseMove = useCallback(
+    (e) => {
+      if (!isDragging) return;
 
-    const newX = (e.clientX / window.innerWidth) * 100 - offset.x;
-    const newY = (e.clientY / window.innerHeight) * 100 - offset.y;
+      const newX = (e.clientX / window.innerWidth) * 100 - offset.x;
+      const newY = (e.clientY / window.innerHeight) * 100 - offset.y;
 
-    // ref를 사용해 style을 직접 수정하여 위치를 업데이트
-    if (stickerRef.current) {
-      stickerRef.current.style.left = `${newX}%`;
-      stickerRef.current.style.top = `${newY}%`;
-    }
-  };
+      if (stickerRef.current) {
+        stickerRef.current.style.left = `${newX}%`;
+        stickerRef.current.style.top = `${newY}%`;
+      }
+    },
+    [isDragging, offset]
+  );
 
-  // 드래그 종료 시 최종 위치를 상태 및 서버에 업데이트
-  const handleMouseUp = () => {
+  // 드래그 종료 시 위치 업데이트 (useCallback으로 메모이제이션)
+  const handleMouseUp = useCallback(() => {
     if (isDragging) {
       setIsDragging(false);
 
       const finalX = parseFloat(stickerRef.current.style.left);
       const finalY = parseFloat(stickerRef.current.style.top);
 
-      // 서버에 최종 좌표 업데이트
       onDragEnd(coordinate.ideaId, finalX.toFixed(2), finalY.toFixed(2));
     }
-  };
+  }, [isDragging, onDragEnd, coordinate.ideaId]);
 
   // 전역 이벤트 리스너 추가 및 제거
   useEffect(() => {
@@ -60,7 +61,7 @@ const Sticker = ({ coordinate, onClick, onDragEnd }) => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isDragging]);
+  }, [isDragging, handleMouseMove, handleMouseUp]);
 
   return (
     <div
