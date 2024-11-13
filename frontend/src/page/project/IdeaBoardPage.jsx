@@ -325,7 +325,7 @@ function IdeaBoardPage() {
       {/* 도움말 */}
       <div className="fixed right-[2.1%] top-[43%] flex">
         {isTipOpen && (
-          <div className=" bg-blue-500 rounded-md p-4 text-white -translate-y-1/3  -translate-x-10">
+          <div className=" bg-blue-500 rounded-md p-4 text-white -translate-y-[38%]  -translate-x-10">
             <ul className="relative list-disc list-inside space-y-2">
               <li>
                 Ctrl을 누르고 마우스휠을 굴리면 화면을 확대 및 축소할 수 있어요.
@@ -336,8 +336,9 @@ function IdeaBoardPage() {
               </li>
               <li>아이디어는 보드 안에서 자유롭게 위치를 변경 할 수 있어요.</li>
               <li>상세보기에서 아이디어를 채택할 수 있어요.</li>
+              <li>아이디어 채택은 팀장만 가능합니다.</li>
             </ul>
-            <div className="absolute top-1/2 right-3 transform -translate-y-1/2 w-0 h-0 border-t-[17.5px] border-t-transparent border-b-[17.5px] border-b-transparent border-l-[35px] border-l-blue-500 -mr-[35px] "></div>
+            <div className="absolute top-1/2 right-3 transform -translate-y-1/2 w-0 h-0 border-t-[17.5px] border-t-transparent border-b-[15px] border-b-transparent border-l-[35px] border-l-blue-500 -mr-[35px] "></div>
           </div>
         )}
         <div
