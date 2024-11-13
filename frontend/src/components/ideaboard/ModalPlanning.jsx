@@ -1,15 +1,43 @@
 import React from "react";
 import DefaultButton from "../common/DefaultButton";
+import { selectIdea, unselectIdea } from "../../api/axios";
+import { useUserStore } from "../../store/useUserStore";
+import { useProjectStore } from "../../store/useProjectStore";
 
 const ModalPlanning = ({ selectedSticker, comments }) => {
+  const { userInfo } = useUserStore();
+  const { leader, mainIdea } = useProjectStore();
+
   const handleChange = (value) => {
     console.log(value);
+  };
+
+  const handleSelectIdea = async () => {
+    if (selectedSticker) {
+      const success = await selectIdea(selectedSticker.ideaId);
+      if (success) {
+        alert("아이디어가 성공적으로 채택되었습니다.");
+      } else {
+        alert("아이디어 채택에 실패했습니다.");
+      }
+    }
+  };
+
+  const handleUnSelectIdea = async () => {
+    if (selectedSticker) {
+      const success = await unselectIdea(selectedSticker.ideaId);
+      if (success) {
+        alert("아이디어가 성공적으로 채택되었습니다.");
+      } else {
+        alert("아이디어 채택에 실패했습니다.");
+      }
+    }
   };
 
   const seviceName = { label: "서비스 명", name: "serviceName" };
   const inputDatas = [
     { label: "기획 배경", name: "background" },
-    { label: "서비스 소개", name: "service_intro" },
+    { label: "서비스 소개", name: "introduction" },
     { label: "서비스 타켓", name: "target_users" },
     { label: "기대 효과", name: "expected_effects" },
     { label: "주제 추천", name: "project_topics" },
@@ -29,6 +57,7 @@ const ModalPlanning = ({ selectedSticker, comments }) => {
               name={seviceName.name}
               className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
               placeholder={`${seviceName.label}을 입력해주세요`}
+              value={selectedSticker?.[seviceName.name] || ""}
               onChange={(e) => handleChange(e.target.value)}
             />
           </div>
@@ -40,21 +69,34 @@ const ModalPlanning = ({ selectedSticker, comments }) => {
                   name={field.name}
                   className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
                   placeholder={`${field.label}을 입력해주세요`}
+                  value={selectedSticker?.[field.name] || ""}
                   onChange={(e) => handleChange(e.target.value)}
                 />
               </div>
             </React.Fragment>
           ))}
         </div>
-
-        <div className="flex flex-1 justify-end pr-2 mb-8">
-          <DefaultButton
-            onClick={() => {}}
-            className=""
-            theme="bright"
-            text={"아이디어 채택"}
-          />
-        </div>
+        {mainIdea === selectedSticker.ideaId
+          ? leader === userInfo.username && (
+              <div className="flex flex-1 justify-end pr-2 mb-8">
+                <DefaultButton
+                  onClick={handleUnSelectIdea}
+                  className=""
+                  theme="bright"
+                  text={"아이디어 채택 취소"}
+                />
+              </div>
+            )
+          : leader === userInfo.username && (
+              <div className="flex flex-1 justify-end pr-2 mb-8">
+                <DefaultButton
+                  onClick={handleSelectIdea}
+                  className=""
+                  theme="bright"
+                  text={"아이디어 채택"}
+                />
+              </div>
+            )}
       </div>
 
       {/* 오른쪽 댓글 섹션 */}
