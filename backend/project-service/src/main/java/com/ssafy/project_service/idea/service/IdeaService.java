@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Objects;
 
+import com.ssafy.project_service.api.repository.APIRepository;
 import com.ssafy.project_service.apiDocs.entity.APIDocs;
 import com.ssafy.project_service.apiDocs.repository.APIDocsRepository;
 import com.ssafy.project_service.comment.entity.Comment;
@@ -28,6 +29,7 @@ import com.ssafy.project_service.planner.entity.Planner;
 import com.ssafy.project_service.planner.repository.PlannerRepository;
 import com.ssafy.project_service.project.entity.Project;
 import com.ssafy.project_service.project.repository.ProjectRepository;
+import com.ssafy.project_service.req.repository.ReqRepository;
 import com.ssafy.project_service.reqDocs.entity.ReqDocs;
 import com.ssafy.project_service.reqDocs.repository.ReqDocsRepository;
 import com.ssafy.project_service.userProject.repository.UserProjectRepository;
@@ -52,6 +54,9 @@ public class IdeaService {
     private final APIDocsRepository apiDocsRepository;
     private final ERDRepository erdRepository;
     private final FlowChartRepository flowChartRepository;
+    private final APIRepository apiRepository;
+    private final ReqRepository reqRepository;
+
 
 
 
@@ -313,6 +318,21 @@ public class IdeaService {
             project.setMainIdeaId(null);
             projectRepository.save(project);
         }
+
+        plannerRepository.deleteAllByIdeaId(ideaId);
+
+        ReqDocs reqDocs = reqDocsRepository.findByIdeaId(ideaId).orElseThrow( () -> new BaseException(ErrorType.IDEA_NOT_FOUND) );
+        reqRepository.deleteAllByIReqDocsId(reqDocs.getId());
+        reqDocsRepository.deleteAllByIdeaId(ideaId);
+
+        APIDocs apiDocs = apiDocsRepository.findByIdea_Id(ideaId);
+        apiRepository.deleteAllByApiDocsId(apiDocs.getApiDocsId());
+        apiDocsRepository.deleteAllByIdeaId(ideaId);
+
+        erdRepository.deleteAllByIdeaId(ideaId);
+        flowChartRepository.deleteAllByIdeaId(ideaId);
+        commentRepository.deleteByIdeaId(ideaId);
+
 
         // 3. 마지막으로 아이디어 삭제
         ideaRepository.delete(idea);
