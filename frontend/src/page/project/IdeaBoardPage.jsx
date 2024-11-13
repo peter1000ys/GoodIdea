@@ -3,7 +3,7 @@ import Sticker from "../../components/ideaboard/Sticker";
 import { useCallback, useEffect, useRef, useState } from "react";
 import StickerModal from "../../components/ideaboard/StickerModal";
 import DefaultButton from "../../components/common/DefaultButton";
-import { createIdea, deleteIdea, fetchIdea } from "../../api/axios";
+import { createIdea, deleteIdea, fetchIdea, updateIdea } from "../../api/axios";
 import { useParams } from "react-router-dom";
 
 function IdeaBoardPage() {
@@ -186,6 +186,25 @@ function IdeaBoardPage() {
 
     setScale(newScale);
   };
+
+  // 드래그 종료 시 호출되는 함수
+  const handleDragEnd = async (ideaId, newX, newY) => {
+    const updatedCoordinates = coordinates.map((sticker) =>
+      sticker.ideaId === ideaId ? { ...sticker, x: newX, y: newY } : sticker
+    );
+
+    // 상태 업데이트
+    setCoordinates(updatedCoordinates);
+
+    // 업데이트할 스티커 데이터 찾기
+    const updatedSticker = updatedCoordinates.find(
+      (sticker) => sticker.ideaId === ideaId
+    );
+
+    // 서버에 새로운 좌표 및 기존 데이터 업데이트 요청
+    await updateIdea(ideaId, { ...updatedSticker, x: newX, y: newY });
+  };
+
   return (
     <>
       <Helmet>
@@ -218,8 +237,10 @@ function IdeaBoardPage() {
               }}
             >
               <Sticker
+                key={coordinate.ideaId}
                 coordinate={coordinate}
                 onClick={() => handleStickerClick(index)}
+                onDragEnd={handleDragEnd}
               />
               {coordinate === selectedSticker && (
                 <div
