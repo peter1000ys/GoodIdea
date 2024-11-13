@@ -28,7 +28,7 @@ function MainPage() {
     // 프로필 정보 요청
     const profileResponse = await fetchUserInfo();
     setLogin(profileResponse); // userInfo 저장
-
+    console.log(profileResponse);
     // 프로젝트 리스트 페이지로 리디렉트
     navigate("/projectlist");
   };
