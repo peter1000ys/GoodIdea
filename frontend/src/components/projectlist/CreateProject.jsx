@@ -73,7 +73,9 @@ const ReaderWritePage = ({ title }) => {
       console.log(isCreate.data?.data);
       navigate(`/project/${isCreate?.data?.data?.project_id}`);
     } else {
-      window.alert("프로젝트 생성에 실패했습니다. " + isCreate?.message);
+      window.alert(
+        "프로젝트 생성에 실패했습니다. " + (isCreate?.message ?? "")
+      );
     }
   };
 
