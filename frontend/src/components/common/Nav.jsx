@@ -137,10 +137,10 @@ function Nav() {
             <li>
               <Link
                 to={`project/${param?.id}`}
-                className={`text-xl block w-full h-full backdrop-blur-lg border-slate-200 p-2 my-2 border shadow-md rounded-lg transition-all duration-500 hover:bg-slate-100 select-none ${
+                className={`text-xl block w-full h-full backdrop-blur-lg border-slate-200 p-2 my-2 border shadow-md rounded-lg transition-all duration-500 select-none ${
                   activeItem === "기본 정보"
-                    ? "bg-slate-100 font-semibold cursor-default shadow-inner"
-                    : "cursor-pointer"
+                    ? "font-semibold cursor-default shadow-inner bg-[#bfdbfe] text-[#00008b]"
+                    : "cursor-pointer bg-slate-100 hover:bg-[#bfdbfe]"
                 }`}
                 onClick={() => handleItemClick("기본 정보")}
               >
@@ -153,8 +153,8 @@ function Nav() {
               <div
                 className={`text-xl flex justify-between items-center cursor-pointer border shadow-md backdrop-blur-md select-none p-2 mt-2 rounded-lg transition-all duration-500 ${
                   isBrainstormingOpen
-                    ? "bg-slate-100 border-slate-300  font-semibold shadow-inner"
-                    : "border-slate-200  hover:bg-slate-100 hover:border-slate-300"
+                    ? "bg-[#bfdbfe] border-slate-300  font-semibold shadow-inner text-[#00008b"
+                    : "bg-slate-100 hover:bg-[#bfdbfe]"
                 }`}
                 onClick={toggleBrainstorming}
               >
@@ -188,7 +188,7 @@ function Nav() {
                 <li>
                   <Link
                     to={`/project/${param?.id}/mindmap`}
-                    className={`block w-full text-lg p-1 my-2 pl-6 select-none rounded-lg transition-all duration-300 hover:bg-slate-100 ${
+                    className={`block w-full  text-lg p-1 my-2 pl-6 select-none rounded-lg transition-all duration-300 hover:bg-slate-100 ${
                       activeItem === "마인드 맵"
                         ? "bg-slate-100 cursor-default"
                         : "cursor-pointer "
@@ -218,10 +218,10 @@ function Nav() {
             {!mainIdea?.ideaId && (
               <li>
                 <div
-                  className={`backdrop-blur-lg hover:bg-slate-100 text-xl flex flex-row justify-between items-center cursor-pointer border border-slate-200 shadow-md p-2 select-none rounded-lg transition-all duration-500 ${
+                  className={`backdrop-blur-lg  text-xl flex flex-row justify-between items-center cursor-pointer border border-slate-200 shadow-md p-2 select-none rounded-lg transition-all duration-500 ${
                     isResultOpen
-                      ? "font-semibold shadow-inner bg-slate-100"
-                      : ""
+                      ? "font-semibold border-slate-300 shadow-inner bg-[#bfdbfe] text-[#00008b]"
+                      : "bg-slate-100 hover:bg-[#bfdbfe]"
                   }`}
                   onClick={toggleResult}
                 >
