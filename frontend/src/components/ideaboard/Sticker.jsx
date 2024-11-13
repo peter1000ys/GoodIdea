@@ -66,6 +66,11 @@ const Sticker = ({ coordinate, onClick, onDragEnd }) => {
     <div
       ref={stickerRef}
       className={`relative w-[100px] h-[100px] cursor-pointer transition-all z-10 ${coordinate.animation}`}
+      style={{
+        left: `${coordinate.x}%`,
+        top: `${coordinate.y}%`,
+        position: "absolute",
+      }}
       onMouseDown={handleMouseDown}
       onClick={onClick}
     >
