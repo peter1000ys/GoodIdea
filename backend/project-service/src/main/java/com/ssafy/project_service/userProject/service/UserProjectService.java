@@ -30,6 +30,7 @@ public class UserProjectService {
 
     public List<UserProject> findAllByProjectId(Long projectId) {
         List<UserProject> userProjects = userProjectRepository.findByProjectId(projectId);
+        System.out.println(userProjects);
         userProjects.forEach(up -> {
             System.out.println("findAllByprojectId " + up.getUserId());
             Optional<UserDto> userDto = userServiceClient.getUserById(up.getUserId());
