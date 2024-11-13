@@ -173,7 +173,7 @@ function MainPage() {
     { top: "10%", left: "5%" },
     { top: "40%", left: "85%" },
     { top: "80%", left: "85%" },
-    { top: "83%", left: "82%" },
+    { top: "65%", left: "74%" },
   ];
 
   useEffect(() => {
@@ -331,7 +331,7 @@ function MainPage() {
             <img
               src="/bonobono.png"
               alt="bonobono"
-              className="absolute z-50"
+              className="absolute "
               style={{
                 top: "81%",
                 left: "75.5%",
