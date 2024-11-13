@@ -2,7 +2,7 @@ import React from "react";
 import DefaultButton from "../common/DefaultButton";
 import { selectIdea, unselectIdea } from "../../api/axios";
 import { useUserStore } from "../../store/useUserStore";
-import { useProjectStore } from "../../store/useProjectStore";
+import useProjectStore from "../../store/useProjectStore";
 
 const ModalPlanning = ({ selectedSticker, comments }) => {
   const { userInfo } = useUserStore();
