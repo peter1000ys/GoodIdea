@@ -32,9 +32,10 @@ public class UserProjectService {
         List<UserProject> userProjects = userProjectRepository.findByProjectId(projectId);
         System.out.println(userProjects);
         userProjects.forEach(up -> {
-            System.out.println("findAllByprojectId " + up.getUserId());
-            Optional<UserDto> userDto = userServiceClient.getUserById(up.getUserId());
-            userDto.ifPresent(up::setUser);
+            if (up.getUserId() != null) {
+                Optional<UserDto> userDto = userServiceClient.getUserById(up.getUserId());
+                userDto.ifPresent(up::setUser);
+            }
         });
 
         return userProjects;
