@@ -33,6 +33,7 @@ public class UserController {
         User user = userService.findUserByUsername1(username);
         return ApiResponse.ok(UserDto.builder()
                     .id(user.getId())
+                    .name(user.getName())
                     .username(user.getUsername())
                     .roleType(user.getRoleType())
                     .grade(user.getGrade())
