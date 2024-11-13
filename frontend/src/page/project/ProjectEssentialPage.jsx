@@ -64,7 +64,7 @@ function ProjectEssentialPage() {
                       .filter((member) => !member.username.includes("bot"))
                       .map((member) => (
                         <p key={member.id}>
-                          {member.username}
+                          {member.name ? member.name : member.username}
                           {member.username === leader ? "(팀장)" : ""}
                         </p>
                       ))}
