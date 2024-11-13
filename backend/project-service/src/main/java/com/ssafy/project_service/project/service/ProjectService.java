@@ -178,29 +178,46 @@ public class ProjectService {
     public List<ProjectResponseDto> getUserProjects(UserDto user, Optional<ProjectType> projectType, Optional<Integer> grade) {
         List<UserProject> userProjects;
 
-        // 동적 쿼리 처리
-        if (projectType.isPresent() && grade.isPresent()) {
-            userProjects = userProjectService.findByUserIdAndGradeAndProjectType(user.getId(), grade.get(), projectType.get());
-        } else if (projectType.isPresent()) {
-            userProjects = userProjectService.findByUserIdAndProjectType(user.getId(), projectType.get());
-        } else if (grade.isPresent()) {
-            userProjects = userProjectService.findByUserIdAndGrade(user.getId(), grade.get());
-        } else {
-            userProjects = userProjectService.findByUserId(user.getId());
-        }
+        if ( user.getRoleType() != RoleType.CONSULTANT) {
+            // 동적 쿼리 처리
+            if (projectType.isPresent() && grade.isPresent()) {
+                userProjects = userProjectService.findByUserIdAndGradeAndProjectType(user.getId(), grade.get(), projectType.get());
+            } else if (projectType.isPresent()) {
+                userProjects = userProjectService.findByUserIdAndProjectType(user.getId(), projectType.get());
+            } else if (grade.isPresent()) {
+                userProjects = userProjectService.findByUserIdAndGrade(user.getId(), grade.get());
+            } else {
+                userProjects = userProjectService.findByUserId(user.getId());
+            }
 
-        return userProjects.stream()
-                .map( userProject -> {
-                    Project project = userProject.getProject();
+            return userProjects.stream()
+                    .map( userProject -> {
+                        Project project = userProject.getProject();
+                        return ProjectResponseDto.builder()
+                                .project_id(project.getId())
+                                .teamName(project.getTeamName())
+                                .gitlabName(project.getGitlabName())
+                                .gitlab_url(project.getGitlab_url())
+                                .projectType(project.getProjectType())
+                                .build();
+                    })
+                    .collect(Collectors.toList());
+        }
+        else {
+            List<Project> projects = projectRepository.findAll();
+            return projects.stream().map( (project) -> {
                     return ProjectResponseDto.builder()
                             .project_id(project.getId())
                             .teamName(project.getTeamName())
                             .gitlabName(project.getGitlabName())
                             .gitlab_url(project.getGitlab_url())
                             .projectType(project.getProjectType())
-                        .build();
-                })
-                .collect(Collectors.toList());
+                            .build();
+                    }
+            ).collect(Collectors.toList());
+        }
+
+
     }
 
     /*
