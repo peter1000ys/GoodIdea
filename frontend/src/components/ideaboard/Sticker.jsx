@@ -26,7 +26,7 @@ const Sticker = ({ coordinate, onClick, onDragEnd }) => {
     const newX = (e.clientX / window.innerWidth) * 100 - offset.x;
     const newY = (e.clientY / window.innerHeight) * 100 - offset.y;
 
-    // ref를 사용해 style을 직접 수정하여 위치를 실시간으로 업데이트
+    // ref를 사용해 style을 직접 수정하여 위치를 업데이트
     if (stickerRef.current) {
       stickerRef.current.style.left = `${newX}%`;
       stickerRef.current.style.top = `${newY}%`;
@@ -80,12 +80,28 @@ const Sticker = ({ coordinate, onClick, onDragEnd }) => {
         style={{ backgroundColor: coordinate.color }}
       >
         <div className="px-2 py-2">
-          <p className="text-gray-700 text-[8px]">
+          <p
+            className="text-gray-700 text-[8px]"
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
             {coordinate.serviceName || "서비스 명을 입력해주세요"}
           </p>
         </div>
         <div className="px-2">
-          <p className="text-gray-700 text-[10px]">
+          <p
+            className="text-gray-700 text-[9px]"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
             {coordinate.introduction || "서비스 소개를 입력해주세요"}
           </p>
         </div>
