@@ -11,6 +11,14 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 import com.ssafy.goodIdea.common.dto.DocumentOperationDto;
 import com.ssafy.goodIdea.common.exception.ApiResponse;
+import com.ssafy.goodIdea.common.exception.BaseException;
+import com.ssafy.goodIdea.common.exception.ErrorType;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.UUID;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequiredArgsConstructor

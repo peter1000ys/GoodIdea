@@ -25,4 +25,17 @@ public class DocumentOperationDto {
         // ERD,
         // FLOWCHART
     }
+
+    public void setIdeaId(Long ideaId) {
+        this.ideaId = ideaId;
+    }
+
+    public Long getIdeaId() {
+        return ideaId;
+    }
+
+    public void setData(String jsonData) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setData'");
+    }
 }
