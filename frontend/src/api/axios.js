@@ -23,13 +23,7 @@ const helper = async (cbFunc, type = "미입력") => {
     return { ok: false, message: error?.response?.data?.message };
   }
 };
-//   {
-// 	// 지역
-//   LocationType locationType;
 
-//   // 기수
-//   Integer grade;
-// }
 // --------------------유저 api 시작---------------------
 
 // 유저 정보 조회
