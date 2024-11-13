@@ -70,6 +70,7 @@ const Sticker = ({ coordinate, onClick, onDragEnd }) => {
         left: `${coordinate.x}%`,
         top: `${coordinate.y}%`,
         position: "absolute",
+        cursor: isDragging ? "grabbing" : "pointer", // 드래그 중일 때는 grabbing, 아닐 때는 grab
       }}
       onMouseDown={handleMouseDown}
       onClick={onClick}
