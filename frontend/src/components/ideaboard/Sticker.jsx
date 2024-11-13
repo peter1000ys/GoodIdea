@@ -1,12 +1,72 @@
-const Sticker = ({ coordinate, onClick }) => {
+import { useState, useEffect, useRef } from "react";
+
+const Sticker = ({ coordinate, onClick, onDragEnd }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const stickerRef = useRef(null);
+
+  // 드래그 시작
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+
+    // 현재 스티커의 위치와 마우스의 위치 차이를 offset으로 저장
+    const stickerX = (e.clientX / window.innerWidth) * 100;
+    const stickerY = (e.clientY / window.innerHeight) * 100;
+    setOffset({
+      x: stickerX - coordinate.x,
+      y: stickerY - coordinate.y,
+    });
+  };
+
+  // 드래그 중 스티커 위치를 실시간으로 업데이트
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+
+    const newX = (e.clientX / window.innerWidth) * 100 - offset.x;
+    const newY = (e.clientY / window.innerHeight) * 100 - offset.y;
+
+    // ref를 사용해 style을 직접 수정하여 위치를 실시간으로 업데이트
+    if (stickerRef.current) {
+      stickerRef.current.style.left = `${newX}%`;
+      stickerRef.current.style.top = `${newY}%`;
+    }
+  };
+
+  // 드래그 종료 시 최종 위치를 상태 및 서버에 업데이트
+  const handleMouseUp = () => {
+    if (isDragging) {
+      setIsDragging(false);
+
+      const finalX = parseFloat(stickerRef.current.style.left);
+      const finalY = parseFloat(stickerRef.current.style.top);
+
+      // 서버에 최종 좌표 업데이트
+      onDragEnd(coordinate.ideaId, finalX.toFixed(2), finalY.toFixed(2));
+    }
+  };
+
+  // 전역 이벤트 리스너 추가 및 제거
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    } else {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging]);
+
   return (
     <div
+      ref={stickerRef}
       className={`relative w-[100px] h-[100px] cursor-pointer transition-all z-10 ${coordinate.animation}`}
-      style={{
-        left: `${coordinate.x}%`,
-        top: `${coordinate.y}%`,
-        position: "absolute",
-      }}
+      onMouseDown={handleMouseDown}
       onClick={onClick}
     >
       <div
@@ -14,22 +74,14 @@ const Sticker = ({ coordinate, onClick }) => {
         style={{ backgroundColor: coordinate.color }}
       >
         <div className="px-2 py-2">
-          {coordinate.serviceName ? (
-            <p className="text-gray-700 text-[8px]">{coordinate.serviceName}</p>
-          ) : (
-            <p className="text-gray-700 text-[8px]">서비스 명을 입력해주세요</p>
-          )}
+          <p className="text-gray-700 text-[8px]">
+            {coordinate.serviceName || "서비스 명을 입력해주세요"}
+          </p>
         </div>
         <div className="px-2">
-          {coordinate.introduction ? (
-            <p className="text-gray-700 text-[10px]">
-              {coordinate.introduction}
-            </p>
-          ) : (
-            <p className="text-gray-700 text-[10px]">
-              서비스 소개를 입력해주세요
-            </p>
-          )}
+          <p className="text-gray-700 text-[10px]">
+            {coordinate.introduction || "서비스 소개를 입력해주세요"}
+          </p>
         </div>
       </div>
       <div
