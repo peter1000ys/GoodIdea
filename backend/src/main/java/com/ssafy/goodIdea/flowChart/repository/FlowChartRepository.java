@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.ssafy.goodIdea.flowChart.entity.Flowchart;
 
 public interface FlowChartRepository extends JpaRepository<Flowchart, Long> {
-//    @Modifying
+    @Modifying
     @Query("DELETE FROM Flowchart c WHERE c.idea.id = :ideaId")
     void deleteAllByIdeaId(@Param("ideaId") Long ideaId);
 }
