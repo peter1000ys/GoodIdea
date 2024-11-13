@@ -177,6 +177,8 @@ public class ProjectService {
      */
     public List<ProjectResponseDto> getUserProjects(UserDto user, Optional<ProjectType> projectType, Optional<Integer> grade) {
         List<UserProject> userProjects;
+        System.out.println(projectType.toString());
+        System.out.println(projectType.isPresent());
 
         if ( user.getRoleType() != RoleType.CONSULTANT) {
             // 동적 쿼리 처리
