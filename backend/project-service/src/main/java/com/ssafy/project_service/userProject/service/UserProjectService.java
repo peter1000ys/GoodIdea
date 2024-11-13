@@ -32,6 +32,8 @@ public class UserProjectService {
         List<UserProject> userProjects = userProjectRepository.findByProjectId(projectId);
         System.out.println(userProjects);
         userProjects.forEach(up -> {
+            System.out.println("UserProject:  " + up.getProject().getId());
+            System.out.println("UserProject:  " + up.getUser().getId());
             System.out.println("findAllByprojectId " + up.getUserId());
             Optional<UserDto> userDto = userServiceClient.getUserById(up.getUserId());
             userDto.ifPresent(up::setUser);
