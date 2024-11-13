@@ -43,6 +43,7 @@ public class ProjectService {
 
     public Optional<Project> findByUserIdAndProjectType(Long userId, ProjectType projectType) {
         // UserId를 통해 UserProject 목록을 가져옴
+        System.out.println("findByUserIdAndProjectType " + userId);
         List<UserProject> userProjects = userProjectService.findByUserId(userId);
 
         // 해당 userProjects에서 ProjectType 필터링
