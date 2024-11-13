@@ -142,7 +142,9 @@ function MindMapPage() {
   };
 
   const handeInfoClick = () => {
-    alert("인포아이콘클릭");
+    alert(
+      "1. 오늘의 KEYWORD -> 오늘 핫한 키워드를 추천해줍니다! \n추천받은 키워드를 검색해보세요. \n2. AI support -> AI가 기획서 초안을 작성해줍니다! \n"
+    );
   };
 
   const handleMindMapItemClick = useCallback(
