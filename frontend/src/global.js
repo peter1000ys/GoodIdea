@@ -1,6 +1,7 @@
 // constants
 
 export const NOW_MAX_GRADE = 12;
+export const SSAFY_LOCATION = ["서울", "광주", "부울경", "구미", "대전"];
 
 export const mindMapColorData = {
   center: "#333333",

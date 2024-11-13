@@ -2,6 +2,7 @@ import { useState } from "react";
 import { fetchUserInfo, updateUserInfo } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../../store/useUserStore";
+import { NOW_MAX_GRADE, SSAFY_LOCATION } from "../../global";
 
 const UpdateUser = () => {
   const { setUserInfo } = useUserStore();
@@ -36,7 +37,7 @@ const UpdateUser = () => {
   const handleButtonClick = async () => {
     console.log(userProfile);
     const data = await updateUserInfo(userProfile);
-    if (data?.status) {
+    if (data?.id) {
       const profileResponse = await fetchUserInfo();
       setUserInfo(profileResponse);
       navigate(`/projectlist`);
@@ -74,13 +75,11 @@ const UpdateUser = () => {
             <option value="" disabled>
               지역를 선택하세요
             </option>
-            {["서울", "광주", "부울경", "구미", "대전"].map(
-              (location, index) => (
-                <option key={index} value={location}>
-                  {location}
-                </option>
-              )
-            )}
+            {SSAFY_LOCATION.map((location, index) => (
+              <option key={index} value={location}>
+                {location}
+              </option>
+            ))}
           </select>
         </label>
 
@@ -96,18 +95,10 @@ const UpdateUser = () => {
               기수를 선택하세요
             </option>
             {[
-              "1",
-              "2",
-              "3",
-              "4",
-              "5",
-              "6",
-              "7",
-              "8",
-              "9",
-              "10",
-              "11",
-              "12",
+              ...Array.from(
+                { length: NOW_MAX_GRADE },
+                (_, i) => NOW_MAX_GRADE - i
+              ),
             ].map((grade, index) => (
               <option key={index} value={grade}>
                 {grade}
