@@ -72,8 +72,7 @@ function Nav() {
       { path: "flowchart", item: "FLOWCHART", setOpen: setResultOpen },
     ];
 
-    const lastPath = location.pathname.split("/")[2] ?? null;
-
+    const lastPath = location.pathname.split("/")[3] ?? null;
     const matchedPath = paths.find(
       (p) => lastPath === p.path || location.pathname.includes(p.path)
     );
@@ -137,7 +136,7 @@ function Nav() {
             <li>
               <Link
                 to={`project/${param?.id}`}
-                className={`text-xl block w-full h-full backdrop-blur-sm border-slate-200 p-2 my-2 border shadow-sm rounded-lg transition-all duration-500 hover:bg-slate-100 select-none ${
+                className={`text-xl block w-full h-full backdrop-blur-lg border-slate-200 p-2 my-2 border shadow-md rounded-lg transition-all duration-500 hover:bg-slate-100 select-none ${
                   activeItem === "기본 정보"
                     ? "bg-slate-100 font-semibold cursor-default shadow-inner"
                     : "cursor-pointer"
@@ -151,7 +150,7 @@ function Nav() {
             {/* 브레인 스토밍 메뉴 */}
             <li>
               <div
-                className={`text-xl flex justify-between items-center cursor-pointer border shadow-sm select-none p-2 mt-2 rounded-lg transition-all duration-500 ${
+                className={`text-xl flex justify-between items-center cursor-pointer border shadow-md backdrop-blur-md select-none p-2 mt-2 rounded-lg transition-all duration-500 ${
                   isBrainstormingOpen
                     ? "bg-slate-100 border-slate-300  font-semibold shadow-inner"
                     : "border-slate-200  hover:bg-slate-100 hover:border-slate-300"

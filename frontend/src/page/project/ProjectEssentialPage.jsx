@@ -59,7 +59,7 @@ function ProjectEssentialPage() {
                 </div>
                 <div className="col-span-1 flex items-center">팀 구성원</div>
                 <div className="col-span-2">
-                  <div className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md space-x-2 flex flex-row">
+                  <div className="w-full flex-wrap bg-gray-100 border border-gray-300 p-2 rounded-md space-x-2 flex flex-row">
                     {members
                       .filter((member) => !member.username.includes("bot"))
                       .map((member) => (
