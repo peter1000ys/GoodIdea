@@ -184,15 +184,40 @@ export const fetchIdeaDetail = async (projectId, ideaId) => {
   return response?.data?.data;
 };
 
-export const updateIdea = async (ideaId, x, y) => {
+export const updateIdea = async (ideaId, ideaData) => {
+  const {
+    serviceName,
+    background,
+    introduction,
+    target,
+    expectedEffect,
+    x,
+    y,
+    color,
+    darkColor,
+    animation,
+  } = ideaData;
+  console.log(ideaData);
   const response = await helper(
     () =>
       authAxiosInstance.put(
         `gateway/project-service/api/v1/idea/${ideaId}/update`,
-        { x, y }
+        {
+          serviceName,
+          background,
+          introduction,
+          target,
+          expectedEffect,
+          x,
+          y,
+          color,
+          darkColor,
+          animation,
+        }
       ),
     "아이디어 수정"
   );
+
   if (!response.ok) return;
   return response?.data?.data;
 };
