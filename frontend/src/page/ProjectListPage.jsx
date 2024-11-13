@@ -11,6 +11,7 @@ import { fetchGitlabProjectList, fetchProjectList } from "../api/axios";
 import ProjectListItemSkeleton from "../components/skeleton/ProjectListItemSkeleton";
 import UpdateUser from "../components/projectlist/UpdateUser";
 import { useUserStore } from "../store/useUserStore";
+import { NOW_MAX_GRADE } from "../global";
 
 function ProjectListPage() {
   const [loading, setLoading] = useState(true);
@@ -50,6 +51,28 @@ function ProjectListPage() {
     }
   }, [userInfo.name, userInfo.locationType, userInfo.grade]);
 
+  // filter change useEffect get fetch fetchProjectList
+  useEffect(() => {
+    const changeFilter = async () => {
+      try {
+        setLoading(true);
+        const projectList = await fetchProjectList({
+          grade: filter1.value === "ALL" ? null : filter1.value,
+          projectType: filter2.value === "ALL" ? null : filter2.value,
+        });
+        if (projectList) {
+          useProjectListStore.setState({
+            projects: [...projectList],
+          });
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    changeFilter();
+  }, [filter1.value, filter2.value]);
+
   // 프로젝트가 없을 시 이거
   const noProject = (
     <div className="flex flex-col text-center mt-20">
@@ -78,7 +101,13 @@ function ProjectListPage() {
               onChange={(e) => {
                 setFilter1(e.target.value);
               }}
-              options={["ALL", "12", "11"]}
+              options={[
+                "ALL",
+                ...Array.from(
+                  { length: NOW_MAX_GRADE },
+                  (_, i) => NOW_MAX_GRADE - i
+                ),
+              ]}
             />
 
             {/* 옵션2 : 지역 */}
@@ -89,7 +118,7 @@ function ProjectListPage() {
               onChange={(e) => {
                 setFilter2(e.target.value);
               }}
-              options={["ALL", "서울", "부산"]}
+              options={["ALL", "관통", "공통", "특화", "자율"]}
             />
             <div className="flex items-center gap-5 ml-auto">
               <DefaultButton

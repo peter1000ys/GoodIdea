@@ -73,9 +73,17 @@ export const fetchGitlabProjectList = async () => {
 };
 
 // 우리 서비스의 자신의 프로젝트 리스트 조회
-export const fetchProjectList = async () => {
+export const fetchProjectList = async ({ grade, projectType }) => {
+  let query = "";
+  if (grade || projectType) {
+    query =
+      "?" +
+      (grade ? `grade=${grade}` : "") +
+      (projectType ? `&projectType=${projectType}` : "");
+  }
   const response = await helper(
-    () => authAxiosInstance.get("gateway/project-service/api/v1/project"),
+    () =>
+      authAxiosInstance.get("gateway/project-service/api/v1/project" + query),
     "프로젝트 목록"
   );
   if (!response.ok) return;
