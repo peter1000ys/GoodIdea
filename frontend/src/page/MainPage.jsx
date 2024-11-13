@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import DefaultButton from "../components/common/DefaultButton";
 import { useUserStore } from "../store/useUserStore";
-import axios from "axios";
 import MainPhaseContent from "../components/main/MainPhaseContent";
+import { fetchUserInfo } from "../api/axios";
 
 function MainPage() {
   const [activeSection, setActiveSection] = useState("section1");
@@ -25,26 +25,12 @@ function MainPage() {
       "refreshToken",
       import.meta.env.VITE_JUHO_REFRESHTOKEN
     );
-    const accessToken = localStorage.getItem("accessToken");
-    try {
-      // 프로필 정보 요청
-      const profileResponse = await axios.get(
-        `https://goodidea.world/gateway/user-service/api/v1/user/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log("정보:", profileResponse.data.data);
-      const userInfo = profileResponse.data.data;
-      setLogin(userInfo); // userInfo 저장
+    // 프로필 정보 요청
+    const profileResponse = await fetchUserInfo();
+    setLogin(profileResponse); // userInfo 저장
 
-      // 메인 페이지로 리디렉트
-      navigate("/projectlist");
-    } catch (error) {
-      console.error("프로필 정보 가져오기 실패:", error);
-    }
+    // 프로젝트 리스트 페이지로 리디렉트
+    navigate("/projectlist");
   };
   // 테스트 드라이버용 함수 ----------------- 끝 -----------------
   const sections = useMemo(
@@ -178,7 +164,6 @@ function MainPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY;
       const windowHeight = window.innerHeight;
 
       const lastSection = document.getElementById("section6");
@@ -251,7 +236,7 @@ function MainPage() {
         />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
         <link
           href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap"
           rel="stylesheet"
