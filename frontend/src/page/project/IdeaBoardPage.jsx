@@ -11,7 +11,6 @@ function IdeaBoardPage() {
   const [selectedSticker, setSelectedSticker] = useState(null); // 선택된 스티커
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [scale, setScale] = useState(1); // 확대/축소 비율
-  const [isDragging, setIsDragging] = useState(false);
   const [translate, setTranslate] = useState({ x: 0, y: 0 }); // 이동 비율
   const [spacePressed, setSpacePressed] = useState(false);
   const containerRef = useRef(null);
@@ -87,16 +86,24 @@ function IdeaBoardPage() {
 
   // 스티커 삭제 함수
   const handleDeleteSticker = async () => {
-    await deleteIdea(selectedSticker?.ideaId);
-    fetchIdeas();
-    setSelectedSticker(null); // 선택된 스티커 초기화
+    if (selectedSticker?.ideaId) {
+      await deleteIdea(selectedSticker.ideaId);
+
+      // 서버에서 삭제 후 로컬 상태에서도 해당 스티커를 제거하여 UX 개선
+      setCoordinates((prevCoordinates) =>
+        prevCoordinates.filter(
+          (sticker) => sticker.ideaId !== selectedSticker.ideaId
+        )
+      );
+
+      setSelectedSticker(null); // 선택된 스티커 초기화
+    }
   };
 
   // 마우스로 화면을 드래그하여 이동하는 기능
   const handleMouseDown = (e) => {
     if (!spacePressed) return; // 스페이스바가 눌린 상태에서만 화면 이동 활성화
 
-    setIsDragging(true);
     e.preventDefault();
     const startX = e.clientX;
     const startY = e.clientY;
@@ -126,7 +133,6 @@ function IdeaBoardPage() {
 
     // 마우스 버튼을 떼었을 때 이벤트 리스너를 제거하는 함수
     const handleMouseUp = () => {
-      setIsDragging(false);
       window.removeEventListener("mousemove", handleMouseMove); // 마우스 이동 이벤트 제거
       window.removeEventListener("mouseup", handleMouseUp); // 마우스 버튼 떼기 이벤트 제거
     };
@@ -188,7 +194,7 @@ function IdeaBoardPage() {
       <div
         ref={containerRef}
         className={`relative overflow-hidden w-full h-full ${
-          isDragging ? "cursor-grab" : ""
+          spacePressed ? "cursor-grab" : ""
         }`}
         onWheel={handleWheel}
         onMouseDown={handleMouseDown}
@@ -203,6 +209,7 @@ function IdeaBoardPage() {
         >
           {coordinates.map((coordinate, index) => (
             <div
+              className={coordinate === selectedSticker ? "z-40" : ""}
               key={coordinate.ideaId}
               style={{
                 left: `${coordinate.x}%`,
@@ -266,7 +273,7 @@ function IdeaBoardPage() {
             />
           </svg>
         }
-        className="fixed top-[10%] right-[1.5%] !px-3"
+        className="fixed top-[13%] right-[1.6%] !px-3"
         theme="default"
       />
       {/* 확대/축소 컨트롤러 */}
