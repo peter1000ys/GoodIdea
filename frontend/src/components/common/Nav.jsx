@@ -72,8 +72,7 @@ function Nav() {
       { path: "flowchart", item: "FLOWCHART", setOpen: setResultOpen },
     ];
 
-    const lastPath = location.pathname.split("/")[2] ?? null;
-
+    const lastPath = location.pathname.split("/")[3] ?? null;
     const matchedPath = paths.find(
       (p) => lastPath === p.path || location.pathname.includes(p.path)
     );
