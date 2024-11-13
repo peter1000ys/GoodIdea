@@ -82,7 +82,7 @@ function ProjectEssentialPage() {
                     </div>
                     <div className="col-span-2">
                       <input
-                        className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
+                        className="w-full border border-gray-300 p-2 rounded-md"
                         // placeholder={field.label}
                         value={fieldValues[field.name]}
                         onChange={(e) => handleChange(e)}
@@ -93,7 +93,7 @@ function ProjectEssentialPage() {
                 <div className="col-span-1 flex items-center">팀원 정보</div>
                 <div className="col-span-2">
                   <textarea
-                    className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md resize-none"
+                    className="w-full border border-gray-300 p-2 rounded-md resize-none"
                     placeholder="팀원 정보 및 관심사 등을 입력해주세요!"
                     rows={4}
                     value={fieldValues.teamInfo}
