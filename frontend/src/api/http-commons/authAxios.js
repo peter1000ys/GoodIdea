@@ -46,7 +46,7 @@ authAxiosInstance.interceptors.response.use(
         // 리프레시 토큰 실패 처리
         console.error("Failed to refresh token:", refreshError);
         // 로그아웃 처리나 리다이렉트 등 추가적인 처리를 여기에 구현
-        clearAuthData();
+        // clearAuthData();
         // window.location.href = "/login";
         return Promise.reject(refreshError);
       }
