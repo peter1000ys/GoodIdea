@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { fetchUserInfo, updateUserInfo } from "../../api/axios";
-import { useNavigate } from "react-router-dom";
+import { updateUserInfo } from "../../api/axios";
 import { useUserStore } from "../../store/useUserStore";
 import { NOW_MAX_GRADE, SSAFY_LOCATION } from "../../global";
 
@@ -11,8 +10,6 @@ const UpdateUser = () => {
     locationType: "",
     grade: "",
   });
-
-  const navigate = useNavigate();
 
   // input, select 변경 시 호출되는 함수
   const handleInputChange = (e) => {
@@ -37,10 +34,9 @@ const UpdateUser = () => {
   const handleButtonClick = async () => {
     console.log(userProfile);
     const data = await updateUserInfo(userProfile);
-    if (data?.id) {
-      const profileResponse = await fetchUserInfo();
-      setUserInfo(profileResponse);
-      navigate(`/projectlist`);
+    if (data) {
+      setUserInfo(data);
+      window.location.reload();
     } else {
       window.alert("유저 정보 수정에 실패했습니다. " + data?.message);
     }
