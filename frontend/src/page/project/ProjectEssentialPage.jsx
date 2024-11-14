@@ -4,8 +4,10 @@ import DefaultButton from "../../components/common/DefaultButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { deleteProject } from "../../api/axios";
 import useProjectStore from "../../store/useProjectStore";
+import useGlobalLoadingStore from "../../store/useGlobalLoadingStore";
 
 function ProjectEssentialPage() {
+  const { startLoading, stopLoading } = useGlobalLoadingStore();
   const navigate = useNavigate();
   const params = useParams();
   const projectId = params?.id;
@@ -26,9 +28,15 @@ function ProjectEssentialPage() {
 
   const deleteProjectHandler = async () => {
     if (confirm("정말로 삭제하시겠습니까?")) {
-      const res = await deleteProject(projectId);
-      if (res) {
-        navigate("/projectlist");
+      try {
+        startLoading();
+
+        const res = await deleteProject(projectId);
+        if (res) {
+          navigate("/projectlist");
+        }
+      } finally {
+        stopLoading();
       }
     }
   };

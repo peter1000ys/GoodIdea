@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createProject, fetchGitlabProjectList } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import { useProjectListStore } from "../../store/useProjectListStore";
+import useGlobalLoadingStore from "../../store/useGlobalLoadingStore";
 
 const ProjectCard = ({ title, handleReader }) => {
   return (
@@ -24,6 +25,7 @@ const ProjectCard = ({ title, handleReader }) => {
 };
 
 const ReaderWritePage = ({ title }) => {
+  const { startLoading, stopLoading } = useGlobalLoadingStore();
   const [gitlabProjectList, setGitlabProjectList] = useState([]);
   const [projectData, setProjectData] = useState({
     projectId: "", // GITLAB Respository 입력 값을 저장할 필드
@@ -61,21 +63,26 @@ const ReaderWritePage = ({ title }) => {
 
   // 프로젝트 생성 버튼 클릭 시 호출되는 함수
   const handleButtonClick = async () => {
-    const isCreate = await createProject(projectData);
-    if (isCreate?.status) {
-      if (isCreate.data?.data)
-        useProjectListStore.setState({
-          projects: [
-            ...useProjectListStore.getState().projects,
-            isCreate.data?.data,
-          ],
-        });
-      console.log(isCreate.data?.data);
-      navigate(`/project/${isCreate?.data?.data?.project_id}`);
-    } else {
-      window.alert(
-        "프로젝트 생성에 실패했습니다. " + (isCreate?.message ?? "")
-      );
+    try {
+      startLoading();
+      const isCreate = await createProject(projectData);
+      if (isCreate?.status) {
+        if (isCreate.data?.data)
+          useProjectListStore.setState({
+            projects: [
+              ...useProjectListStore.getState().projects,
+              isCreate.data?.data,
+            ],
+          });
+        console.log(isCreate.data?.data);
+        navigate(`/project/${isCreate?.data?.data?.project_id}`);
+      } else {
+        window.alert(
+          "프로젝트 생성에 실패했습니다. " + (isCreate?.message ?? "")
+        );
+      }
+    } finally {
+      stopLoading();
     }
   };
 

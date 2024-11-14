@@ -2,8 +2,10 @@ import { useState } from "react";
 import { updateUserInfo } from "../../api/axios";
 import { useUserStore } from "../../store/useUserStore";
 import { NOW_MAX_GRADE, SSAFY_LOCATION } from "../../global";
+import useGlobalLoadingStore from "../../store/useGlobalLoadingStore";
 
 const UpdateUser = () => {
+  const { startLoading, stopLoading } = useGlobalLoadingStore();
   const { setUserInfo } = useUserStore();
   const [userProfile, setUserProfile] = useState({
     name: "",
@@ -33,12 +35,16 @@ const UpdateUser = () => {
   // 수정하기 버튼 클릭 시 호출되는 함수
   const handleButtonClick = async () => {
     console.log(userProfile);
+    startLoading();
     const data = await updateUserInfo(userProfile);
     if (data) {
+      console.log(":?");
       setUserInfo(data);
+      stopLoading();
       window.location.reload();
     } else {
       window.alert("유저 정보 수정에 실패했습니다. " + data?.message);
+      stopLoading();
     }
   };
 
