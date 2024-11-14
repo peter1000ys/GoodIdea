@@ -37,10 +37,9 @@ const UpdateUser = () => {
   const handleButtonClick = async () => {
     console.log(userProfile);
     const data = await updateUserInfo(userProfile);
-    if (data?.id) {
-      const profileResponse = await fetchUserInfo();
-      setUserInfo(profileResponse);
-      navigate(`/projectlist`);
+    if (data) {
+      setUserInfo(data);
+      window.location.reload();
     } else {
       window.alert("유저 정보 수정에 실패했습니다. " + data?.message);
     }
