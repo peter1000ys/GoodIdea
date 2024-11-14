@@ -333,7 +333,6 @@ public class IdeaService {
         flowChartRepository.deleteAllByIdeaId(ideaId);
         commentRepository.deleteByIdeaId(ideaId);
 
-
         // 3. 마지막으로 아이디어 삭제
         ideaRepository.delete(idea);
     }
