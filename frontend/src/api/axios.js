@@ -67,7 +67,7 @@ export const fetchGitlabProjectList = async () => {
 };
 
 // 우리 서비스의 자신의 프로젝트 리스트 조회
-export const fetchProjectList = async ({ grade, projectType }) => {
+export const fetchProjectList = async ({ grade, projectType } = {}) => {
   let query = "";
   if (grade || projectType) {
     query =
