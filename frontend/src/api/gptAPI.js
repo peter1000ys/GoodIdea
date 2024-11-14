@@ -85,7 +85,7 @@ export const sendMessageToGPT = async (messages) => {
 
   try {
     const response = await gptApi.post("", {
-      model: "gpt-3.5-turbo", // 또는 사용하고자 하는 모델로 변경
+      model: "gpt-4o", // 또는 사용하고자 하는 모델로 변경
       messages: messages,
     });
 
