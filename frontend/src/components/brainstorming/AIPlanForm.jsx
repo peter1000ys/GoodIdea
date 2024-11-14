@@ -67,12 +67,12 @@ const AIPlanForm = ({ onClose }) => {
       const plan = await generatePlan(tags);
       setGeneratedPlan({
         background: plan.background,
-        service_intro: plan.service_intro,
-        target_users: plan.target_users,
-        expected_effects: plan.expected_effects,
-        project_topics: plan.project_topics,
-        tech_stack: plan.tech_stack,
-        advanced_stack: plan.advanced_stack,
+        service_intro: plan.introduction,
+        target_users: plan.target,
+        expected_effects: plan.expectedEffect,
+        project_topics: plan.projectTopic,
+        tech_stack: plan.techStack,
+        advanced_stack: plan.advancedStack,
       });
       setIsCompleted(true);
       setTimeout(() => setIsCompleted(false), 3000);
