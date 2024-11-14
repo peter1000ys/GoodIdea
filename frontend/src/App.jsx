@@ -4,21 +4,18 @@ import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { LiveblocksProvider } from "@liveblocks/react";
 import { createClient } from "@liveblocks/client"; // @liveblocks/client에서 createClient 가져오기
+import CommonLayout from "./components/CommonLayout";
+
+// default 페이지
 import MainPage from "./page/MainPage";
 import NotFoundPage from "./page/NotFoundPage";
-import CommonLayout from "./components/CommonLayout";
-import ApiSpecificationPage from "./page/project/ApiSpecificationPage";
-import MindMapPage from "./page/project/MindMapPage";
-import ERDPage from "./page/project/ERDPage";
-import IdeaBoardPage from "./page/project/IdeaBoardPage";
-// import ProjectEssentialPage from "./page/project/ProjectEssentialPage";
-import ProposalPage from "./page/project/ProposalPage";
-import RequirementsSpecificationPage from "./page/project/RequirementsSpecificationPage";
-import FlowChartPage from "./page/project/FlowChartPage";
-import ProjectListPage from "./page/ProjectListPage";
 import LoginPage from "./page/LoginPage";
 import liveblocksClient from "../liveblocks.config"; // Liveblocks 클라이언트 import
 
+import LoadingSpinner from "./components/common/LoadingSpinner";
+
+// 프로젝트 정보
+const ProjectListPage = React.lazy(() => import("./page/ProjectListPage"));
 const ProjectEssentialPage = React.lazy(() =>
   import("./page/project/ProjectEssentialPage")
 );
@@ -30,13 +27,25 @@ const client = createClient({
   publicApiKey:
     "pk_dev_nJXrR6Wtow_BqktuYQvAWmBdZ7ybi5UK7O-0_Ix1DlBiVGTSKzWxCSZeSDT5oWsh",
 });
+// 산출물 목록들 페이지
+const MindMapPage = React.lazy(() => import("./page/project/MindMapPage"));
+const IdeaBoardPage = React.lazy(() => import("./page/project/IdeaBoardPage"));
+const ProposalPage = React.lazy(() => import("./page/project/ProposalPage"));
+const ApiSpecificationPage = React.lazy(() =>
+  import("./page/project/ApiSpecificationPage")
+);
+const ERDPage = React.lazy(() => import("./page/project/ERDPage"));
+const RequirementsSpecificationPage = React.lazy(() =>
+  import("./page/project/RequirementsSpecificationPage")
+);
+const FlowChartPage = React.lazy(() => import("./page/project/FlowChartPage"));
 
 function App() {
   return (
     <HelmetProvider>
       <LiveblocksProvider publicApiKey="pk_dev_nJXrR6Wtow_BqktuYQvAWmBdZ7ybi5UK7O-0_Ix1DlBiVGTSKzWxCSZeSDT5oWsh">
         <BrowserRouter>
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="" element={<CommonLayout />}>
                 {/* 메인 페이지 */}
