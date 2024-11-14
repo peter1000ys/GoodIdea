@@ -2,13 +2,12 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useProjectStore from "../../store/useProjectStore";
 import authAxiosInstance from "../../api/http-commons/authAxios";
-import { RoomProvider } from "@liveblocks/react";
 
 function Nav() {
   const location = useLocation();
   const navigate = useNavigate();
   const param = useParams();
-  
+
   // ProjectStore에서 필요한 정보 가져오기
   const { setProjectInfo, mainIdea, setMainIdea } = useProjectStore();
 
@@ -234,21 +233,19 @@ function Nav() {
                     isResultOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
                   }`}
                 >
-                  <RoomProvider id={`proposal-${mainIdea?.ideaId}`}>
-                    <li className="mt-5">
-                      <Link
-                        to={`/project/${param?.id}/idea/${mainIdea?.ideaId}/proposal`}
-                        className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
-                          activeItem === "기획서"
-                            ? "bg-[#666666] cursor-default"
-                            : "cursor-pointer"
-                        }`}
-                        onClick={() => handleItemClick("기획서")}
-                      >
-                        기획서
-                      </Link>
-                    </li>
-                  </RoomProvider>
+                  <li className="mt-5">
+                    <Link
+                      to={`/project/${param?.id}/idea/${mainIdea?.ideaId}/proposal`}
+                      className={`block w-full h-full text-lg mb-1 p-1 pl-6 select-none rounded-lg hover:bg-[#666666] ${
+                        activeItem === "기획서"
+                          ? "bg-[#666666] cursor-default"
+                          : "cursor-pointer"
+                      }`}
+                      onClick={() => handleItemClick("기획서")}
+                    >
+                      기획서
+                    </Link>
+                  </li>
                   <li>
                     <Link
                       to={`/project/${param?.id}/idea/${mainIdea?.ideaId}/requirementsspecification`}

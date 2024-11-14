@@ -1,95 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import * as Y from "yjs";
-import { HocuspocusProvider, TiptapCollabProvider } from "@hocuspocus/provider";
 import DefaultButton from "../../components/common/DefaultButton";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { deleteProject } from "../../api/axios";
-// Yjs 문서 생성 및 필드 초기화
-const doc = new Y.Doc();
-const fields = {
-  teamGitlabCode: doc.getText("teamGitlabCode"),
-  teamName: doc.getText("teamName"),
-  teamMembers: doc.getText("teamMembers"),
-  projectName: doc.getText("projectName"),
-  figmaLink: doc.getText("figmaLink"),
-  jiraLink: doc.getText("jiraLink"),
-  gitlabLink: doc.getText("gitlabLink"),
-  teamInfo: doc.getText("teamInfo"),
-};
-
-// // 초기값 설정
-// Object.keys(fields).forEach((key) => {
-//   console.log(fields[key].toString());
-//   if (fields[key].toString() === "") {
-//     fields[key].insert(0, ""); // 필요시 초기값 설정
-//   }
-// });
+import useProjectStore from "../../store/useProjectStore";
+import useGlobalLoadingStore from "../../store/useGlobalLoadingStore";
 
 function ProjectEssentialPage() {
+  const { startLoading, stopLoading } = useGlobalLoadingStore();
   const navigate = useNavigate();
   const params = useParams();
   const projectId = params?.id;
+  const { gitlabName, members, leader } = useProjectStore();
 
   const [fieldValues, setFieldValues] = useState({
     teamGitlabCode: "",
     teamName: "",
-    teamMembers: "",
     projectName: "",
     figmaLink: "",
     jiraLink: "",
-    gitlabLink: "",
     teamInfo: "",
   });
 
-  useEffect(() => {
-    const provider = new HocuspocusProvider({
-      url: `ws://oracle1.mypjt.xyz/ws`, // WebSocket URL
-      document: doc,
-      // appId: "7j9y6m10",
-      name: "projectEssential_private", // 문서의 고유 식별자
-      token: "notoken", // JWT 토큰 (필요에 따라 설정)
-      onSynced: () => {
-        console.log("Synced with server");
-      },
-    });
-
-    // Yjs 문서의 변경 사항을 React 상태와 동기화
-    const updateFieldValues = () => {
-      console.log("updateFieldValues called");
-      const newFieldValues = {
-        teamGitlabCode: fields.teamGitlabCode.toString(),
-        teamName: fields.teamName.toString(),
-        teamMembers: fields.teamMembers.toString(),
-        projectName: fields.projectName.toString(),
-        figmaLink: fields.figmaLink.toString(),
-        jiraLink: fields.jiraLink.toString(),
-        gitlabLink: fields.gitlabLink.toString(),
-        teamInfo: fields.teamInfo.toString(),
-      };
-
-      // 변경이 있을 때만 상태 업데이트
-      if (JSON.stringify(newFieldValues) !== JSON.stringify(fieldValues)) {
-        setFieldValues(newFieldValues);
-      }
-    };
-    doc.on("load", updateFieldValues);
-
-    // Yjs 문서 변경 시 updateFieldValues 실행
-    doc.on("update", updateFieldValues);
-
-    return () => {
-      provider.destroy();
-      doc.off("update", updateFieldValues);
-    };
-  }, [fieldValues]);
-
-  // 입력 필드 변경 시 Yjs 문서 업데이트
-  const handleChange = (field, value) => {
-    fields[field].delete(0, fields[field].length); // 이전 텍스트 제거
-    fields[field].insert(0, value); // 새 텍스트 삽입
+  const handleChange = (e) => {
+    console.log("안쓰는거", e);
   };
 
+  const deleteProjectHandler = async () => {
+    if (confirm("정말로 삭제하시겠습니까?")) {
+      try {
+        startLoading();
+
+        const res = await deleteProject(projectId);
+        if (res) {
+          navigate("/projectlist");
+        }
+      } finally {
+        stopLoading();
+      }
+    }
+  };
   return (
     <>
       <Helmet>
@@ -107,10 +57,29 @@ function ProjectEssentialPage() {
                 REGISTRATION FORM
               </h2>
               <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="col-span-1 flex items-center">
+                  GITLAB Repository
+                </div>
+                <div className="col-span-2">
+                  <div className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md">
+                    {gitlabName}
+                  </div>
+                </div>
+                <div className="col-span-1 flex items-center">팀 구성원</div>
+                <div className="col-span-2">
+                  <div className="w-full flex-wrap bg-gray-100 border border-gray-300 p-2 rounded-md space-x-2 flex flex-row">
+                    {members
+                      .filter((member) => !member.username.includes("bot"))
+                      .map((member) => (
+                        <p key={member.id}>
+                          {member.name ? member.name : member.username}
+                          {member.username === leader ? "(팀장)" : ""}
+                        </p>
+                      ))}
+                  </div>
+                </div>
                 {[
-                  { label: "팀 깃랩 코드", name: "teamGitlabCode" },
                   { label: "팀 명", name: "teamName" },
-                  { label: "팀 구성원", name: "teamMembers" },
                   { label: "프로젝트 명", name: "projectName" },
                   { label: "피그마 링크", name: "figmaLink" },
                   { label: "지라 링크", name: "jiraLink" },
@@ -121,12 +90,10 @@ function ProjectEssentialPage() {
                     </div>
                     <div className="col-span-2">
                       <input
-                        className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
+                        className="w-full border border-gray-300 p-2 rounded-md"
                         // placeholder={field.label}
                         value={fieldValues[field.name]}
-                        onChange={(e) =>
-                          handleChange(field.name, e.target.value)
-                        }
+                        onChange={(e) => handleChange(e)}
                       />
                     </div>
                   </React.Fragment>
@@ -134,7 +101,7 @@ function ProjectEssentialPage() {
                 <div className="col-span-1 flex items-center">팀원 정보</div>
                 <div className="col-span-2">
                   <textarea
-                    className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md resize-none"
+                    className="w-full border border-gray-300 p-2 rounded-md resize-none"
                     placeholder="팀원 정보 및 관심사 등을 입력해주세요!"
                     rows={4}
                     value={fieldValues.teamInfo}
@@ -145,10 +112,7 @@ function ProjectEssentialPage() {
             </div>
             <div className="flex flex-1 justify-end px-8 mb-8">
               <DefaultButton
-                onClick={() => {
-                  deleteProject(projectId);
-                  navigate("/projectlist");
-                }}
+                onClick={deleteProjectHandler}
                 className=""
                 theme="alert"
                 text={"프로젝트 삭제"}
