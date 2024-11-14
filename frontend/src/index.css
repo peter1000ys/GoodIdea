@@ -3,6 +3,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 기본 스크롤바 */
 html {
   -webkit-text-size-adjust: none;
 }

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Divier from "../common/Divier";
 
 function ProjectListItem({ project }) {
-  console.log(project);
+  // console.log(project);
   const navigate = useNavigate();
   const navigateDetail = () => {
     // navigate to detail page
