@@ -38,11 +38,11 @@ const ModalPlanning = ({ selectedSticker, comments }) => {
   const inputDatas = [
     { label: "기획 배경", name: "background" },
     { label: "서비스 소개", name: "introduction" },
-    { label: "서비스 타켓", name: "target_users" },
-    { label: "기대 효과", name: "expected_effects" },
-    { label: "주제 추천", name: "project_topics" },
-    { label: "추천 기술 스택", name: "tech_stack" },
-    { label: "고급 기술 스택", name: "advanced_stack" },
+    { label: "서비스 타켓", name: "target" },
+    { label: "기대 효과", name: "expectedEffect" },
+    { label: "주제 추천", name: "projectTopic" },
+    { label: "추천 기술 스택", name: "techStack" },
+    { label: "고급 기술 스택", name: "advancedStack" },
   ];
 
   return (

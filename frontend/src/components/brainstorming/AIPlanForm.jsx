@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import DefaultButton from "../common/DefaultButton";
 import { generatePlan } from "../../api/aiPlan";
+import { useNavigate } from "react-router-dom";
+import handleGenerateStickerFromAI from "../ideaboard/handleGenerateStickerFromAI";
 
-const AIPlanForm = ({ onClose }) => {
+const AIPlanForm = ({ onClose, projectId }) => {
+  const navigate = useNavigate();
+
   const [tags, setTags] = useState({
     기획배경: [],
     서비스소개: [],
@@ -83,8 +87,18 @@ const AIPlanForm = ({ onClose }) => {
     }
   };
 
-  const openIdeaBoard = () => {
-    console.log("아이디어 보드 열기");
+  const goToIdeaBoard = async () => {
+    try {
+      // 초안 데이터를 기반으로 스티커 생성
+      // console.log("아이디어 보드로 이동합니다!", projectId, generatedPlan);
+      await handleGenerateStickerFromAI(projectId, generatedPlan);
+      alert("아이디어 보드로 이동합니다!");
+      // 아이디어 보드 페이지로 이동
+      navigate(`/project/${projectId}/ideaboard`);
+    } catch (error) {
+      // console.error("아이디어 보드 이동 중 오류:", error);
+      alert("아이디어 보드로 이동할 수 없습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
@@ -186,7 +200,7 @@ const AIPlanForm = ({ onClose }) => {
             type="button"
             disabled={isLoading}
           />
-          <DefaultButton onClick={openIdeaBoard} text="아이디어 보드" />
+          <DefaultButton onClick={goToIdeaBoard} text="아이디어 보드" />
         </div>
       </div>
 

@@ -24,6 +24,8 @@ import useGlobalLoadingStore from "../../store/useGlobalLoadingStore";
 
 function MindMapPage() {
   const params = useParams();
+  const { id } = useParams();
+
   const { loading, startLoading, stopLoading } = useGlobalLoadingStore();
   const [isPlanOpen, setIsPlanOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -395,7 +397,7 @@ function MindMapPage() {
           isOpen={isPlanOpen}
           onClose={() => setIsPlanOpen(false)}
         >
-          <AIPlanForm onClose={() => setIsPlanOpen(false)} />
+          <AIPlanForm onClose={() => setIsPlanOpen(false)} projectId={id} />
         </PortalModal>
       </div>
     </>

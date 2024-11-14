@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import Sticker from "../../components/ideaboard/Sticker";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useCallback, useState, useRef } from "react";
 import StickerModal from "../../components/ideaboard/StickerModal";
 import DefaultButton from "../../components/common/DefaultButton";
 import { createIdea, deleteIdea, fetchIdea, updateIdea } from "../../api/axios";

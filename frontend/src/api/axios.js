@@ -123,29 +123,29 @@ export const deleteProject = async (projectId) => {
   return true;
 };
 
-export const createIdea = async (projectId) => {
-  // 랜덤한 x, y 좌표 생성
-  const x = `${Math.floor(Math.random() * 85 + 0)}`; // x 범위 0% ~ 86%
-  const y = `${Math.floor(Math.random() * 67 + 5)}`; // y 범위 5% ~ 71%
+export const createIdea = async (projectId, stickerData) => {
+  // // 랜덤한 x, y 좌표 생성
+  // const x = `${Math.floor(Math.random() * 85 + 0)}`; // x 범위 0% ~ 86%
+  // const y = `${Math.floor(Math.random() * 67 + 5)}`; // y 범위 5% ~ 71%
 
-  // colors, darkColors, animations 배열에서 랜덤 요소 선택
-  const index = Math.floor(Math.random() * colors.length);
-  const color = colors[index];
-  const darkColor = darkColors[index];
-  const animation = animations[Math.floor(Math.random() * animations.length)];
-  // 요청에 보낼 데이터 정의
-  const data = {
-    x,
-    y,
-    color,
-    darkColor,
-    animation,
-  };
+  // // colors, darkColors, animations 배열에서 랜덤 요소 선택
+  // const index = Math.floor(Math.random() * colors.length);
+  // const color = colors[index];
+  // const darkColor = darkColors[index];
+  // const animation = animations[Math.floor(Math.random() * animations.length)];
+  // // 요청에 보낼 데이터 정의
+  // const data = {
+  //   x,
+  //   y,
+  //   color,
+  //   darkColor,
+  //   animation,
+  // };
   const response = await helper(
     () =>
       authAxiosInstance.post(
         `gateway/project-service/api/v1/idea/${projectId}/create`,
-        data
+        stickerData
       ),
     "아이디어 생성"
   );
