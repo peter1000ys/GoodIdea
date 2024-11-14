@@ -134,7 +134,6 @@ export const createIdea = async (projectId) => {
   const darkColor = darkColors[index];
   const animation = animations[Math.floor(Math.random() * animations.length)];
   // 요청에 보낼 데이터 정의
-  console.log(x, y, color, darkColor, animation);
   const data = {
     x,
     y,
@@ -142,7 +141,6 @@ export const createIdea = async (projectId) => {
     darkColor,
     animation,
   };
-  console.log(data);
   const response = await helper(
     () =>
       authAxiosInstance.post(
