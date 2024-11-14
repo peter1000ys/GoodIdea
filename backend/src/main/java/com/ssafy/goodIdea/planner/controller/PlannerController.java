@@ -33,6 +33,7 @@ public class PlannerController {
         @DestinationVariable Long ideaId,
         DocumentOperationDto operation
     ) {
+        System.out.println("123");
         System.out.println(operation.getData().toString());
         operation.setIdeaId(ideaId);
         return ApiResponse.ok(plannerService.updateContentWebSocket(operation));
