@@ -294,7 +294,7 @@ function IdeaBoardPage() {
             />
           </svg>
         }
-        className="fixed top-[13%] right-[1.6%] !px-3"
+        className="fixed top-[11%] right-[1.6%] !px-3"
         theme="default"
       />
       {/* 확대/축소 컨트롤러 */}
