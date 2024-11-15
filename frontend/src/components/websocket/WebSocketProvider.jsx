@@ -18,6 +18,15 @@ export function WebSocketProvider({
   const ytext = useRef(null);
   const [connectionStatus, setConnectionStatus] = useState("disconnected");
 
+  // 마지막 업데이트된 텍스트 상태를 저장
+  let lastContent = "";
+
+  // 줄바꿈을 포함한 텍스트 정리 함수
+  const sanitizeContent = (content) => {
+    return content.replace(/\n+/g, "\n").trim(); // 여러 줄바꿈을 하나로 줄이고 트림
+  };
+
+  // Debounce callback for handling content updates
   const debouncedCallback = useRef(
     debounce((content) => {
       onMessageReceived({
@@ -55,11 +64,18 @@ export function WebSocketProvider({
       setConnectionStatus(status);
     });
 
-    // Observe Yjs text changes
+    // Observe text changes
     ytext.current.observe((event) => {
       if (!event.transaction.local) {
-        const content = ytext.current.toString();
-        console.log("Updated content received:", content);
+        const content = sanitizeContent(ytext.current.toString());
+
+        if (content === lastContent) {
+          console.warn("Duplicate content detected. Skipping update.");
+          return;
+        }
+
+        lastContent = content;
+        console.log("Sanitized content received:", content);
         debouncedCallback(content);
       }
     });
@@ -86,7 +102,7 @@ export function WebSocketProvider({
       ) {
         console.log("WebSocket is open. Updating Yjs document.");
         ytext.current.delete(0, ytext.current.length);
-        ytext.current.insert(0, content);
+        ytext.current.insert(0, sanitizeContent(content));
       } else {
         console.warn("WebSocket is not open. Skipping Yjs update.");
         return;
@@ -94,8 +110,8 @@ export function WebSocketProvider({
 
       // Send update to backend via REST API
       const message = {
-        ideaId,
-        content,
+        ideaId: ideaId,
+        content: sanitizeContent(content),
         timestamp: Date.now(),
       };
 
