@@ -20,4 +20,10 @@ public class MongoIdea {
     private Object erd;
     @Field("idea_flow_chart")
     private String flowChart;
+    @Field("idea_api_doc")
+    private ApiDocs apiDocs;
+    @Field("idea_req_doc")
+    private RecDocs recDocs;
+    @Field("idea_proposal")
+    private String proposal;
 }
