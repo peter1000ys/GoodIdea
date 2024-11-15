@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 @Slf4j
 public class LiveblocksFeignConfig {
 
-    @Value("${liveblocks.secret_key}")
+    @Value("${liveblocks_secret_key}")
     String secretKey;
 
     @Bean
