@@ -108,7 +108,7 @@ function MainPage() {
           </>
         ),
         bgColor: "bg-purple-500",
-        textBgColor: "bg-orange-500",
+        textBgColor: "bg-[#f0bf93]",
       },
       {
         id: "section5",
