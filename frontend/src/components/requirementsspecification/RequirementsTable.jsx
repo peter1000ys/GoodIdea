@@ -1,57 +1,83 @@
-import { useFormStore } from "../../store/useRequirementsStore";
 import { useState, useEffect } from "react";
+import { useMutation, useStorage } from "@liveblocks/react";
 
 function RequirementsTable() {
-  const {
-    requirements,
-    addRow,
-    updateRequirement,
-    columnWidths,
-    updateColumnWidth,
-  } = useFormStore();
-
-  const [localRequirements, setLocalRequirements] = useState(requirements);
-
-  useEffect(() => {
-    setLocalRequirements(requirements);
-  }, [requirements]);
-
-  const handleChange = (id, field, value) => {
-    const updatedRequirements = localRequirements.map((req) =>
-      req.id === id ? { ...req, [field]: value } : req
-    );
-    setLocalRequirements(updatedRequirements);
-    updateRequirement(id, { [field]: value });
+  const storage = useStorage((storage) => storage.requirements); // 항상 최상위에서 호출
+  const columnWidths = {
+    status: 150,
+    relatedPage: 150,
+    isRequired: 150,
+    name: 150,
+    description: 300,
+    author: 150,
   };
+  // 초기 상태 훅 설정
+  const [localRequirements, setLocalRequirements] = useState([]);
+  // storage가 초기화된 후 requirements 데이터를 로드
+  // useEffect(() => {
+  //   if (storage && storage.get("requirements")) {
+  //     const requirements = storage.get("requirements").toArray();
+  //     // setLocalRequirements(requirements);
+  //   }
+  // }, [storage]);
 
-  const handleAddRow = () => {
-    addRow();
-  };
+  // requirements와 columnWidths 가져오기
+  // const requirements = storage.root?.get("requirements");
+  // const columnWidths = storage.root?.get("columnWidths");
 
-  const handleResize = (column, e) => {
-    const startX = e.clientX;
-    const startWidth = columnWidths[column];
+  const handleChange = useMutation(({ storage }, id, field, value) => {
+    const requirements = storage.get("requirements");
+    const index = requirements.findIndex((req) => req.id === id);
+    if (index !== -1) {
+      requirements.set(index, { ...requirements.get(index), [field]: value });
+      // requirements.set("requirements"); // localRequirements 업데이트
+    }
+  }, []);
 
-    const onMouseMove = (e) => {
-      const newWidth = Math.max(startWidth + e.clientX - startX, 50);
-      updateColumnWidth(column, newWidth);
-    };
+  const handleAddRow = useMutation(({ storage }) => {
+    const requirements = storage.get("requirements");
+    console.log(requirements.toArray());
+    requirements.push({
+      id: Date.now(),
+      status: "미진행",
+      relatedPage: "",
+      isRequired: "필수 기능",
+      name: "",
+      description: "",
+      author: "",
+    });
+    // setLocalRequirements(requirements.toArray()); // localRequirements 업데이트
+  }, []);
 
-    const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-    };
+  // const handleResize = (column, e) => {
+  //   const startX = e.clientX;
+  //   const startWidth = columnWidths[column];
 
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-  };
+  //   const onMouseMove = (e) => {
+  //     const newWidth = Math.max(startWidth + e.clientX - startX, 50);
+  //     columnWidths[column] = newWidth; // 컬럼 너비 업데이트
+  //     storage.set("columnWidths", columnWidths);
+  //   };
+
+  //   const onMouseUp = () => {
+  //     document.removeEventListener("mousemove", onMouseMove);
+  //     document.removeEventListener("mouseup", onMouseUp);
+  //   };
+
+  //   document.addEventListener("mousemove", onMouseMove);
+  //   document.addEventListener("mouseup", onMouseUp);
+  // };
+  // storage가 초기화되지 않은 경우 로딩 상태 표시
+  if (!storage) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="overflow-x-auto p-4">
       <table className="w-full border-collapse">
         <thead>
           <tr>
-            {Object.keys(columnWidths).map((column) => (
+            {Object.keys(columnWidths)?.map((column) => (
               <th
                 key={column}
                 className="p-1 relative"
@@ -64,7 +90,7 @@ function RequirementsTable() {
                 {column === "description" && "상세 설명"}
                 {column === "author" && "작성자"}
                 <span
-                  onMouseDown={(e) => handleResize(column, e)}
+                  // onMouseDown={(e) => handleResize(column, e)}
                   className="absolute right-0 top-1 h-full cursor-col-resize px-1 text-slate-200"
                   title="너비 조정 가능"
                 >
@@ -75,7 +101,7 @@ function RequirementsTable() {
           </tr>
         </thead>
         <tbody>
-          {localRequirements.map((req) => (
+          {storage.map((req) => (
             <tr key={req.id} className="hover:bg-gray-50">
               <td className="p-2" style={{ width: columnWidths.status }}>
                 <select

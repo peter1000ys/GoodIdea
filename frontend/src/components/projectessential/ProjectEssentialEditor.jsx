@@ -1,5 +1,4 @@
 import {
-  useBroadcastEvent,
   useMutation,
   useMyPresence,
   useOthers,
@@ -26,7 +25,6 @@ function ProjectEssentialEditor() {
   // 커서
   const [{ cursor }, updateMyPresence] = useMyPresence();
   const others = useOthers();
-  const broadcast = useBroadcastEvent();
   const [cursorState, setCursorState] = useState({ mode: CursorMode.Hidden });
 
   useEffect(() => {
