@@ -79,12 +79,10 @@ export function WebSocketProvider({
   // Function to send local updates to Y.js and the server
   const sendMessage = debounce(async (content) => {
     try {
-      if (wsProvider.current?.ws?.readyState === WebSocket.OPEN) {
+      if (wsProvider) {
         ytext.current.delete(0, ytext.current.length);
         ytext.current.insert(0, content);
         console.log("Local update applied to Yjs document:", content);
-      } else {
-        console.warn("WebSocket is not connected.");
       }
 
       // Send update to the server
