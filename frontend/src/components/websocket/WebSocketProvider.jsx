@@ -78,13 +78,13 @@ export function WebSocketProvider({
 
   const sendMessage = debounce(async (content) => {
     try {
-      if (wsProvider.current && wsProvider.current.status === "connected") {
+      if (wsProvider.current && wsProvider.current.ws.readyState === WebSocket.OPEN) {
         ytext.current.delete(0, ytext.current.length); // 기존 텍스트 삭제
         ytext.current.insert(0, content); // 새 텍스트 삽입
         console.log("WebSocket: Yjs document updated.");
       }
       else {
-        console.log(wsProvider.current.status)
+        console.log(wsProvider.current.ws.readyStates)
       }
       // 서버로 업데이트 전송
       const message = {
