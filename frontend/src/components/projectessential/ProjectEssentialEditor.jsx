@@ -185,7 +185,7 @@ function ProjectEssentialEditor() {
           >
             {cursorState.mode === CursorMode.Chat && (
               <>
-                <img src="cursor.svg" />
+                {/* <img src="cursor.svg" /> */}
 
                 <div
                   className="absolute top-5 left-2 bg-blue-500 px-4 py-2 text-sm leading-relaxed text-white"
