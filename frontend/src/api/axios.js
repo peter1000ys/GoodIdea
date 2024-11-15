@@ -264,11 +264,13 @@ export const unselectIdea = async (ideaId) => {
   return true;
 };
 
-export const createIdeaComment = async (ideaId) => {
+export const createIdeaComment = async (ideaId, payload) => {
+  const { commentContent, rating } = payload;
   const response = await helper(
     () =>
       authAxiosInstance.post(
-        `gateway/project-service/api/v1/idea/comment/${ideaId}/create`
+        `gateway/project-service/api/v1/idea/comment/${ideaId}/create`,
+        { commentContent, rating }
       ),
     "아이디어 댓글 작성"
   );
