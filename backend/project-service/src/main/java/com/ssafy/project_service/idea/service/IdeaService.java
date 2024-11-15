@@ -36,6 +36,7 @@ import com.ssafy.project_service.req.repository.ReqRepository;
 import com.ssafy.project_service.reqDocs.entity.ReqDocs;
 import com.ssafy.project_service.reqDocs.repository.ReqDocsRepository;
 import com.ssafy.project_service.userProject.repository.UserProjectRepository;
+import com.ssafy.project_service.userProject.service.UserProjectService;
 import org.springframework.stereotype.Service;
 
 
@@ -61,6 +62,7 @@ public class IdeaService {
     private final ReqRepository reqRepository;
     private final MongoIdeaService mongoIdeaService;
     private final MongoIdeaRepository mongoIdeaRepository;
+    private final UserProjectService userProjectService;
 
 
     /*
@@ -198,6 +200,7 @@ public class IdeaService {
 
         // 댓글 DTO 변환
         if ( comments.isEmpty() ) {
+
             return IdeaDetailResponseDto.builder()
                     .ideaId(idea.getId())
                     .serviceName(idea.getServiceName())
@@ -218,7 +221,7 @@ public class IdeaService {
                     .<IdeaDetailResponseDto.CommentDto>map(comment -> IdeaDetailResponseDto.CommentDto.builder()
                             .commentId(comment.getId())
                             .rating(comment.getRating())
-                            .userName(comment.getUser().getUsername())
+                            .userId(comment.getUserId())
                             .commentContent(comment.getCommentContent())
                             .createdAt(comment.getCreatedAt())
                             .build())

@@ -32,7 +32,7 @@ public class IdeaDetailResponseDto {
     public static class CommentDto {
         private Long commentId;
         private float rating;
-        private String userName;
+        private Long userId;
         private String commentContent;
         private LocalDateTime createdAt;
     }
