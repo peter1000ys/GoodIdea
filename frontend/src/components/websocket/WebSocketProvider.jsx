@@ -66,24 +66,18 @@ export function WebSocketProvider({
     // Cleanup function
     return () => {
       debouncedCallback.cancel();
-      if (wsProvider.current) {
-        wsProvider.current.disconnect();
-        setTimeout(() => wsProvider.current.destroy(), 1000);
-      }
-      if (ydoc.current) {
-        ydoc.current.destroy();
-      }
+      wsProvider.current.disconnect();
+      setTimeout(() => wsProvider.current.destroy(), 1000);
     };
   }, [ideaId, documentType, onMessageReceived, debouncedCallback]);
 
   // Function to send local updates to Y.js and the server
   const sendMessage = debounce(async (content) => {
     try {
-      if (wsProvider) {
         ytext.current.delete(0, ytext.current.length);
         ytext.current.insert(0, content);
         console.log("Local update applied to Yjs document:", content);
-      }
+      
 
       // Send update to the server
       const message = {
