@@ -12,6 +12,7 @@ import { deleteProject } from "../../api/axios";
 import DefaultButton from "../common/DefaultButton";
 import { Cursor } from "../common/Cursor";
 import { CursorMode, colorName } from "../../global";
+import ProjectEssentialEditorSkeleton from "../skeleton/ProjectEssentialEditorSkeleton";
 
 function ProjectEssentialEditor() {
   const storage = useStorage((root) => root.fieldValues);
@@ -78,7 +79,7 @@ function ProjectEssentialEditor() {
   };
 
   if (!storage) {
-    return <div>Loading...</div>;
+    return <ProjectEssentialEditorSkeleton />;
   }
 
   // 커서
