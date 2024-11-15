@@ -5,12 +5,13 @@ import { useLocation } from "react-router-dom";
 import ProposalEditor from "./ProposalEditor"; // ProposalEditor 컴포넌트 import
 import { ClientSideSuspense } from "@liveblocks/react";
 import { Helmet } from "react-helmet-async";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const Room = ({ children }) => {
   const { pathname } = useLocation();
   return (
     <RoomProvider id={`proposal-room-${pathname}`}>
-      <ClientSideSuspense fallback={<div>loading...</div>}>
+      <ClientSideSuspense fallback={<LoadingSpinner message={"Wait!!"} />}>
         {() => children}
       </ClientSideSuspense>
     </RoomProvider>
