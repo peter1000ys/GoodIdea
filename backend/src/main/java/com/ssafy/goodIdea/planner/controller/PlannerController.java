@@ -28,7 +28,7 @@ public class PlannerController {
     /*
      * 플래너 수정 (WebSocket)
      */
-    @PostMapping("/{ideaId}/ws/")
+    @PostMapping("/{ideaId}/ws")
     public ApiResponse<PlannerUpdateResponseDto> updatePlannerWebSocket(
         @PathVariable("ideaId") Long ideaId,
         @RequestBody DocumentOperationDto operation

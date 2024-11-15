@@ -119,7 +119,7 @@
           try {
             const response = await axios.post(
               // `https://oracle1.mypjt.xyz/api/v1/planner/${ideaId}/ws/`,
-              `http://backend:8080/api/v1/planner/${ideaId}/ws/`,
+              `https://oracle1.mypjt.xyz/api/v1/planner/${ideaId}/ws`,
               message
             );
             console.log("Spring server response:", response.data);
