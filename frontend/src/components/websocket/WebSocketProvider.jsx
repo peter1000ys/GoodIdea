@@ -3,6 +3,7 @@ import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 import { debounce } from "lodash";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 const WebSocketContext = createContext(null);
 
@@ -17,6 +18,7 @@ export function WebSocketProvider({
   const ytext = useRef(null);
   const [connectionStatus, setConnectionStatus] = useState("disconnected");
 
+  // Debounce callback for handling content updates
   const debouncedCallback = useRef(
     debounce((content) => {
       onMessageReceived({
@@ -29,12 +31,12 @@ export function WebSocketProvider({
   ).current;
 
   useEffect(() => {
-    // YJS 문서 초기화
+    // Initialize YJS document and text
     ydoc.current = new Y.Doc();
     ytext.current = ydoc.current.getText("content");
 
-    // WebSocket 연결 설정
-    const wsProvider = new WebsocketProvider(
+    // Initialize WebSocket provider
+    const wsProviderInstance = new WebsocketProvider(
       "wss://oracle1.mypjt.xyz/ws/",
       `${documentType}/${ideaId}`,
       ydoc.current,
@@ -42,19 +44,19 @@ export function WebSocketProvider({
         connect: true,
         WebSocketPolyfill: WebSocket,
         maxBackoffTime: 2500,
-        reconnectInterval: 1000, // 재연결 주기
+        reconnectInterval: 1000,
       }
     );
 
-    wsProvider.current = wsProvider;
+    wsProvider.current = wsProviderInstance;
 
-    // 연결 상태 로깅
-    wsProvider.on("status", ({ status }) => {
+    // Monitor WebSocket connection status
+    wsProviderInstance.on("status", ({ status }) => {
       console.log("WebSocket status:", status);
       setConnectionStatus(status);
     });
 
-    // 텍스트 변경 감지
+    // Observe text changes
     ytext.current.observe((event) => {
       if (!event.transaction.local) {
         const content = ytext.current.toString();
@@ -65,9 +67,9 @@ export function WebSocketProvider({
 
     return () => {
       debouncedCallback.cancel();
-      if (wsProvider) {
-        wsProvider.disconnect();
-        setTimeout(() => wsProvider.destroy(), 1000);
+      if (wsProviderInstance) {
+        wsProviderInstance.disconnect();
+        setTimeout(() => wsProviderInstance.destroy(), 1000);
       }
       if (ydoc.current) {
         ydoc.current.destroy();
@@ -75,9 +77,9 @@ export function WebSocketProvider({
     };
   }, [ideaId, documentType, onMessageReceived, debouncedCallback]);
 
-  const sendMessage = async (content) => {
+  const sendMessage = debounce(async (content) => {
     try {
-      // WebSocket이 열려 있는지 확인
+      // Check WebSocket readiness
       if (
         wsProvider.current &&
         wsProvider.current.ws &&
@@ -87,12 +89,30 @@ export function WebSocketProvider({
         ytext.current.delete(0, ytext.current.length);
         ytext.current.insert(0, content);
       } else {
-        console.error("WebSocket is not open. Cannot update Yjs document.");
+        console.warn("WebSocket is not open. Skipping Yjs update.");
+        return;
+      }
+
+      // Send update to backend via REST API
+      const message = {
+        ideaId: ideaId,
+        content: content,
+        timestamp: Date.now(),
+      };
+
+      try {
+        const response = await axios.post(
+          `https://oracle1.mypjt.xyz/api/v1/planner/${ideaId}/ws`,
+          message
+        );
+        console.log("Spring server response:", response.data);
+      } catch (error) {
+        console.error("Error sending data to Spring server:", error.message);
       }
     } catch (error) {
       console.error("Error updating Yjs document:", error);
     }
-  };
+  }, 100);
 
   return (
     <WebSocketContext.Provider value={{ sendMessage, connectionStatus }}>
