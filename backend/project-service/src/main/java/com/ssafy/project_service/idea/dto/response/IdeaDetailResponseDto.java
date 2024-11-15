@@ -37,6 +37,3 @@ public class IdeaDetailResponseDto {
         private LocalDateTime createdAt;
     }
 }
-
-
-
