@@ -28,9 +28,7 @@ public class LiveblocksService {
                 .build();
         GetUserIdTokenRes getUserIdTokenRes
                 = liveblocksFeignClient.getLiveblocksUserIdToken(getUserIdTokenReq);
-
-        return GetUserIdTokenRes.builder()
-                .token(getUserIdTokenRes.getToken())
-                .build();
+        GetUserIdTokenRes token = new GetUserIdTokenRes(getUserIdTokenRes.getToken());
+        return token;
     }
 }

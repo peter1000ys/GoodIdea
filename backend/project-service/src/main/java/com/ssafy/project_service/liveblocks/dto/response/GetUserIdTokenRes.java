@@ -1,13 +1,11 @@
 package com.ssafy.project_service.liveblocks.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GetUserIdTokenRes{
     String token;
 }
