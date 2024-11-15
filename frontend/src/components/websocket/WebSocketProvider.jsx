@@ -18,7 +18,6 @@ export function WebSocketProvider({
   const ytext = useRef(null);
   const [connectionStatus, setConnectionStatus] = useState("disconnected");
 
-  // Debounce callback for handling content updates
   const debouncedCallback = useRef(
     debounce((content) => {
       onMessageReceived({
@@ -56,7 +55,7 @@ export function WebSocketProvider({
       setConnectionStatus(status);
     });
 
-    // Observe text changes
+    // Observe Yjs text changes
     ytext.current.observe((event) => {
       if (!event.transaction.local) {
         const content = ytext.current.toString();
@@ -95,8 +94,8 @@ export function WebSocketProvider({
 
       // Send update to backend via REST API
       const message = {
-        ideaId: ideaId,
-        content: content,
+        ideaId,
+        content,
         timestamp: Date.now(),
       };
 
