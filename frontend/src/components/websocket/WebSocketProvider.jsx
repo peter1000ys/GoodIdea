@@ -42,7 +42,6 @@ export function WebSocketProvider({
       {
         connect: true,
         WebSocketPolyfill: WebSocket,
-        awareness: new awarenessProtocol.Awareness(ydoc),
         maxBackoffTime: 2500
       }
     );
@@ -57,11 +56,14 @@ export function WebSocketProvider({
 
     // 텍스트 변경 감지
     ytext.current.observe((event) => {
-      if (!event.transaction.local) {
-        const content = ytext.current.toString();
-        console.log("Updated content received:", content);
-        debouncedCallback(content);
+      if (event.transaction.local) {
+        // 로컬 변경사항은 다른 클라이언트에 전파하지 않음
+        return;
       }
+
+      const content = ytext.current.toString();
+      console.log("Updated content received:", content);
+      debouncedCallback(content);      
     });
 
     return () => {
