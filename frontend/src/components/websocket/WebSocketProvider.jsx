@@ -80,7 +80,7 @@ export function WebSocketProvider({
 
   const sendMessage = debounce(async (content) => {
     try {
-      if (wsProvider.current) {
+      if (wsProvider) {
         ytext.current.delete(0, ytext.current.length); // 기존 텍스트 삭제
         ytext.current.insert(0, content); // 새 텍스트 삽입
         console.log("WebSocket: Yjs document updated.");
