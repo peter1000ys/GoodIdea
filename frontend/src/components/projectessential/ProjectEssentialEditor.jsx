@@ -37,6 +37,8 @@ function ProjectEssentialEditor() {
           previousMessage: null,
           message: "",
         });
+      } else if (e.key === "e") {
+        setCursorState({ mode: CursorMode.ReactionSelector });
       }
     }
 
@@ -94,7 +96,7 @@ function ProjectEssentialEditor() {
       <div
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
-        className="h-full w-full flex flex-col"
+        className="h-full max-w-full flex flex-col"
       >
         <div className="flex-1 flex justify-center items-center bg-gray-100 py-8">
           <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">

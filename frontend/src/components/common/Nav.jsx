@@ -224,7 +224,7 @@ function Nav() {
               </li>
 
               {/* 산출물 메뉴 */}
-              {!mainIdea?.ideaId && (
+              {mainIdea?.ideaId && (
                 <li>
                   <div
                     className={`backdrop-blur-lg  text-xl flex flex-row justify-between items-center cursor-pointer border border-slate-200 shadow-md p-2 select-none rounded-lg transition-all duration-500 ${

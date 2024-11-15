@@ -4,6 +4,7 @@ import { RoomProvider } from "@liveblocks/react";
 import { useLocation } from "react-router-dom";
 import ProposalEditor from "./ProposalEditor"; // ProposalEditor 컴포넌트 import
 import { ClientSideSuspense } from "@liveblocks/react";
+import { Helmet } from "react-helmet-async";
 
 const Room = ({ children }) => {
   const { pathname } = useLocation();
@@ -19,8 +20,13 @@ const Room = ({ children }) => {
 export default function ProposalPage() {
   return (
     // RoomProvider로 ProposalEditor를 감싸서 Liveblocks 방 기능을 제공합니다.
-    <Room>
-      <ProposalEditor />
-    </Room>
+    <>
+      <Helmet>
+        <title>기획서</title>
+      </Helmet>
+      <Room>
+        <ProposalEditor />
+      </Room>
+    </>
   );
 }

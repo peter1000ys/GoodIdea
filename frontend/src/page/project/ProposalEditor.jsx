@@ -4,13 +4,13 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 import { useStorage } from "@liveblocks/react";
-import { Helmet } from "react-helmet-async";
 import { updateProposal } from "../../api/axios";
 import "./ProposalEditor.css";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 
 export function ProposalEditor() {
   const { ideaId } = useParams();
-  const [isEditorReady, setIsEditorReady] = useState(false); // 로딩 상태 초기화
+  // const [isEditorReady, setIsEditorReady] = useState(false); // 로딩 상태 초기화
   const liveblocks = useLiveblocksExtension({
     publicApiKey: import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY,
   });
@@ -22,18 +22,18 @@ export function ProposalEditor() {
     extensions: [
       StarterKit.configure({
         history: false,
-        focus: false,
+        // focus: false,
       }),
       liveblocks,
     ],
     editorProps: {
       attributes: {
-        class: "editor w-full h-full border rounded-lg p-4",
+        class: "editor flex-1 flex h-full border rounded-lg p-2 !w-full",
       },
     },
     onUpdate: ({ editor }) => {
       const content = editor.getHTML();
-      setIsEditorReady(true);
+      // setIsEditorReady(true);
       if (root && root.content !== content) {
         editor.commands.setTextSelection(null);
         root.set((prev) => ({ ...prev, content }));
@@ -83,12 +83,11 @@ export function ProposalEditor() {
   }
 
   return (
-    <div className="h-full w-full flex flex-col">
-      <Helmet>
-        <title>기획서</title>
-      </Helmet>
-      {<EditorContent editor={editor} className="editor" />}
-    </div>
+    <>
+      <div className="h-full w-full max-w-full p-4">
+        {<EditorContent editor={editor} className="editor" />}
+      </div>
+    </>
   );
 }
 
