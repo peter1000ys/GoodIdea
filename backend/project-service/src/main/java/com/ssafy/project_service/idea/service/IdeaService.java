@@ -36,6 +36,7 @@ import com.ssafy.project_service.req.repository.ReqRepository;
 import com.ssafy.project_service.reqDocs.entity.ReqDocs;
 import com.ssafy.project_service.reqDocs.repository.ReqDocsRepository;
 import com.ssafy.project_service.userProject.repository.UserProjectRepository;
+import com.ssafy.project_service.userProject.service.UserProjectService;
 import org.springframework.stereotype.Service;
 
 
@@ -61,6 +62,7 @@ public class IdeaService {
     private final ReqRepository reqRepository;
     private final MongoIdeaService mongoIdeaService;
     private final MongoIdeaRepository mongoIdeaRepository;
+    private final UserProjectService userProjectService;
 
 
     /*
@@ -197,30 +199,49 @@ public class IdeaService {
                 .orElse(0.0) * 100) / 100.0);
 
         // 댓글 DTO 변환
-        List<IdeaDetailResponseDto.CommentDto> commentDtos = comments.stream()
-                .<IdeaDetailResponseDto.CommentDto>map(comment -> IdeaDetailResponseDto.CommentDto.builder()
-                        .commentId(comment.getId())
-                        .rating(comment.getRating())
-                        .userName(comment.getUser().getUsername())
-                        .commentContent(comment.getCommentContent())
-                        .createdAt(comment.getCreatedAt())
-                        .build())
-                .collect(Collectors.toList());
+        if ( comments.isEmpty() ) {
 
-        return IdeaDetailResponseDto.builder()
-                .ideaId(idea.getId())
-                .serviceName(idea.getServiceName())
-                .introduction(idea.getIntroduction())
-                .background(idea.getBackground())
-                .target(idea.getTarget())
-                .expectedEffect(idea.getExpectedEffect())
-                .projectTopic(idea.getProjectTopic())
-                .advancedStack(idea.getAdvancedStack())
-                .techStack(idea.getTechStack())
-                .averageRating(idea.getAverageRating())
-                .averageRating(avgRating)
-                .comments(commentDtos)
-                .build();
+            return IdeaDetailResponseDto.builder()
+                    .ideaId(idea.getId())
+                    .serviceName(idea.getServiceName())
+                    .introduction(idea.getIntroduction())
+                    .background(idea.getBackground())
+                    .target(idea.getTarget())
+                    .expectedEffect(idea.getExpectedEffect())
+                    .projectTopic(idea.getProjectTopic())
+                    .advancedStack(idea.getAdvancedStack())
+                    .techStack(idea.getTechStack())
+                    .averageRating(idea.getAverageRating())
+                    .averageRating(avgRating)
+                    .comments(null)
+                    .build();
+        }
+        else {
+            List<IdeaDetailResponseDto.CommentDto> commentDtos = comments.stream()
+                    .<IdeaDetailResponseDto.CommentDto>map(comment -> IdeaDetailResponseDto.CommentDto.builder()
+                            .commentId(comment.getId())
+                            .rating(comment.getRating())
+                            .userId(comment.getUserId())
+                            .commentContent(comment.getCommentContent())
+                            .createdAt(comment.getCreatedAt())
+                            .build())
+                    .collect(Collectors.toList());
+
+            return IdeaDetailResponseDto.builder()
+                    .ideaId(idea.getId())
+                    .serviceName(idea.getServiceName())
+                    .introduction(idea.getIntroduction())
+                    .background(idea.getBackground())
+                    .target(idea.getTarget())
+                    .expectedEffect(idea.getExpectedEffect())
+                    .projectTopic(idea.getProjectTopic())
+                    .advancedStack(idea.getAdvancedStack())
+                    .techStack(idea.getTechStack())
+                    .averageRating(idea.getAverageRating())
+                    .averageRating(avgRating)
+                    .comments(commentDtos)
+                    .build();
+        }
     }
 
     /*
