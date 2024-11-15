@@ -26,9 +26,7 @@ function RequirementsSpecificationPage() {
         <title>요구사항명세서페이지</title>
       </Helmet>
       <Room>
-        <div className="h-full w-full flex flex-col">
-          <RequirementsTable />
-        </div>
+        <RequirementsTable />
       </Room>
     </>
   );

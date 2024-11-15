@@ -35,8 +35,9 @@ function ProjectEssentialEditor() {
           previousMessage: null,
           message: "",
         });
-      } else if (e.key === "e") {
-        setCursorState({ mode: CursorMode.ReactionSelector });
+      } else if (e.key === "Escape") {
+        updateMyPresence({ message: "" });
+        setCursorState({ mode: CursorMode.Hidden });
       }
     }
 
@@ -80,11 +81,13 @@ function ProjectEssentialEditor() {
     return <div>Loading...</div>;
   }
 
+  // 커서
   function handlePointerMove(e) {
     const cursor = { x: Math.floor(e.clientX), y: Math.floor(e.clientY) };
     updateMyPresence({ cursor });
   }
 
+  // 커서
   function handlePointerLeave(e) {
     updateMyPresence({ cursor: null });
   }
@@ -206,14 +209,15 @@ function ProjectEssentialEditor() {
                       });
                     }}
                     onKeyDown={(e) => {
+                      console.log(e.key);
                       if (e.key === "Enter") {
-                        updateMyPresence({
+                        setCursorState({
                           mode: CursorMode.Chat,
                           previousMessage: cursorState.message,
                           message: "",
                         });
                       } else if (e.key === "Escape") {
-                        updateMyPresence({
+                        setCursorState({
                           mode: CursorMode.Hidden,
                         });
                       }
