@@ -111,7 +111,7 @@ function MindMapPage() {
 
     if (!handleDetailClick) return;
     init();
-  }, [params.id, handleDetailClick]);
+  }, [params.id, handleDetailClick, startLoading, stopLoading]);
 
   // 마인드맵 검색
   const handleSearch = async () => {

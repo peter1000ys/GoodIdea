@@ -21,3 +21,8 @@ export const colorName = [
   "lightblue",
   "turquoise",
 ];
+
+export const CursorMode = {
+  Hidden: "Hidden",
+  Chat: "Chat",
+};

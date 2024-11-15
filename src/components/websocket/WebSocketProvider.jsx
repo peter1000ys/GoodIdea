@@ -63,7 +63,7 @@ export function WebSocketProvider({
   // WebSocket 설정 및 연결 로직
   useEffect(() => {
     const client = new Client({
-      webSocketFactory: () => new WebSocket("wss://oracle1.mypjt.xyz/ws"),
+      webSocketFactory: () => new WebSocket("ws://localhost:8080/ws"),
       connectHeaders: { 'Origin': window.location.origin },
       reconnectDelay: 5000,
       maxRetries: 5,
