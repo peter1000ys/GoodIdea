@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public interface MongoIdeaRepository extends MongoRepository<MongoIdea, ObjectId> {
     @Query(value = "{ _id: ?0}", fields = "{ idea_erd:  1}")
-    Optional<MongoIdea> findErdById(Long projectId);
+    Optional<MongoIdea> findErdById(Long ideaId);
+
+    @Query(value = "{ _id: ?0}", fields = "{idea_api_doc:  1}")
+    Optional<MongoIdea> findIdeaApiDocs(Long ideaId);
 
 }

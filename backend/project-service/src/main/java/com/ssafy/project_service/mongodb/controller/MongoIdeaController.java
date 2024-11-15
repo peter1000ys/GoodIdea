@@ -1,9 +1,15 @@
 package com.ssafy.project_service.mongodb.controller;
 
 import com.ssafy.project_service.common.exception.ApiResponse;
+import com.ssafy.project_service.mongodb.entity.GetApiDoc;
+import com.ssafy.project_service.mongodb.entity.GetSimpleApiDoc;
+import com.ssafy.project_service.mongodb.entity.UpdateApiDoc;
 import com.ssafy.project_service.mongodb.service.MongoIdeaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -37,4 +43,55 @@ public class MongoIdeaController {
                 mongoIdeaService.changeIdeaErd(ideaId, erdDoc)
         );
     }
+    /**
+     * 프로젝트 API 명세서  등록 / 업데이트
+     **/
+    @PostMapping("/{ideaId}/api-docs")
+    public ApiResponse<String> insertIdeaApiDoc(
+            @PathVariable Long ideaId,
+            @RequestBody UpdateApiDoc updateApiDoc
+    ) {
+        return ApiResponse.ok(
+                mongoIdeaService.updateIdeaApiDoc(ideaId, updateApiDoc)
+        );
+    }
+
+    /**
+     * 프로젝트 API 명세서 상세 조회
+     **/
+    @GetMapping("/{ideaId}/api-docs/{apiDocId}")
+    public ApiResponse<GetApiDoc> findIdeaSingleApiDoc(
+            @PathVariable Long ideaId,
+            @PathVariable String apiDocId
+    ) {
+        return ApiResponse.ok(
+                mongoIdeaService.findIdeaSingleApiDocs(ideaId, UUID.fromString(apiDocId))
+        );
+    }
+
+    /**
+     * 프로젝트 API 명세서 목록 조회
+     **/
+    @GetMapping("/{ideaId}/api-docs")
+    public ApiResponse<List<GetSimpleApiDoc>> findIdeaApiDocs(
+            @PathVariable Long ideaId
+    ) {
+        return ApiResponse.ok(
+                mongoIdeaService.findIdeaApiDocs(ideaId)
+        );
+    }
+
+    /**
+     * 프로젝트 API 명세서 삭제
+     **/
+    @DeleteMapping("/{ideaId}/api-docs/{apiDocId}")
+    public ApiResponse<String> deleteIdeaApiDoc(
+            @PathVariable Long ideaId,
+            @PathVariable String apiDocId
+    ) {
+        return ApiResponse.ok(
+                mongoIdeaService.deleteIdeaApiDoc(ideaId, UUID.fromString(apiDocId))
+        );
+    }
+
 }
