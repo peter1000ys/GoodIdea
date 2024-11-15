@@ -14,7 +14,7 @@ import Divier from "../common/Divier";
 const ModalPlanning = ({ selectedSticker }) => {
   const param = useParams();
   const { userInfo } = useUserStore();
-  const { leader, mainIdea } = useProjectStore();
+  const { leader, mainIdea, members } = useProjectStore();
   const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
 
@@ -34,13 +34,16 @@ const ModalPlanning = ({ selectedSticker }) => {
   };
 
   useEffect(() => {
-    console.log("selectedSticker", selectedSticker.ideaId);
     const stickerDetail = async () => {
-      await fetchIdeaDetail(param?.id, selectedSticker.ideaId);
+      try {
+        const result = await fetchIdeaDetail(param?.id, selectedSticker.ideaId);
+        setComments(result.comments || []);
+      } catch (error) {
+        console.error("Error fetching sticker detail:", error);
+      }
     };
-    stickerDetail();
-    setComments;
-    stickerDetail.comments;
+
+    stickerDetail(); // 함수 호출
   }, [selectedSticker.ideaId, param]);
 
   const handleUnSelectIdea = async () => {
@@ -163,17 +166,36 @@ const ModalPlanning = ({ selectedSticker }) => {
         {/* 댓글 리스트 */}
         <div className="space-y-4">
           {comments && comments.length > 0 ? (
-            comments.map((comment, index) => (
-              <div
-                key={index}
-                className="p-2 mx-3 border border-gray-300 rounded-md transition-all animate-tinRightIn"
-                style={{ backgroundColor: selectedSticker.darkColor }}
-              >
-                <p className="ml-2">{userInfo.name}</p>
-                <Divier />
-                <p className="ml-2"> 댓 글 {comment.commentContent}</p>
-              </div>
-            ))
+            comments.map((comment, index) => {
+              // createdAt을 "YYYY.MM.DD" 형식으로 변환
+              const formattedDate = comment.createdAt
+                ? new Date(comment.createdAt)
+                    .toISOString()
+                    .split("T")[0]
+                    .replace(/-/g, ".")
+                : new Date().toISOString().split("T")[0].replace(/-/g, ".");
+
+              const commenterName =
+                members.find((member) => member.id === comment.userId)?.name ||
+                userInfo.name;
+              return (
+                <div
+                  key={index}
+                  className="p-2 mx-3 border border-gray-300 rounded-md transition-all animate-tinRightIn"
+                  style={{ backgroundColor: selectedSticker.darkColor }}
+                >
+                  <div className="flex justify-between items-center">
+                    <p className="ml-2 font-semibold">{commenterName}</p>
+                    <p className="text-sm text-gray-500">
+                      {formattedDate}
+                    </p>{" "}
+                    {/* 변환된 날짜 표시 */}
+                  </div>
+                  <Divier />
+                  <p className="ml-2 py-2">{comment.commentContent}</p>
+                </div>
+              );
+            })
           ) : (
             <p className="text-gray-500 text-center mt-10">
               작성된 댓글이 없습니다.
