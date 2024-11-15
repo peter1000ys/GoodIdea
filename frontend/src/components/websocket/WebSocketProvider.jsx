@@ -26,7 +26,7 @@
           documentType,
           ideaId,
         });
-      }, 500)
+      }, 250)
     ).current;
 
     useEffect(() => {
@@ -48,8 +48,8 @@
           connect: true,
           WebSocketPolyfill: WebSocket,
           // 연결 재시도 설정 추가
-          maxBackoffTime: 3000,
-          reconnectInterval: 1000,
+          maxBackoffTime: 1500,
+          reconnectInterval: 500,
         }
       );
 
@@ -90,7 +90,7 @@
           wsProvider.disconnect();
           setTimeout(() => {
             wsProvider.destroy();
-          }, 1000);
+          }, 500);
         }
         if (ydoc.current) {
           ydoc.current.destroy();
