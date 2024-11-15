@@ -24,7 +24,7 @@ const ProjectCard = ({ title, handleReader }) => {
   );
 };
 
-const ReaderWritePage = ({ title }) => {
+const ReaderWritePage = ({ title, onClose }) => {
   const { startLoading, stopLoading } = useGlobalLoadingStore();
   const [gitlabProjectList, setGitlabProjectList] = useState([]);
   const [projectData, setProjectData] = useState({
@@ -75,6 +75,7 @@ const ReaderWritePage = ({ title }) => {
             ],
           });
         console.log(isCreate.data?.data);
+        onClose();
         navigate(`/project/${isCreate?.data?.data?.project_id}`);
       } else {
         window.alert(
@@ -139,7 +140,7 @@ const ReaderWritePage = ({ title }) => {
   );
 };
 
-const CreateProject = () => {
+const CreateProject = ({ onClose }) => {
   const [page, setPage] = useState("project");
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
@@ -184,7 +185,7 @@ const CreateProject = () => {
             isAnimating ? "opacity-0 blur-sm" : "opacity-100 blur-0"
           }`}
         >
-          <ReaderWritePage title={selectedTitle} />
+          <ReaderWritePage onClose={onClose} title={selectedTitle} />
         </div>
       )}
     </div>

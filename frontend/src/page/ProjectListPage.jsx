@@ -166,7 +166,7 @@ function ProjectListPage() {
         }}
       >
         <div className="w-full h-full flex flex-col">
-          <CreateProject />
+          <CreateProject onClose={() => setIsCreateModalOpen(false)} />
         </div>
       </PortalModal>
       {/* updateUser Modal */}
