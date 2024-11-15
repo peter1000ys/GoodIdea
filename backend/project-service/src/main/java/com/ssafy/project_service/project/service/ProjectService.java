@@ -11,6 +11,9 @@ import com.ssafy.project_service.common.exception.ErrorType;
 import com.ssafy.project_service.idea.dto.response.IdeaCreateResponseDto;
 import com.ssafy.project_service.idea.entity.Idea;
 import com.ssafy.project_service.idea.repository.IdeaRepository;
+import com.ssafy.project_service.mongodb.entity.MongoIdea;
+import com.ssafy.project_service.mongodb.repository.MongoIdeaRepository;
+import com.ssafy.project_service.mongodb.service.MongoIdeaService;
 import com.ssafy.project_service.project.dto.request.ProjectCreateRequestDto;
 import com.ssafy.project_service.project.dto.request.ProjectUpdateRequestDto;
 import com.ssafy.project_service.project.dto.response.GitLabProjectResponseDto;
@@ -40,6 +43,7 @@ public class ProjectService {
     private final UserServiceClient userServiceClient;
     private final UserProjectRepository userProjectRepository;
     private final IdeaRepository ideaRepository;
+
 
     public Optional<Project> findByUserIdAndProjectType(Long userId, ProjectType projectType) {
         // UserId를 통해 UserProject 목록을 가져옴
@@ -77,6 +81,13 @@ public class ProjectService {
                     .gitLabProjectId(myProject.getProject_id())
                 .build()
         );
+
+//        // MongoDB에 동일한 프로젝트 ID로 프로젝트 저장
+//        MongoIdea mongoIdea = new MongoIdea();
+//        mongoIdea.setId(project.getId());  // 동일한 ID 설정
+//        mongoIdea.setErd(mongoIdeaService.getSampleErdDoc());  // 예시 데이터
+//        mongoIdea.setFlowChart("default flow chart");  // 예시 데이터
+//        mongoIdeaRepository.save(mongoIdea);
 
         users.forEach(us -> {
                     Optional<UserDto> member = userServiceClient.getUser(us.getUsername());

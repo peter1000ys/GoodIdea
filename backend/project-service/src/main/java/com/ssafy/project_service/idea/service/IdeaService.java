@@ -25,6 +25,9 @@ import com.ssafy.project_service.idea.dto.response.IdeaListResponseDto;
 import com.ssafy.project_service.idea.dto.response.IdeaUpdateResponseDto;
 import com.ssafy.project_service.idea.entity.Idea;
 import com.ssafy.project_service.idea.repository.IdeaRepository;
+import com.ssafy.project_service.mongodb.entity.MongoIdea;
+import com.ssafy.project_service.mongodb.repository.MongoIdeaRepository;
+import com.ssafy.project_service.mongodb.service.MongoIdeaService;
 import com.ssafy.project_service.planner.entity.Planner;
 import com.ssafy.project_service.planner.repository.PlannerRepository;
 import com.ssafy.project_service.project.entity.Project;
@@ -56,8 +59,8 @@ public class IdeaService {
     private final FlowChartRepository flowChartRepository;
     private final APIRepository apiRepository;
     private final ReqRepository reqRepository;
-
-
+    private final MongoIdeaService mongoIdeaService;
+    private final MongoIdeaRepository mongoIdeaRepository;
 
 
     /*
@@ -86,6 +89,13 @@ public class IdeaService {
                 .build();
 
         idea = ideaRepository.save(idea);
+
+        // MongoDB에 동일한 프로젝트 ID로 프로젝트 저장
+        MongoIdea mongoIdea = new MongoIdea();
+        mongoIdea.setId(project.getId());  // 동일한 ID 설정
+        mongoIdea.setErd(mongoIdeaService.getSampleErdDoc());  // 예시 데이터
+        mongoIdea.setFlowChart("default flow chart");  // 예시 데이터
+        mongoIdeaRepository.save(mongoIdea);
 
         // 기획서 생성
         Planner planner = Planner.builder()
