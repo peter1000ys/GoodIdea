@@ -18,6 +18,7 @@ export function WebSocketProvider({
   const ytext = useRef(null);
   const [connectionStatus, setConnectionStatus] = useState("disconnected");
 
+  // Debounced callback to send updates to the parent component
   const debouncedCallback = useRef(
     debounce((content) => {
       onMessageReceived({
@@ -30,47 +31,44 @@ export function WebSocketProvider({
   ).current;
 
   useEffect(() => {
-    // YJS 문서 초기화
+    // Initialize Y.js document and shared text type
     ydoc.current = new Y.Doc();
     ytext.current = ydoc.current.getText("content");
 
-    // WebSocket 연결 설정
-    const wsProvider = new WebsocketProvider(
+    // Setup WebSocket connection for Y.js document
+    wsProvider.current = new WebsocketProvider(
       "wss://oracle1.mypjt.xyz/ws/",
       `${documentType}/${ideaId}`,
       ydoc.current,
       {
         connect: true,
         WebSocketPolyfill: WebSocket,
-        maxBackoffTime: 2500
+        maxBackoffTime: 2500,
+        reconnectInterval: 1000,
       }
     );
 
-    wsProvider.current = wsProvider;
-
-    // 연결 상태 모니터링
-    wsProvider.on("status", ({ status }) => {
+    // Monitor WebSocket connection status
+    wsProvider.current.on("status", ({ status }) => {
       console.log("WebSocket status:", status);
       setConnectionStatus(status);
     });
 
-    // 텍스트 변경 감지
+    // Observe text changes and trigger callback for remote updates
     ytext.current.observe((event) => {
-      if (event.transaction.local) {
-        // 로컬 변경사항은 다른 클라이언트에 전파하지 않음
-        return;
+      if (!event.transaction.local) {
+        const content = ytext.current.toString();
+        console.log("Remote update received:", content);
+        debouncedCallback(content);
       }
-
-      const content = ytext.current.toString();
-      console.log("Updated content received:", content);
-      debouncedCallback(content);      
     });
 
+    // Cleanup function
     return () => {
       debouncedCallback.cancel();
-      if (wsProvider) {
-        wsProvider.disconnect();
-        setTimeout(() => wsProvider.destroy(), 1000);
+      if (wsProvider.current) {
+        wsProvider.current.disconnect();
+        setTimeout(() => wsProvider.current.destroy(), 1000);
       }
       if (ydoc.current) {
         ydoc.current.destroy();
@@ -78,17 +76,21 @@ export function WebSocketProvider({
     };
   }, [ideaId, documentType, onMessageReceived, debouncedCallback]);
 
+  // Function to send local updates to Y.js and the server
   const sendMessage = debounce(async (content) => {
     try {
-      if (wsProvider) {
-        ytext.current.delete(0, ytext.current.length); // 기존 텍스트 삭제
-        ytext.current.insert(0, content); // 새 텍스트 삽입
-        console.log("WebSocket: Yjs document updated.");
+      if (wsProvider.current?.ws?.readyState === WebSocket.OPEN) {
+        ytext.current.delete(0, ytext.current.length);
+        ytext.current.insert(0, content);
+        console.log("Local update applied to Yjs document:", content);
+      } else {
+        console.warn("WebSocket is not connected.");
       }
-      // 서버로 업데이트 전송
+
+      // Send update to the server
       const message = {
-        ideaId: ideaId,
-        content: content,
+        ideaId,
+        content,
         timestamp: Date.now(),
       };
 
@@ -97,9 +99,9 @@ export function WebSocketProvider({
           `https://oracle1.mypjt.xyz/api/v1/planner/${ideaId}/ws`,
           message
         );
-        console.log("Spring server response:", response.data);
+        console.log("Server response:", response.data);
       } catch (error) {
-        console.error("Error sending data to Spring server:", error.message);
+        console.error("Error sending data to server:", error.message);
       }
     } catch (error) {
       console.error("Error updating Yjs document:", error);
