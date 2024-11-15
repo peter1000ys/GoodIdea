@@ -42,8 +42,8 @@ export function WebSocketProvider({
       {
         connect: true,
         WebSocketPolyfill: WebSocket,
-        maxBackoffTime: 3000,
-        reconnectInterval: 500,
+        awareness: new awarenessProtocol.Awareness(ydoc),
+        maxBackoffTime: 2500
       }
     );
 
@@ -78,13 +78,10 @@ export function WebSocketProvider({
 
   const sendMessage = debounce(async (content) => {
     try {
-      if (wsProvider.current && wsProvider.current.ws) {
+      if (wsProvider.current) {
         ytext.current.delete(0, ytext.current.length); // 기존 텍스트 삭제
         ytext.current.insert(0, content); // 새 텍스트 삽입
         console.log("WebSocket: Yjs document updated.");
-      }
-      else {
-        console.log(wsProvider.current.ws)
       }
       // 서버로 업데이트 전송
       const message = {
