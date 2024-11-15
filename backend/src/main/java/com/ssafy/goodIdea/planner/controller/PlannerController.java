@@ -28,14 +28,13 @@ public class PlannerController {
     /*
      * 플래너 수정 (WebSocket)
      */
-    @MessageMapping("/{ideaId}/ws/")
+    @PostMapping("/{ideaId}/ws/")
     public ApiResponse<PlannerUpdateResponseDto> updatePlannerWebSocket(
-        @DestinationVariable Long ideaId,
-        DocumentOperationDto operation
+        @PathVariable("ideaId") Long ideaId,
+        @RequestBody DocumentOperationDto operation
     ) {
-        System.out.println("123");
-        System.out.println(operation.getData().toString());
+//        System.out.println(operation);
         operation.setIdeaId(ideaId);
-        return ApiResponse.ok(plannerService.updateContentWebSocket(operation));
+        return ApiResponse.ok(plannerService.updateContent(operation.getIdeaId(), operation.getContent()));
     }
 }

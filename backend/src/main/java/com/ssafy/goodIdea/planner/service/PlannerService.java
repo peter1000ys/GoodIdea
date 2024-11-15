@@ -26,50 +26,51 @@ public class PlannerService {
         Planner planner = plannerRepository.findById(ideaId)
             .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
         
-        return PlannerUpdateResponseDto.from(planner, null, 0L);
+        return PlannerUpdateResponseDto.builder()
+                .ideaId(planner.getId())
+                .content(planner.getContent())
+                .build();
     }
 
     @Transactional
-    public Planner updateContent(Long ideaId, String content) {
+    public PlannerUpdateResponseDto updateContent(Long ideaId, String content) {
         try {
             Planner planner = plannerRepository.findById(ideaId)
                     .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
             
             planner.updateContent(content);
             plannerRepository.save(planner);
-            
-            return planner;
+
+            return PlannerUpdateResponseDto.builder()
+                    .content(content)
+                    .ideaId(ideaId)
+                    .build();
 
         } catch (Exception e) {
             log.error("Error updating planner content: {}", e.getMessage(), e);
             throw new BaseException(ErrorType.SERVER_ERROR);
         }
     }
-
-    @Transactional
-    public PlannerUpdateResponseDto updateContentWebSocket(DocumentOperationDto operationDto) {
-        try {
-            log.debug("Received operation DTO: {}", operationDto);
-            
-            Long ideaId = operationDto.getIdeaId();
-            Planner planner = plannerRepository.findById(ideaId)
-                    .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
-
-            String content = operationDto.getData();
-            log.debug("Content to save: {}", content);
-
-            planner.updateContent(content);
-            plannerRepository.save(planner);
-            
-            return PlannerUpdateResponseDto.from(
-                planner, 
-                UUID.randomUUID().toString(),
-                System.currentTimeMillis()
-            );
-
-        } catch (Exception e) {
-            log.error("Error handling websocket operation: {}", e.getMessage(), e);
-            throw new BaseException(ErrorType.SERVER_ERROR);
-        }
-    }
+//
+//    @Transactional
+//    public PlannerUpdateResponseDto updateContentWebSocket(DocumentOperationDto operationDto) {
+//        try {
+//            Long ideaId = operationDto.getIdeaId();
+//            Planner planner = plannerRepository.findById(ideaId)
+//                    .orElseThrow(() -> new BaseException(ErrorType.PLANNER_NOT_FOUND));
+//
+//            String content = operationDto.getContent();
+//            planner.updateContent(content);
+//
+//            return PlannerUpdateResponseDto.from(
+//                planner,
+//                UUID.randomUUID().toString(),
+//                System.currentTimeMillis()
+//            );
+//
+//        } catch (Exception e) {
+//            log.error("Error handling websocket operation: {}", e.getMessage(), e);
+//            throw new BaseException(ErrorType.SERVER_ERROR);
+//        }
+//    }
 }
