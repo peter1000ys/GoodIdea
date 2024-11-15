@@ -197,30 +197,48 @@ public class IdeaService {
                 .orElse(0.0) * 100) / 100.0);
 
         // 댓글 DTO 변환
-        List<IdeaDetailResponseDto.CommentDto> commentDtos = comments.stream()
-                .<IdeaDetailResponseDto.CommentDto>map(comment -> IdeaDetailResponseDto.CommentDto.builder()
-                        .commentId(comment.getId())
-                        .rating(comment.getRating())
-                        .userName(comment.getUser().getUsername())
-                        .commentContent(comment.getCommentContent())
-                        .createdAt(comment.getCreatedAt())
-                        .build())
-                .collect(Collectors.toList());
+        if ( comments.isEmpty() ) {
+            return IdeaDetailResponseDto.builder()
+                    .ideaId(idea.getId())
+                    .serviceName(idea.getServiceName())
+                    .introduction(idea.getIntroduction())
+                    .background(idea.getBackground())
+                    .target(idea.getTarget())
+                    .expectedEffect(idea.getExpectedEffect())
+                    .projectTopic(idea.getProjectTopic())
+                    .advancedStack(idea.getAdvancedStack())
+                    .techStack(idea.getTechStack())
+                    .averageRating(idea.getAverageRating())
+                    .averageRating(avgRating)
+                    .comments(null)
+                    .build();
+        }
+        else {
+            List<IdeaDetailResponseDto.CommentDto> commentDtos = comments.stream()
+                    .<IdeaDetailResponseDto.CommentDto>map(comment -> IdeaDetailResponseDto.CommentDto.builder()
+                            .commentId(comment.getId())
+                            .rating(comment.getRating())
+                            .userName(comment.getUser().getUsername())
+                            .commentContent(comment.getCommentContent())
+                            .createdAt(comment.getCreatedAt())
+                            .build())
+                    .collect(Collectors.toList());
 
-        return IdeaDetailResponseDto.builder()
-                .ideaId(idea.getId())
-                .serviceName(idea.getServiceName())
-                .introduction(idea.getIntroduction())
-                .background(idea.getBackground())
-                .target(idea.getTarget())
-                .expectedEffect(idea.getExpectedEffect())
-                .projectTopic(idea.getProjectTopic())
-                .advancedStack(idea.getAdvancedStack())
-                .techStack(idea.getTechStack())
-                .averageRating(idea.getAverageRating())
-                .averageRating(avgRating)
-                .comments(commentDtos)
-                .build();
+            return IdeaDetailResponseDto.builder()
+                    .ideaId(idea.getId())
+                    .serviceName(idea.getServiceName())
+                    .introduction(idea.getIntroduction())
+                    .background(idea.getBackground())
+                    .target(idea.getTarget())
+                    .expectedEffect(idea.getExpectedEffect())
+                    .projectTopic(idea.getProjectTopic())
+                    .advancedStack(idea.getAdvancedStack())
+                    .techStack(idea.getTechStack())
+                    .averageRating(idea.getAverageRating())
+                    .averageRating(avgRating)
+                    .comments(commentDtos)
+                    .build();
+        }
     }
 
     /*
