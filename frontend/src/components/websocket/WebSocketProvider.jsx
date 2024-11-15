@@ -83,7 +83,9 @@ export function WebSocketProvider({
         ytext.current.insert(0, content); // 새 텍스트 삽입
         console.log("WebSocket: Yjs document updated.");
       }
-
+      else {
+        console.log(wsProvider.current.status)
+      }
       // 서버로 업데이트 전송
       const message = {
         ideaId: ideaId,
