@@ -6,9 +6,9 @@ import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 import { useMyPresence, useOthers, useStorage } from "@liveblocks/react";
 import { updateProposal } from "../../api/axios";
 import "./ProposalEditor.css";
-import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { CursorMode, colorName } from "../../global";
 import { Cursor } from "../../components/common/Cursor";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 export function ProposalEditor() {
   const { ideaId } = useParams();
@@ -119,7 +119,11 @@ export function ProposalEditor() {
   }, [editor, saveContentToDB, ideaId]);
 
   if (!storage) {
-    return <div>Loading...</div>; // 에디터가 준비되기 전까지 로딩 상태 표시
+    return (
+      <LoadingSpinner
+        message={"기획서 페이지를 로딩중입니다. 잠시만 기다리세요"}
+      />
+    ); // 에디터가 준비되기 전까지 로딩 상태 표시
   }
 
   // 커서
