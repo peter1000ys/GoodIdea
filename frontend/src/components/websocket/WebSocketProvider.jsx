@@ -18,7 +18,6 @@ export function WebSocketProvider({
   const ytext = useRef(null);
   const [connectionStatus, setConnectionStatus] = useState("disconnected");
 
-  // 서버 전송 디바운스 설정
   const debouncedCallback = useRef(
     debounce((content) => {
       onMessageReceived({
@@ -35,11 +34,6 @@ export function WebSocketProvider({
     ydoc.current = new Y.Doc();
     ytext.current = ydoc.current.getText("content");
 
-    // ideaId와 documentType을 Yjs 문서에 저장
-    const ymap = ydoc.current.getMap();
-    ymap.set("ideaId", String(ideaId));
-    ymap.set("documentType", String(documentType));
-
     // WebSocket 연결 설정
     const wsProvider = new WebsocketProvider(
       "wss://oracle1.mypjt.xyz/ws/",
@@ -55,30 +49,17 @@ export function WebSocketProvider({
 
     wsProvider.current = wsProvider;
 
-    // WebSocket 상태 확인
+    // 연결 상태 모니터링
     wsProvider.on("status", ({ status }) => {
       console.log("WebSocket status:", status);
       setConnectionStatus(status);
-      if (status === "connected") {
-        console.log("WebSocket connection established successfully.");
-      } else if (status === "disconnected") {
-        console.warn("WebSocket connection lost. Attempting to reconnect...");
-      }
-    });
-
-    // WebSocket 에러 핸들링
-    wsProvider.on("connection-error", (error) => {
-      console.error("WebSocket connection error:", error);
     });
 
     // 텍스트 변경 감지
     ytext.current.observe((event) => {
-      if (event.transaction.local) {
-        return;
-      }
-      const content = ytext.current.toString();
-      if (content) {
-        console.log("Yjs document content updated:", content);
+      if (!event.transaction.local) {
+        const content = ytext.current.toString();
+        console.log("Updated content received:", content);
         debouncedCallback(content);
       }
     });
@@ -95,17 +76,14 @@ export function WebSocketProvider({
     };
   }, [ideaId, documentType, onMessageReceived, debouncedCallback]);
 
-  // 메시지 전송 로직
   const sendMessage = debounce(async (content) => {
     try {
       if (wsProvider.current && wsProvider.current.wsconnected) {
-        console.log("WebSocket sending Yjs update:", content);
         ydoc.current.transact(() => {
-          ytext.current.delete(0, ytext.current.length); // 기존 내용 삭제
-          ytext.current.insert(0, content); // 새 내용 삽입
+          ytext.current.delete(0, ytext.current.length); // 기존 텍스트 삭제
+          ytext.current.insert(0, content); // 새 텍스트 삽입
         });
-      } else {
-        console.warn("WebSocket is not connected. Skipping update.");
+        console.log("WebSocket: Yjs document updated.");
       }
 
       // 서버로 업데이트 전송
@@ -114,8 +92,6 @@ export function WebSocketProvider({
         content: content,
         timestamp: Date.now(),
       };
-
-      console.log("Sending update to Spring server:", message);
 
       try {
         const response = await axios.post(
@@ -127,7 +103,7 @@ export function WebSocketProvider({
         console.error("Error sending data to Spring server:", error.message);
       }
     } catch (error) {
-      console.error("Error sending WebSocket message:", error);
+      console.error("Error updating Yjs document:", error);
     }
   }, 100);
 
