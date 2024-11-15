@@ -43,7 +43,7 @@ export function WebSocketProvider({
         connect: true,
         WebSocketPolyfill: WebSocket,
         maxBackoffTime: 3000,
-        reconnectInterval: 1000,
+        reconnectInterval: 500,
       }
     );
 
