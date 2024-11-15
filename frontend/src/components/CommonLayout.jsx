@@ -24,7 +24,11 @@ function CommonLayout() {
       {isproject && <Nav />}
       {loading && <LoadingSpinner />}
       {/* Main Content */}
-      <main className={`flex-1 flex flex-col ${isproject ? "ml-64" : "ml-0"}`}>
+      <main
+        className={`flex-1 flex flex-col ${
+          isproject ? "ml-64" : "ml-0"
+        } w-full max-w-full`}
+      >
         {/* 자식 컴포넌트를 렌더링 */}
         {location.pathname.includes("project") && <Header />}
         <Outlet />

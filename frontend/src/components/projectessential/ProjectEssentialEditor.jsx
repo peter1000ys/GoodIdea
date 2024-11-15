@@ -1,5 +1,4 @@
 import {
-  useBroadcastEvent,
   useMutation,
   useMyPresence,
   useOthers,
@@ -26,7 +25,6 @@ function ProjectEssentialEditor() {
   // 커서
   const [{ cursor }, updateMyPresence] = useMyPresence();
   const others = useOthers();
-  const broadcast = useBroadcastEvent();
   const [cursorState, setCursorState] = useState({ mode: CursorMode.Hidden });
 
   useEffect(() => {
@@ -37,6 +35,9 @@ function ProjectEssentialEditor() {
           previousMessage: null,
           message: "",
         });
+      } else if (e.key === "Escape") {
+        updateMyPresence({ message: "" });
+        setCursorState({ mode: CursorMode.Hidden });
       }
     }
 
@@ -80,11 +81,13 @@ function ProjectEssentialEditor() {
     return <div>Loading...</div>;
   }
 
+  // 커서
   function handlePointerMove(e) {
     const cursor = { x: Math.floor(e.clientX), y: Math.floor(e.clientY) };
     updateMyPresence({ cursor });
   }
 
+  // 커서
   function handlePointerLeave(e) {
     updateMyPresence({ cursor: null });
   }
@@ -94,7 +97,7 @@ function ProjectEssentialEditor() {
       <div
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
-        className="h-full w-full flex flex-col"
+        className="h-full max-w-full flex flex-col"
       >
         <div className="flex-1 flex justify-center items-center bg-gray-100 py-8">
           <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
@@ -182,7 +185,7 @@ function ProjectEssentialEditor() {
           >
             {cursorState.mode === CursorMode.Chat && (
               <>
-                <img src="cursor.svg" />
+                {/* <img src="cursor.svg" /> */}
 
                 <div
                   className="absolute top-5 left-2 bg-blue-500 px-4 py-2 text-sm leading-relaxed text-white"
@@ -206,14 +209,15 @@ function ProjectEssentialEditor() {
                       });
                     }}
                     onKeyDown={(e) => {
+                      console.log(e.key);
                       if (e.key === "Enter") {
-                        updateMyPresence({
+                        setCursorState({
                           mode: CursorMode.Chat,
                           previousMessage: cursorState.message,
                           message: "",
                         });
                       } else if (e.key === "Escape") {
-                        updateMyPresence({
+                        setCursorState({
                           mode: CursorMode.Hidden,
                         });
                       }

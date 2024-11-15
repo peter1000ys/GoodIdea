@@ -49,7 +49,15 @@ const LazyFlowChartPage = React.lazy(() =>
 function App() {
   return (
     <HelmetProvider>
-      <LiveblocksProvider publicApiKey="pk_dev_nJXrR6Wtow_BqktuYQvAWmBdZ7ybi5UK7O-0_Ix1DlBiVGTSKzWxCSZeSDT5oWsh">
+      <LiveblocksProvider
+        resolveUsers={({ userIds }) => {
+          console.log(userIds, "userIds"); // 이제 userIds가 배열로 출력됩니다.
+          return userIds.map((userId) => ({
+            name: "Anonymous", // 모든 사용자에게 'Anonymous'라는 이름을 반환
+          }));
+        }}
+        publicApiKey="pk_dev_nJXrR6Wtow_BqktuYQvAWmBdZ7ybi5UK7O-0_Ix1DlBiVGTSKzWxCSZeSDT5oWsh"
+      >
         <BrowserRouter>
           <Routes>
             <Route path="" element={<CommonLayout />}>
