@@ -21,7 +21,7 @@ function ProjectEssentialEditor() {
   const navigate = useNavigate();
   const params = useParams();
   const projectId = params?.id;
-  const { gitlabName, members, leader } = useProjectStore();
+  const { gitlabName, members, leader, teamName } = useProjectStore();
 
   // 커서
   const [{ cursor }, updateMyPresence] = useMyPresence();
@@ -119,6 +119,12 @@ function ProjectEssentialEditor() {
                     {gitlabName}
                   </div>
                 </div>
+                <div className="col-span-1 flex items-center">팀 명</div>
+                <div className="col-span-2">
+                  <div className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md">
+                    {teamName}
+                  </div>
+                </div>
                 <div className="col-span-1 flex items-center">팀 구성원</div>
                 <div className="col-span-2">
                   <div className="w-full flex-wrap bg-gray-100 border border-gray-300 p-2 rounded-md space-x-2 flex flex-row">
@@ -133,7 +139,6 @@ function ProjectEssentialEditor() {
                   </div>
                 </div>
                 {[
-                  { label: "팀 명", name: "teamName" },
                   { label: "프로젝트 명", name: "projectName" },
                   { label: "피그마 링크", name: "figmaLink" },
                   { label: "지라 링크", name: "jiraLink" },
