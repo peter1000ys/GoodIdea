@@ -1,5 +1,5 @@
 version: "3"
-network:
+networks:
     mesh:
     
 services:
@@ -8,7 +8,7 @@ services:
     image: ssafy/frontend
     ports:
       - 3000:80
-    network:
+    networks:
       - mesh
       
   backend:
@@ -16,5 +16,5 @@ services:
     image: ssafy/backend
     ports:
       - 8080:8080
-    network:
+    networks:
       - mesh
