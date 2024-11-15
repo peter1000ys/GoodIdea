@@ -74,6 +74,10 @@
 
       // 텍스트 변경 관찰
       ytext.current.observe((event) => {
+        if (event.transaction.local) {
+          // 로컬 변경사항은 다른 클라이언트에 전파하지 않음
+          return;
+        }
         const content = ytext.current.toString();
         if (content) {
           console.log("Yjs document content before sending:", ytext.current.toString());
