@@ -2,7 +2,6 @@ import { Helmet } from "react-helmet-async";
 import React from "react";
 import MindMap from "../../components/brainstorming/MindMap";
 import { useCallback, useEffect, useState } from "react";
-import { mindMapColorData } from "../../global";
 import AIPlanForm from "../../components/brainstorming/AIPlanForm";
 import PortalModal from "../../components/common/PortalModal";
 import {
@@ -206,7 +205,6 @@ function MindMapPage() {
                 <>
                   <MindMap
                     onClick={handleMindMapItemClick}
-                    mindMapColorData={mindMapColorData}
                     mindMapData={mindMapData}
                   />
                   {/* 관련 뉴스 리스트 영역 */}

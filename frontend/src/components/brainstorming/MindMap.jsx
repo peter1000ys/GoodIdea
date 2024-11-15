@@ -1,8 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { useRef } from "react";
 import * as d3 from "d3";
+import { mindMapColorData } from "../../global";
 
-const MindMap = ({ mindMapData, mindMapColorData, onClick }) => {
+const MindMap = ({ mindMapData, onClick }) => {
   const svgRef = useRef();
   const clickHandle = useCallback(
     (event, d) => {
@@ -132,7 +133,7 @@ const MindMap = ({ mindMapData, mindMapColorData, onClick }) => {
       d.fx = null;
       d.fy = null;
     }
-  }, [clickHandle, mindMapColorData, mindMapData]);
+  }, [clickHandle, mindMapData]);
 
   return (
     <div className="flex justify-center items-center w-2/3 h-screen">
