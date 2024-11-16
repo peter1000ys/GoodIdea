@@ -1,4 +1,4 @@
-package com.ssafy.project_service.mongodb.entity;
+package com.ssafy.project_service.mongodb.entity.reqDoc;
 
 
 import lombok.Getter;

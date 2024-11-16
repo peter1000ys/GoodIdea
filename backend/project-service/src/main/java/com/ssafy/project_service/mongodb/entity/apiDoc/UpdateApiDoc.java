@@ -1,11 +1,10 @@
-package com.ssafy.project_service.mongodb.entity;
+package com.ssafy.project_service.mongodb.entity.apiDoc;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-import java.util.List;
 import java.util.UUID;
 
 @Builder

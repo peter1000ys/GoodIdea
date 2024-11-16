@@ -41,7 +41,10 @@ public enum ErrorType {
     IDEA_NOT_EMPTY(404, HttpStatus.BAD_REQUEST, "아이디어가 비어있습니다."),
     NO_PERMISSION(404, HttpStatus.BAD_REQUEST, "권한이 없습니다."),
     // API_DOC
-    NOT_FOUND_API_DOC(404, HttpStatus.BAD_REQUEST, "존재하지 않는 API 명세서입니다.")
+    NOT_FOUND_API_DOC(404, HttpStatus.BAD_REQUEST, "존재하지 않는 API 명세서입니다."),
+    NOT_FOUND_REQ_DOC(404, HttpStatus.BAD_REQUEST, "존재하지 않는 요구사항 명세서입니다."),
+    JSON_PARSE_ERROR(400,HttpStatus.BAD_REQUEST, "JSON Parse error."),
+    FAILED_TO_UPDATE_FLOWCHART(404, HttpStatus.BAD_REQUEST, "Liveblocks Flow Chart 업데이트 실패")
     ;
     
     private final int code;

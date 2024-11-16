@@ -1,11 +1,8 @@
-package com.ssafy.project_service.mongodb.entity;
+package com.ssafy.project_service.mongodb.entity.apiDoc;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -36,7 +33,7 @@ public record GetApiDoc(
         String frontendManager
 ) {
 
-    public static GetApiDoc of(ApiDoc apiDoc, List<String> validPathVariables) {
+    public static GetApiDoc of(ApiDoc apiDoc) {
         return GetApiDoc.builder()
                 .id(apiDoc.getId())
                 .domain(apiDoc.getDomain())

@@ -1,4 +1,4 @@
-package com.ssafy.project_service.mongodb.entity;
+package com.ssafy.project_service.mongodb.entity.reqDoc;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +9,8 @@ import java.util.List;
 
 @Data
 @Builder
-public class RecDocs {
+public class ReqDocs {
     @Builder.Default
     @Field("req_docs")
-    private List<ReqDoc> recDocList = new ArrayList<>();
+    private List<ReqDoc> reqDocList = new ArrayList<>();
 }

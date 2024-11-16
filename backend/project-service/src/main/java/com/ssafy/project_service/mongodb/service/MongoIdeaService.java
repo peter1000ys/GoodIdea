@@ -1,9 +1,15 @@
 package com.ssafy.project_service.mongodb.service;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.ssafy.project_service.common.exception.BaseException;
 import com.ssafy.project_service.common.exception.ErrorType;
-import com.ssafy.project_service.common.util.StringParserUtil;
+import com.ssafy.project_service.liveblocks.application.LiveblocksComponent;
+import com.ssafy.project_service.liveblocks.entity.StepName;
 import com.ssafy.project_service.mongodb.entity.*;
+import com.ssafy.project_service.mongodb.entity.apiDoc.*;
+import com.ssafy.project_service.mongodb.entity.reqDoc.ReqDoc;
+import com.ssafy.project_service.mongodb.entity.reqDoc.UpdateReqDoc;
 import com.ssafy.project_service.mongodb.repository.MongoIdeaRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -14,7 +20,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -26,6 +32,37 @@ public class MongoIdeaService {
     private final MongoTemplate mongoTemplate;
     private final Gson gson;
     private final MongoIdeaRepository mongoIdeaRepository;
+    private final LiveblocksComponent liveblocksComponent;
+    private final ObjectMapper objectMapper;
+
+    /**
+     * 기획서 조회
+     **/
+    @Transactional(readOnly = true)
+    public String findIdeaProposal(Long ideaId) {
+        var idea = mongoIdeaRepository.findProposalById(ideaId).orElseThrow(() ->
+                new BaseException(ErrorType.IDEA_NOT_FOUND));
+        return idea.getProposal();
+    }
+
+    /**
+     *  liveblock 기획서 조회
+     **/
+    public String liveUpdateIdeaProposal(Long ideaId) {
+        String proposal = liveblocksComponent.getRoomStorageDocument(ideaId.toString(), StepName.PLAN, String.class);
+        mongoIdeaRepository.updateProposal(ideaId, proposal);
+        return proposal;
+    }
+
+    /**
+     * 기획서 업데이트
+     **/
+    @Transactional
+    public String updateIdeaProposal(Long ideaId, String updateIdeaProposal) {
+        mongoIdeaRepository.updateProposal(ideaId,
+                updateIdeaProposal);
+        return findIdeaProposal(ideaId);
+    }
 
 
     /**
@@ -59,6 +96,26 @@ public class MongoIdeaService {
         mongoTemplate.updateFirst(query, update, MongoIdea.class);
 
         return erdDoc;
+    }
+
+    /**
+     *  liveblock ERD 조회
+     **/
+    @Transactional
+    public Object liveIdeaErd(Long ideaId) {
+        var erdDoc = liveblocksComponent.getRoomStorageDocument(ideaId.toString(), StepName.ERD, Object.class);
+        if (Objects.isNull(erdDoc)) {
+            return null;
+        }
+        try {
+            String data = ((LinkedHashMap<?, ?>) erdDoc).get("json").toString();
+            if (data.isEmpty()) {
+                data = "{\"json\":\"\"}";
+            }
+            return changeIdeaErd(ideaId, objectMapper.readValue(data, Object.class));
+        } catch (JsonProcessingException e) {
+            throw new BaseException(ErrorType.JSON_PARSE_ERROR);
+        }
     }
 
     /**
@@ -104,7 +161,7 @@ public class MongoIdeaService {
     ) {
         ApiDoc apiDoc = getIdeaApiDoc(ideaId, apiDocId);
 
-        return GetApiDoc.of(apiDoc, new ArrayList<>(StringParserUtil.extractBracketsContent(apiDoc.getApiUrl())));
+        return GetApiDoc.of(apiDoc);
     }
 
     /**
@@ -139,6 +196,99 @@ public class MongoIdeaService {
         var apiDocs = idea.getApiDocs().getApiDocList();
         return apiDocs.stream().map(GetSimpleApiDoc::of).toList();
     }
+
+
+    /**
+     * 프로젝트 요구 사항 명세서 정보 업데이트
+     **/
+    public String updateIdeaReqDoc(Long ideaId, UpdateReqDoc updateReqDoc) {
+        ReqDoc reqDoc = UpdateReqDoc.toReqDoc(updateReqDoc);
+        Query query = new Query(Criteria.where("_id").is(ideaId));
+        // id가 없으면 save 수행
+        if (Objects.isNull(reqDoc.getId())) {
+            reqDoc.setId(UUID.randomUUID()); // id setting
+            Update update = new Update().addToSet("idea_req_doc.req_docs", reqDoc);
+            mongoTemplate.updateFirst(query, update, MongoIdea.class);
+            return reqDoc.getId().toString();
+        }
+        // update 수행
+        query.addCriteria(Criteria.where("idea_req_doc.req_docs.req_doc_id").is(reqDoc.getId()));
+        Update update = new Update().set("idea_req_doc.req_docs.$", reqDoc);
+        mongoTemplate.updateFirst(query, update, MongoIdea.class);
+        return updateReqDoc.id().toString();
+    }
+
+    /**
+     * 프로젝트 요구 사항 명세서 정보 삭제
+     **/
+    public String deleteIdeaReqDoc(Long ideaId, UUID reqDocId) {
+        Query query = new Query(Criteria.where("_id").is(ideaId));
+        Update update = new Update().pull("idea_req_doc.req_docs", Query.query(Criteria.where("req_doc_id").is(reqDocId)));
+        var result = mongoTemplate.updateFirst(query, update, MongoIdea.class);
+
+        if (result.wasAcknowledged() && result.getModifiedCount() > 0) {
+            return "삭제 성공";
+        }
+
+        return "삭제 실패";
+    }
+
+    /**
+     * Req DOC 조회
+     **/
+    public GetReqDoc findIdeaSingleReqDocs(
+            Long ideaId, UUID reqDocId
+    ) {
+        ReqDoc reqDoc = getIdeaReqDoc(ideaId, reqDocId);
+
+        return GetReqDoc.of(reqDoc);
+    }
+
+    /**
+     * Req DOC 조회
+     **/
+    private ReqDoc getIdeaReqDoc(Long ideaId, UUID reqDocId) {
+        Query query = new Query().addCriteria(Criteria.where("_id").is(ideaId));
+        query.fields().include("idea_req_doc.req_docs.$");
+        query.addCriteria(Criteria.where("idea_req_doc.req_docs.req_doc_id").is(reqDocId));
+
+        MongoIdea idea = mongoTemplate.findOne(query, MongoIdea.class);
+
+        if (idea == null || idea.getReqDocs() == null || idea.getReqDocs().getReqDocList().isEmpty()) {
+            throw new BaseException(ErrorType.NOT_FOUND_REQ_DOC);
+        }
+
+        return idea.getReqDocs().getReqDocList().get(0);
+    }
+
+    /**
+     * 요구 사항 명세서 리스트 정보
+     **/
+    @Transactional(readOnly = true)
+    public List<GetSimpleReqDoc> findIdeaReqDocs(Long ideaId) {
+        var idea = mongoIdeaRepository.findIdeaReqDocs(ideaId).orElseThrow(() ->
+                new BaseException(ErrorType.IDEA_NOT_FOUND));
+
+        if (Objects.isNull(idea.getReqDocs()) || Objects.isNull(idea.getReqDocs().getReqDocList())) {
+            return List.of();
+        }
+
+        var reqDocs = idea.getReqDocs().getReqDocList();
+        return reqDocs.stream().map(GetSimpleReqDoc::of).toList();
+    }
+
+    public LiveFlowChart liveUpdateIdeaFlowChart(Long ideaId) {
+        LiveFlowChart liveFlowChart = liveblocksComponent.getRoomStorageDocument(ideaId.toString(), StepName.FLOW, LiveFlowChart.class);
+        if (Objects.isNull(liveFlowChart)) {
+            return null;
+        }
+        return mongoIdeaRepository.updateFlowChart(ideaId, liveFlowChart);
+    }
+
+
+
+
+
 
 
     /**

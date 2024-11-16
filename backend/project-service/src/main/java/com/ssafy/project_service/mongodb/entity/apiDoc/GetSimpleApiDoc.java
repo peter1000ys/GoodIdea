@@ -1,8 +1,7 @@
-package com.ssafy.project_service.mongodb.entity;
+package com.ssafy.project_service.mongodb.entity.apiDoc;
 
 
 import lombok.Builder;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.UUID;
 

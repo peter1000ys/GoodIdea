@@ -2,6 +2,8 @@ package com.ssafy.project_service.mongodb.entity;
 
 
 
+import com.ssafy.project_service.mongodb.entity.apiDoc.ApiDocs;
+import com.ssafy.project_service.mongodb.entity.reqDoc.ReqDocs;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -23,7 +25,7 @@ public class MongoIdea {
     @Field("idea_api_doc")
     private ApiDocs apiDocs;
     @Field("idea_req_doc")
-    private RecDocs recDocs;
+    private ReqDocs reqDocs;
     @Field("idea_proposal")
     private String proposal;
 }

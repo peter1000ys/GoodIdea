@@ -1,4 +1,4 @@
-package com.ssafy.project_service.mongodb.entity;
+package com.ssafy.project_service.mongodb.entity.apiDoc;
 
 import lombok.Getter;
 import lombok.Setter;
