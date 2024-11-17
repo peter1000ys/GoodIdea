@@ -33,9 +33,9 @@ ELASTIC_PW = os.getenv("ELASTIC_PW")
 es = Elasticsearch("http://elasticsearch:9200", basic_auth=(ELASTIC_ID, ELASTIC_PW))
 
 @app.post("/api/v1/training/all")
-async def trainingALL():
+def trainingALL():
     page_size = 1000
-    page = 0
+    page = 10
     
     while True:
         try:
