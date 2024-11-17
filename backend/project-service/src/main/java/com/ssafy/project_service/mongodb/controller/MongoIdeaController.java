@@ -7,6 +7,8 @@ import com.ssafy.project_service.mongodb.entity.reqDoc.UpdateReqDoc;
 import com.ssafy.project_service.mongodb.service.MongoIdeaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,12 +50,13 @@ public class MongoIdeaController {
     /**
      * 기획서 Liveblocks 연동
      **/
-    @PostMapping("/{ideaId}/proposal/live")
+    @PostMapping("/{projectId}/{ideaId}/proposal/live")
     public ApiResponse<String> liveUpdateIdeaProposal(
+            @PathVariable(name = "ideaId") Long projectId,
             @PathVariable(name = "ideaId") Long ideaId
     ) {
         return ApiResponse.ok(
-                mongoIdeaService.liveUpdateIdeaProposal(ideaId)
+                mongoIdeaService.liveUpdateIdeaProposal(projectId, ideaId)
         );
     }
 
@@ -84,12 +87,13 @@ public class MongoIdeaController {
     /**
      * liveblock 프로젝트 ERD 업데이트
      **/
-    @PostMapping("/{ideaId}/erd/live")
+    @PostMapping("/{projectId}/{ideaId}/erd/live")
     public ApiResponse<Object> changeIdeaErdWithLiveblocks(
+            @PathVariable Long projectId,
             @PathVariable Long ideaId
     ) {
         return ApiResponse.ok(
-                mongoIdeaService.liveIdeaErd(ideaId)
+                mongoIdeaService.liveIdeaErd(projectId, ideaId)
         );
     }
 
@@ -196,15 +200,26 @@ public class MongoIdeaController {
         );
     }
 
-    /**
-     * Liveblocks 프로젝트 Flow Chart 업데이트
-     **/
-    @PostMapping("/{ideaId}/flow-chart/live")
-    public ApiResponse<LiveFlowChart> liveUpdateIdeaFlowChart(
+    @PostMapping("/{projectId}/{ideaId}/req-docs/live")
+    public ApiResponse<List<GetSimpleReqDoc>> liveIdeaRecDoc(
+            @PathVariable Long projectId,
             @PathVariable Long ideaId
     ) {
         return ApiResponse.ok(
-                mongoIdeaService.liveUpdateIdeaFlowChart(ideaId)
+                mongoIdeaService.liveIdeaReqDoc(projectId, ideaId)
+        );
+    }
+
+    /**
+     * Liveblocks 프로젝트 Flow Chart 업데이트
+     **/
+    @PostMapping("/{projectId}/{ideaId}/flow-chart/live")
+    public ApiResponse<LiveFlowChart> liveUpdateIdeaFlowChart(
+            @PathVariable Long projectId,
+            @PathVariable Long ideaId
+    ) {
+        return ApiResponse.ok(
+                mongoIdeaService.liveUpdateIdeaFlowChart(projectId, ideaId)
         );
     }
 

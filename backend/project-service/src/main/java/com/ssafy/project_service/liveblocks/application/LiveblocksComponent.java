@@ -53,16 +53,25 @@ public class LiveblocksComponent {
         }
     }
 
-    public <T> T getRoomStorageDocument(String projectId, StepName stepName, Class<T> clazz) {
-        Map<String, Object> map = liveblocksFeignClient.getRoomStorageDocument(projectId, stepName.getRoomName());
+    public <T> T getRoomStorageDocument(String projectId, String ideaId, StepName stepName, Class<T> clazz) {
+        Map<String, Object> map = liveblocksFeignClient.getRoomStorageDocument(projectId, ideaId, stepName.getRoomName());
         Object object = map.get(stepName.getJsonName());
         return objectMapper.convertValue(object, clazz);
     }
 
-    public <T> List<T> getRoomStorageDocuments(String projectId, StepName stepName, Class<T> clazz) {
-        Map<String, Object> map = liveblocksFeignClient.getRoomStorageDocument(projectId, stepName.getRoomName());
-        if (map.get(stepName.getJsonName()) instanceof List<?>) {
-            return ((List<?>) map.get(stepName.getJsonName())).stream().map(t -> objectMapper.convertValue(t, clazz)).toList();
+    public <T> List<T> getRoomStorageDocuments(String projectId, String ideaId, StepName stepName, Class<T> clazz) {
+        Map<String, Object> map = liveblocksFeignClient.getRoomStorageDocument(projectId, ideaId, stepName.getRoomName());
+        // "requirements" 계층 확인 및 "data" 추출
+        if (map.containsKey("data") && map.get("data") instanceof Map) {
+            Map<?, ?> dataMap = (Map<?, ?>) map.get("data");
+            if (dataMap.containsKey(stepName.getJsonName()) && dataMap.get(stepName.getJsonName()) instanceof Map) {
+                Map<?, ?> requirementsMap = (Map<?, ?>) dataMap.get(stepName.getJsonName());
+                if (requirementsMap.containsKey("data") && requirementsMap.get("data") instanceof List<?>) {
+                    return ((List<?>) requirementsMap.get("data")).stream()
+                            .map(item -> objectMapper.convertValue(item, clazz))
+                            .toList();
+                }
+            }
         }
         return List.of();
     }

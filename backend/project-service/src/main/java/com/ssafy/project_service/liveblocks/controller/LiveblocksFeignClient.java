@@ -44,9 +44,10 @@ public interface LiveblocksFeignClient {
         @RequestBody UpdateRoomReq updateRoomReq
     );
 
-    @GetMapping(value = "/rooms/%2Fproject%2F{projectId}%2F{stepName}/storage?format=json", consumes = "application/json")
+    @GetMapping(value = "/rooms/essential-room-%2Fproject%2F{projectId}%2Fidea%2F{ideaId}%2F{stepName}/storage?format=json", consumes = "application/json")
     Map<String, Object> getRoomStorageDocument(
             @PathVariable("projectId") String projectId,
+            @PathVariable("ideaId") String ideaId,
             @PathVariable("stepName") String stepName
     );
 

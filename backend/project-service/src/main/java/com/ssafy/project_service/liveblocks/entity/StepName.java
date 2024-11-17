@@ -10,6 +10,7 @@ public enum StepName {
     FLOW("flow", "flow"),
     ERD("erd", "erd"),
     API("api", "apiList"),
+    REQ("requirementsspecification", "reqList"),
     BUILD("build", "build"),
     README("readme", "readme"),
     ;

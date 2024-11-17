@@ -8,10 +8,12 @@ import com.ssafy.project_service.liveblocks.application.LiveblocksComponent;
 import com.ssafy.project_service.liveblocks.entity.StepName;
 import com.ssafy.project_service.mongodb.entity.*;
 import com.ssafy.project_service.mongodb.entity.apiDoc.*;
+import com.ssafy.project_service.mongodb.entity.reqDoc.LiveReqDetail;
 import com.ssafy.project_service.mongodb.entity.reqDoc.ReqDoc;
 import com.ssafy.project_service.mongodb.entity.reqDoc.UpdateReqDoc;
 import com.ssafy.project_service.mongodb.repository.MongoIdeaRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -20,13 +22,11 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class MongoIdeaService {
 
     private final MongoTemplate mongoTemplate;
@@ -48,8 +48,8 @@ public class MongoIdeaService {
     /**
      *  liveblock 기획서 조회
      **/
-    public String liveUpdateIdeaProposal(Long ideaId) {
-        String proposal = liveblocksComponent.getRoomStorageDocument(ideaId.toString(), StepName.PLAN, String.class);
+    public String liveUpdateIdeaProposal(Long projectId, Long ideaId) {
+        String proposal = liveblocksComponent.getRoomStorageDocument(projectId.toString(), ideaId.toString(), StepName.PLAN, String.class);
         mongoIdeaRepository.updateProposal(ideaId, proposal);
         return proposal;
     }
@@ -102,8 +102,8 @@ public class MongoIdeaService {
      *  liveblock ERD 조회
      **/
     @Transactional
-    public Object liveIdeaErd(Long ideaId) {
-        var erdDoc = liveblocksComponent.getRoomStorageDocument(ideaId.toString(), StepName.ERD, Object.class);
+    public Object liveIdeaErd(Long projectId, Long ideaId) {
+        var erdDoc = liveblocksComponent.getRoomStorageDocument(projectId.toString(), ideaId.toString(), StepName.ERD, Object.class);
         if (Objects.isNull(erdDoc)) {
             return null;
         }
@@ -277,8 +277,32 @@ public class MongoIdeaService {
         return reqDocs.stream().map(GetSimpleReqDoc::of).toList();
     }
 
-    public LiveFlowChart liveUpdateIdeaFlowChart(Long ideaId) {
-        LiveFlowChart liveFlowChart = liveblocksComponent.getRoomStorageDocument(ideaId.toString(), StepName.FLOW, LiveFlowChart.class);
+    public List<GetSimpleReqDoc> liveIdeaReqDoc(Long projectId, Long ideaId) {
+        System.out.println(StepName.REQ.getRoomName());
+    List<LiveReqDetail> liveReqDto = liveblocksComponent.getRoomStorageDocuments(projectId.toString(), ideaId.toString(), StepName.REQ, LiveReqDetail.class);
+        List<ReqDoc> reqDocs = new ArrayList<>();
+        for (LiveReqDetail liveReqDetail : liveReqDto) {
+            try {
+                reqDocs.add(LiveReqDetail.toReqDoc(liveReqDetail));
+            } catch (Exception e) {
+                if (e instanceof BaseException) {
+                    log.info(e.getMessage());
+                }
+                log.trace(liveReqDetail.name() + " APIListDetail 파싱 실패!");
+            }
+        }
+
+        Query query = new Query(Criteria.where("_id").is(ideaId));
+        Update update = new Update().set("idea_req_doc.req_docs", reqDocs);
+        var result = mongoTemplate.updateFirst(query, update, MongoIdea.class);
+        if (result.wasAcknowledged() && (result.getMatchedCount() > 0 || result.getModifiedCount() > 0)) {
+            return reqDocs.stream().map(GetSimpleReqDoc::of).toList();
+        }
+        throw new BaseException(ErrorType.FAILED_TO_UPDATE_API_DOCS);
+    }
+
+    public LiveFlowChart liveUpdateIdeaFlowChart(Long projectId, Long ideaId) {
+        LiveFlowChart liveFlowChart = liveblocksComponent.getRoomStorageDocument(projectId.toString(), ideaId.toString(), StepName.FLOW, LiveFlowChart.class);
         if (Objects.isNull(liveFlowChart)) {
             return null;
         }
