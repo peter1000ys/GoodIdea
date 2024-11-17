@@ -14,8 +14,6 @@ import java.util.List;
 public class ApiDocs {
     @Field("api_base_url")
     private String apiBaseUrl;
-    @Field("usable_domains")
-    private List<String> domains;
     @Builder.Default
     @Field("api_docs")
     private List<ApiDoc> apiDocList = new ArrayList<>();

@@ -101,89 +101,6 @@ public class IdeaService {
 
         idea = ideaRepository.save(idea);
 
-        // MongoDB에 동일한 프로젝트 ID로 프로젝트 저장
-        MongoIdea mongoIdea = new MongoIdea();
-        mongoIdea.setId(idea.getId());  // 동일한 ID 설정
-        mongoIdea.setErd(mongoIdeaService.getSampleErdDoc());  // 예시 데이터
-        mongoIdea.setFlowChart("default flow chart");  // 예시 데이터
-
-// ApiDocs 생성
-        ApiDoc apiDoc = new ApiDoc();
-        apiDoc.setId(UUID.nameUUIDFromBytes("1".getBytes()));
-        apiDoc.setDomain("example.com");
-        apiDoc.setName("Sample API");
-        apiDoc.setMethodType(MethodType.GET);
-        apiDoc.setApiUrl("/api/sample");
-        apiDoc.setRequestHeader("{\"Authorization\": \"Bearer token\"}");
-        apiDoc.setRequestParams("{\"id\": \"123\"}");
-        apiDoc.setRequestBody("{\"name\": \"example\"}");
-        apiDoc.setResponseBody("{\"result\": \"success\"}");
-        apiDoc.setApiImportance(ApiImportance.HIGH);
-        apiDoc.setBackendManager("John Doe");
-        apiDoc.setFrontendManager("Jane Doe");
-
-        ApiDocs apiDocs = ApiDocs.builder()
-                .apiBaseUrl("https://example.com/api")
-                .domains(List.of("example.com", "example.org"))
-                .apiDocList(List.of(apiDoc))
-                .build();
-
-        mongoIdea.setApiDocs(apiDocs);
-
-// ReqDocs 생성
-        ReqDoc reqDoc = new ReqDoc();
-        reqDoc.setId(UUID.nameUUIDFromBytes("1".getBytes()));
-        reqDoc.setStatus(Status.INCOMPLETE);
-        reqDoc.setRelatedPage("sample-page.html");
-        reqDoc.setIsRequired(IsRequired.ESSENTIAL);
-        reqDoc.setName("Sample Requirement");
-        reqDoc.setDescription("This is a sample requirement for demonstration.");
-        reqDoc.setAuthor("Jane Developer");
-
-        ReqDocs reqDocs = ReqDocs.builder()
-                .reqDocList(List.of(reqDoc))
-                .build();
-
-        mongoIdea.setReqDocs(reqDocs);
-
-    // Proposal 생성
-        mongoIdea.setProposal("This is a default proposal for the project.");
-
-    // MongoDB에 저장
-        mongoIdeaRepository.save(mongoIdea);
-
-        // 기획서 생성
-        Planner planner = Planner.builder()
-                .idea(idea)
-                .content("")
-                .build();
-        plannerRepository.save(planner);
-
-//        // 요구사항 명세서 생성
-//        ReqDocs reqDocs = ReqDocs.builder()
-//                .idea(idea)
-//                .build();
-//        reqDocsRepository.save(reqDocs);
-//
-//        // API 명세서 생성
-//        APIDocs apiDocs = APIDocs.builder()
-//                .idea(idea)
-//                .build();
-//        apiDocsRepository.save(apiDocs);
-
-        // ERD 생성
-        ERD erd = ERD.builder()
-                .idea(idea)
-                .code("")
-                .build();
-        erdRepository.save(erd);
-
-        // 플로우차트 생성
-        Flowchart flowchart = Flowchart.builder()
-                .idea(idea)
-                .code("")
-                .build();
-        flowChartRepository.save(flowchart);
 
         return IdeaCreateResponseDto.builder()
                 .ideaId(idea.getId())
@@ -316,6 +233,56 @@ public class IdeaService {
         // 메인 아이디어 설정
         project.setMainIdeaId(ideaId);
         projectRepository.save(project);
+
+        // MongoDB에 동일한 프로젝트 ID로 프로젝트 저장
+        MongoIdea mongoIdea = new MongoIdea();
+        mongoIdea.setId(idea.getId());  // 동일한 ID 설정
+        mongoIdea.setErd(mongoIdeaService.getSampleErdDoc());  // 예시 데이터
+        mongoIdea.setFlowChart("default flow chart");  // 예시 데이터
+
+        // ApiDocs 생성
+        ApiDoc apiDoc = new ApiDoc();
+        apiDoc.setId(UUID.nameUUIDFromBytes("1".getBytes()));
+        apiDoc.setDomain("example.com");
+        apiDoc.setName("Sample API");
+        apiDoc.setMethodType(MethodType.GET);
+        apiDoc.setApiUrl("/api/sample");
+        apiDoc.setRequestHeader("{\"Authorization\": \"Bearer token\"}");
+        apiDoc.setRequestParams("{\"id\": \"123\"}");
+        apiDoc.setRequestBody("{\"name\": \"example\"}");
+        apiDoc.setResponseBody("{\"result\": \"success\"}");
+        apiDoc.setApiImportance(ApiImportance.HIGH);
+        apiDoc.setBackendManager("John Doe");
+        apiDoc.setFrontendManager("Jane Doe");
+
+        ApiDocs apiDocs = ApiDocs.builder()
+                .apiBaseUrl("https://example.com/api")
+                .apiDocList(List.of(apiDoc))
+                .build();
+
+        mongoIdea.setApiDocs(apiDocs);
+
+        // ReqDocs 생성
+        ReqDoc reqDoc = new ReqDoc();
+        reqDoc.setId(UUID.nameUUIDFromBytes("1".getBytes()));
+        reqDoc.setStatus(Status.INCOMPLETE);
+        reqDoc.setRelatedPage("sample-page.html");
+        reqDoc.setIsRequired(IsRequired.ESSENTIAL);
+        reqDoc.setName("Sample Requirement");
+        reqDoc.setDescription("This is a sample requirement for demonstration.");
+        reqDoc.setAuthor("Jane Developer");
+
+        ReqDocs reqDocs = ReqDocs.builder()
+                .reqDocList(List.of(reqDoc))
+                .build();
+
+        mongoIdea.setReqDocs(reqDocs);
+
+        // Proposal 생성
+        mongoIdea.setProposal("This is a default proposal for the project.");
+
+        // MongoDB에 저장
+        mongoIdeaRepository.save(mongoIdea);
     }
 
     /*
@@ -418,20 +385,6 @@ public class IdeaService {
             project.setMainIdeaId(null);
             projectRepository.save(project);
         }
-
-        plannerRepository.deleteAllByIdeaId(ideaId);
-
-//        ReqDocs reqDocs = reqDocsRepository.findByIdeaId(ideaId).orElseThrow( () -> new BaseException(ErrorType.IDEA_NOT_FOUND) );
-//        reqRepository.deleteAllByIReqDocsId(reqDocs.getId());
-//        reqDocsRepository.deleteAllByIdeaId(ideaId);
-
-        APIDocs apiDocs = apiDocsRepository.findByIdea_Id(ideaId);
-        apiRepository.deleteAllByApiDocsId(apiDocs.getApiDocsId());
-        apiDocsRepository.deleteAllByIdeaId(ideaId);
-
-        erdRepository.deleteAllByIdeaId(ideaId);
-        flowChartRepository.deleteAllByIdeaId(ideaId);
-        commentRepository.deleteByIdeaId(ideaId);
 
         // 3. 마지막으로 아이디어 삭제
         ideaRepository.delete(idea);
