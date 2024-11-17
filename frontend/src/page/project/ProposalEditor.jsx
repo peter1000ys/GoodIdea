@@ -118,7 +118,7 @@ export function ProposalEditor() {
     };
   }, [editor, saveContentToDB, ideaId]);
 
-  if (!storage) {
+  if (storage === null) {
     return (
       <LoadingSpinner
         message={"기획서 페이지를 로딩중입니다. 잠시만 기다리세요"}

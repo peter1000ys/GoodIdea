@@ -109,7 +109,8 @@ function RequirementsTable() {
   //   document.addEventListener("mouseup", onMouseUp);
   // };
   // storage가 초기화되지 않은 경우 로딩 상태 표시
-  if (!storage) {
+  if (storage === null) {
+    console.log(storage);
     return <div>Loading...</div>;
   }
 

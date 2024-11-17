@@ -56,20 +56,15 @@ function Code({ inline, children = [], className, ...props }) {
 }
 
 function ProposalEditor() {
-  const storage = useStorage((root) => root.proposal);
-
-  // const [markdown, setMarkdown] = useState(
-  //   `\# MARKDOWN\n \#\# 문법을\n \#\#\# 사용해서\n \#\#\#\# 기획서를 작성하세요.`
-  // );
+  const storage = useStorage((root) => root.fieldValues);
 
   const updateMarkdown = useMutation(({ storage }, value) => {
-    storage.set("proposal", value);
-    // const proposal = storage.get("proposal");
-    // console.log(proposal);
-    // proposal.set(value);
+    const proposal = storage.get("fieldValues");
+    console.log(proposal);
+    proposal.set("content", value);
   }, []);
 
-  if (!storage) {
+  if (storage === null) {
     return <div>Loading...</div>;
   }
 
@@ -78,7 +73,7 @@ function ProposalEditor() {
       <div className="h-full w-full flex flex-col">
         <div className="flex-1 w-full h-full p-4 bg-gray-100">
           <MDEditor
-            value={storage}
+            value={storage?.content}
             onChange={updateMarkdown}
             textareaProps={{
               placeholder: "Mermaid 문법을 사용해 기획서를 작성하세요.",
