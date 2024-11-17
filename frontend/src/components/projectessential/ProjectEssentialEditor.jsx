@@ -60,6 +60,7 @@ function ProjectEssentialEditor() {
 
   const updateName = useMutation(({ storage }, name, value) => {
     const fieldValues = storage.get("fieldValues");
+    console.log(fieldValues);
     fieldValues.set(name, value);
   }, []);
 
@@ -78,7 +79,7 @@ function ProjectEssentialEditor() {
     }
   };
 
-  if (!storage) {
+  if (storage === null) {
     return <ProjectEssentialEditorSkeleton />;
   }
 

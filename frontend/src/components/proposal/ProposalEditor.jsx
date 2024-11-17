@@ -1,31 +1,80 @@
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
-import { useMyPresence, useOthers, useStorage } from "@liveblocks/react";
-import { updateProposal } from "../../api/axios";
-import "./ProposalEditor.css";
+import {
+  useMutation,
+  useMyPresence,
+  useOthers,
+  useStorage,
+} from "@liveblocks/react";
+import MDEditor from "@uiw/react-md-editor";
+import mermaid from "mermaid";
+import { Children, isValidElement, useEffect, useRef, useState } from "react";
 import { CursorMode, colorName } from "../../global";
-import { Cursor } from "../../components/common/Cursor";
-import LoadingSpinner from "../../components/common/LoadingSpinner";
+import { Cursor } from "../common/Cursor";
 
-export function ProposalEditor() {
-  const { ideaId } = useParams();
-  // const [isEditorReady, setIsEditorReady] = useState(false); // 로딩 상태 초기화
-  const liveblocks = useLiveblocksExtension({
-    publicApiKey: import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY,
-  });
+// Markdown에서 코드를 추출하는 함수
+const getCode = (arr = []) =>
+  Children.toArray(arr)
+    ?.map((dt) => {
+      if (typeof dt === "string") {
+        return dt;
+      }
+      if (isValidElement(dt) && dt.props && dt.props.children) {
+        return getCode(dt.props.children);
+      }
+      return false;
+    })
+    .filter(Boolean)
+    .join("");
 
-  const storage = useStorage((storage) => storage);
-  const root = storage?.root ?? null;
+// Mermaid 코드 렌더링을 위한 Code 컴포넌트
+function Code({ inline, children = [], className, ...props }) {
+  const demoid = useRef(
+    `dome${parseInt(String(Math.random() * 1e15), 10).toString(36)}`
+  );
+  const code = getCode(children);
+  // console.log("Extracted code:", code);
+
+  const demo = useRef(null);
+
+  useEffect(() => {
+    const renderMermaid = async () => {
+      if (demo.current && code) {
+        try {
+          const { svg } = await mermaid.render(demoid.current, code);
+          demo.current.innerHTML = svg;
+        } catch (error) {
+          demo.current.innerHTML = "Invalid syntax";
+        }
+      }
+    };
+    renderMermaid();
+  }, [code]);
+  if (
+    typeof code === "string" &&
+    typeof className === "string" &&
+    /^language-mermaid/.test(className.toLowerCase())
+  ) {
+    return (
+      <div ref={demo}>
+        <div id={demoid.current} style={{ display: "none" }} />
+      </div>
+    );
+  }
+  return <code className={String(className)}>{children}</code>;
+}
+
+function ProposalEditor() {
+  const storage = useStorage((root) => root.fieldValues);
+
+  const updateMarkdown = useMutation(({ storage }, value) => {
+    const proposal = storage.get("fieldValues");
+    proposal.set("content", value);
+  }, []);
 
   // 커서
   const [{ cursor }, updateMyPresence] = useMyPresence();
   const others = useOthers();
   const [cursorState, setCursorState] = useState({ mode: CursorMode.Hidden });
 
-  // 커서
   useEffect(() => {
     function onKeyUp(e) {
       if (e.key === "/") {
@@ -56,74 +105,8 @@ export function ProposalEditor() {
     };
   }, [updateMyPresence]);
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        history: false,
-        // focus: false,
-      }),
-      liveblocks,
-    ],
-    editorProps: {
-      attributes: {
-        class: "editor flex-1 flex h-full border rounded-lg p-2 !w-full",
-      },
-    },
-    onUpdate: ({ editor }) => {
-      const content = editor.getHTML();
-      // setIsEditorReady(true);
-      if (root && root.content !== content) {
-        editor.commands.setTextSelection(null);
-        root.set((prev) => ({ ...prev, content }));
-      }
-    },
-    onCreate: () => {}, // 에디터가 생성되면 로딩 해제
-  });
-
-  // 텍스트 에디터
-  useEffect(() => {
-    if (editor && root && root.content) {
-      // 내용이 존재하는 경우에만 setTextSelection을 설정
-      setTimeout(() => {
-        if (editor.getHTML().trim() !== "") {
-          editor.commands.setTextSelection(null);
-        }
-      }, 50); // 약간의 지연을 줘서 선택 적용
-    }
-  }, [editor, root]);
-  const saveContentToDB = useCallback(async (content, ideaId) => {
-    try {
-      const response = await updateProposal(ideaId, content);
-      if (response.status === 200) {
-        console.log("Document saved to the database.");
-      } else {
-        console.error("Failed to save content to DB:", response.status);
-      }
-    } catch (error) {
-      console.error("Failed to save content to DB:", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleUnload = () => {
-      if (editor) {
-        const finalContent = editor.getHTML();
-        saveContentToDB(finalContent, ideaId);
-      }
-    };
-    window.addEventListener("beforeunload", handleUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleUnload);
-      if (editor) editor.destroy();
-    };
-  }, [editor, saveContentToDB, ideaId]);
-
   if (storage === null) {
-    return (
-      <LoadingSpinner
-        message={"기획서 페이지를 로딩중입니다. 잠시만 기다리세요"}
-      />
-    ); // 에디터가 준비되기 전까지 로딩 상태 표시
+    return <div>Loading...</div>;
   }
 
   // 커서
@@ -136,14 +119,29 @@ export function ProposalEditor() {
   function handlePointerLeave(e) {
     updateMyPresence({ cursor: null });
   }
+
   return (
     <>
       <div
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
-        className="h-full w-full max-w-full p-4"
+        className="h-full w-full flex flex-col"
       >
-        {<EditorContent editor={editor} className="editor" />}
+        <div className="flex-1 w-full h-full p-4 bg-gray-100">
+          <MDEditor
+            value={storage?.content}
+            onChange={updateMarkdown}
+            textareaProps={{
+              placeholder: "Mermaid 문법을 사용해 기획서를 작성하세요.",
+            }}
+            height={675}
+            previewOptions={{
+              components: {
+                code: Code,
+              },
+            }}
+          />
+        </div>
 
         {cursor && (
           <div
@@ -178,7 +176,7 @@ export function ProposalEditor() {
                       });
                     }}
                     onKeyDown={(e) => {
-                      console.log(e.key, CursorMode.Chat);
+                      console.log(e.key);
                       if (e.key === "Enter") {
                         setCursorState({
                           mode: CursorMode.Chat,
