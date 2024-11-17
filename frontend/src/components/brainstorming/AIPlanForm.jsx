@@ -64,6 +64,19 @@ const AIPlanForm = ({ onClose, projectId }) => {
   };
 
   const generatePlanHandler = async () => {
+    if (
+      !generatedPlan.background ||
+      !generatedPlan.service_intro ||
+      !generatedPlan.target_users ||
+      !generatedPlan.expected_effects ||
+      !generatedPlan.project_topics ||
+      !generatedPlan.tech_stack ||
+      !generatedPlan.advanced_stack
+    ) {
+      alert("값을 입력해주세요.");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     setIsCompleted(false);
@@ -88,6 +101,20 @@ const AIPlanForm = ({ onClose, projectId }) => {
   };
 
   const goToIdeaBoard = async () => {
+    // check the all of generatedPlan status
+    if (
+      !generatedPlan.background ||
+      !generatedPlan.service_intro ||
+      !generatedPlan.target_users ||
+      !generatedPlan.expected_effects ||
+      !generatedPlan.project_topics ||
+      !generatedPlan.tech_stack ||
+      !generatedPlan.advanced_stack
+    ) {
+      alert("값을 입력해주세요.");
+      return;
+    }
+
     try {
       // 초안 데이터를 기반으로 스티커 생성
       // console.log("아이디어 보드로 이동합니다!", projectId, generatedPlan);
@@ -98,6 +125,8 @@ const AIPlanForm = ({ onClose, projectId }) => {
     } catch (error) {
       // console.error("아이디어 보드 이동 중 오류:", error);
       alert("아이디어 보드로 이동할 수 없습니다. 다시 시도해주세요.");
+    } finally {
+      onClose();
     }
   };
 
