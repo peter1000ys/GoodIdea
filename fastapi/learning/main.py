@@ -49,6 +49,7 @@ async def trainingALL():
             break
         
         hits = data["hits"]["hits"]
+        print("datetime: ", hits[-1]["date"], " / page : ", page )
         if not hits:
             break
         
@@ -64,8 +65,8 @@ async def training():
     page_size = 1000
     page = 0
     yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y%m%d")
-    start_date = "20241112"
-    end_date = "20241117"
+    # start_date = "20241112"
+    # end_date = "20241117"
 
     while True:
         try:
@@ -75,8 +76,8 @@ async def training():
                         "query": {
                             "range": {
                                 "date": {
-                                    "gte": start_date,
-                                    "lte": end_date,
+                                    "gte": yesterday,
+                                    "lte": yesterday,
                                     "format": "yyyyMMdd"
                                 }
                             }
