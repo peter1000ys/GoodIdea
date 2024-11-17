@@ -34,6 +34,7 @@ es = Elasticsearch("http://elasticsearch:9200", basic_auth=(ELASTIC_ID, ELASTIC_
 
 @app.post("/api/v1/training/all")
 async def trainingALL():
+    print("Trainig All Start")
     page_size = 1000
     page = 0
     
