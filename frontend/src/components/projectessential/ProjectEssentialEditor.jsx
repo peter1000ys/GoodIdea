@@ -216,7 +216,7 @@ function ProjectEssentialEditor() {
                       });
                     }}
                     onKeyDown={(e) => {
-                      console.log(e.key);
+                      // console.log(e.key);
                       if (e.key === "Enter") {
                         setCursorState({
                           mode: CursorMode.Chat,

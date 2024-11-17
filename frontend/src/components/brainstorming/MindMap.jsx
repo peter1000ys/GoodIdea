@@ -8,7 +8,7 @@ const MindMap = ({ mindMapData, onClick }) => {
   const clickHandle = useCallback(
     (event, d) => {
       onClick(d.id);
-      console.log("Clicked node:", d);
+      // console.log("Clicked node:", d);
     },
     [onClick]
   );

@@ -32,7 +32,7 @@ function ApiSpecTable() {
 
   // 커서
   useEffect(() => {
-    console.log(others);
+    // console.log(others);
     function onKeyUp(e) {
       if (e.key === "/") {
         setCursorState({
@@ -304,7 +304,7 @@ function ApiSpecTable() {
                     });
                   }}
                   onKeyDown={(e) => {
-                    console.log(e.key, CursorMode.Chat);
+                    // console.log(e.key, CursorMode.Chat);
                     if (e.key === "Enter") {
                       setCursorState({
                         mode: CursorMode.Chat,

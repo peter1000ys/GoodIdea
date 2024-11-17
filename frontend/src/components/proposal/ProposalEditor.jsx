@@ -176,7 +176,6 @@ function ProposalEditor() {
                       });
                     }}
                     onKeyDown={(e) => {
-                      console.log(e.key);
                       if (e.key === "Enter") {
                         setCursorState({
                           mode: CursorMode.Chat,
