@@ -64,6 +64,8 @@ async def training():
     page_size = 1000
     page = 0
     yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y%m%d")
+    start_date = "20241112"
+    end_date = "20241117"
 
     while True:
         try:
@@ -73,8 +75,8 @@ async def training():
                         "query": {
                             "range": {
                                 "date": {
-                                    "gte": yesterday,
-                                    "lte": yesterday,
+                                    "gte": start_date,
+                                    "lte": end_date,
                                     "format": "yyyyMMdd"
                                 }
                             }
