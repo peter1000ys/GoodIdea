@@ -49,7 +49,7 @@ async def trainingALL():
             break
         
         hits = data["hits"]["hits"]
-        print("datetime: ", hits[-1]["date"], " / page : ", page )
+        print("datetime: ", hits[-1]["_source"]["date"], " / page : ", page )
         if not hits:
             break
         
