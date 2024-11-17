@@ -7,6 +7,7 @@ import {
 } from "@liveblocks/react";
 import { CursorMode, colorName } from "../../global";
 import { Cursor } from "../common/Cursor";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 function RequirementsTable() {
   const storage = useStorage((storage) => storage.requirements); // 항상 최상위에서 호출
@@ -110,7 +111,11 @@ function RequirementsTable() {
   // };
   // storage가 초기화되지 않은 경우 로딩 상태 표시
   if (!storage) {
-    return <div>Loading...</div>;
+    return (
+      <LoadingSpinner
+        message={"요구사항 명세서를 로드 중입니다. 잠시만 기다려주세요!"}
+      />
+    );
   }
 
   return (

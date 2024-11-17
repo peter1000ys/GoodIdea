@@ -2,6 +2,7 @@ import { useMutation, useStorage } from "@liveblocks/react";
 import MDEditor from "@uiw/react-md-editor";
 import mermaid from "mermaid";
 import { Children, isValidElement, useEffect, useRef } from "react";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 // Markdown에서 코드를 추출하는 함수
 const getCode = (arr = []) =>
@@ -70,7 +71,11 @@ function ProposalEditor() {
   }, []);
 
   if (!storage) {
-    return <div>Loading...</div>;
+    return (
+      <LoadingSpinner
+        message={"기획서를 로드 중입니다. 잠시만 기다려주세요!"}
+      />
+    );
   }
 
   return (
