@@ -79,8 +79,8 @@ def crawl_daum_news(target_date):
     return articles
 
 def crawl_daum_news_all():
-    start_date = datetime(datetime.now().year, 10, 18)
-    end_date = datetime.now() - timedelta(days=6)
+    start_date = datetime(datetime.now().year, 11, 12)
+    end_date = datetime.now() - timedelta(days=1)
     current_date = start_date
 
     while current_date <= end_date:
