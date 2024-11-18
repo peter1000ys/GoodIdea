@@ -213,7 +213,7 @@ def createAIPlanner(OPEN_AI_KEY, payload_dict:dict):
 
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o",
         messages=[
             {"role": "system", "content": "You are an AI assistant that drafts concise project proposal summaries. Each section (Background, Service Introduction, Target Users, Expected Effects) must be filled out with meaningful content."},
             {"role": "user", "content": prompt}
