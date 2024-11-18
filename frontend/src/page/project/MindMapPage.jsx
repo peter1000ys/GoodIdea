@@ -20,6 +20,8 @@ import GithubCarousel from "../../components/brainstorming/GithubCarousel";
 import NewsCarousel from "../../components/brainstorming/NewsCarousel";
 import CarouselItemSkeleton from "../../components/skeleton/CarouselItemSkeleton";
 import useGlobalLoadingStore from "../../store/useGlobalLoadingStore";
+import DeepGlowingButton from "../../components/brainstorming/DeepGlowingButton";
+import { colorName } from "../../global";
 
 function MindMapPage() {
   const params = useParams();
@@ -94,6 +96,7 @@ function MindMapPage() {
             mainKeyword,
             words
           );
+          console.log(newNodes, newLinks, "nodelinks");
 
           setMindMapData({
             nodes: newNodes,
@@ -134,7 +137,6 @@ function MindMapPage() {
         mainKeyword: searchKeyword,
         keywords: SubKeywords,
       });
-
       // 세팅
       setMindMapData({
         nodes: newNodes,
@@ -168,6 +170,54 @@ function MindMapPage() {
     [selectedDetail, mindMapData, handleDetailClick]
   );
 
+  const upgradeMindMap = async () => {
+    const nextNode = [];
+    const nextLinks = [];
+
+    await Promise.all(
+      mindMapData.nodes
+        .filter((i) => i.category !== "center") // center 노드는 제외
+        .map(async (node) => {
+          const keywords = await fetchMindMapSubKeyword(node.id); // 각 노드에 대한 서브 키워드 가져오기
+
+          // 새 노드 추가 (중복 방지)
+          keywords.forEach((keyword, idx) => {
+            if (
+              !mindMapData.nodes.some((n) => n.id === keyword) &&
+              !nextNode.some((n) => n.id === keyword)
+            ) {
+              nextNode.push({
+                id: keyword,
+                category: colorName[idx % colorName.length],
+              });
+            }
+          });
+
+          // 링크 추가 (중복 방지)
+          keywords.forEach((subNode) => {
+            if (
+              !mindMapData.links.some(
+                (link) => link.source === node.id && link.target === subNode
+              ) &&
+              !nextLinks.some(
+                (link) => link.source === node.id && link.target === subNode
+              )
+            ) {
+              nextLinks.push({
+                source: node.id, // 링크의 시작점은 노드의 ID
+                target: subNode, // 링크의 끝점은 서브 키워드 ID
+              });
+            }
+          });
+        })
+    );
+
+    // MindMap 데이터 업데이트
+    setMindMapData({
+      nodes: [...mindMapData.nodes, ...nextNode], // 기존 노드와 새 노드 병합
+      links: [...mindMapData.links, ...nextLinks], // 기존 링크와 새 링크 병합
+    });
+  };
   return (
     <>
       <Helmet>
@@ -186,6 +236,7 @@ function MindMapPage() {
         <div className="m-auto w-full my-2 max-w-5xl relative">
           {/* 추천키워드, AI플랜버튼 영역 */}
           <CloudOverlay
+            handleExtendClick={upgradeMindMap}
             setSearchKeyword={setSearchKeyword}
             handleRecommend={handleSearch}
             setIsPlanOpen={setIsPlanOpen}
