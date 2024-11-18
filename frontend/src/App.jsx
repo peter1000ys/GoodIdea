@@ -24,7 +24,7 @@ console.log("Public Key from env:", import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY);
 
 const client = createClient({
   publicApiKey:
-    "pk_dev_nJXrR6Wtow_BqktuYQvAWmBdZ7ybi5UK7O-0_Ix1DlBiVGTSKzWxCSZeSDT5oWsh",
+    "pk_prod_qLJQWLsr3vhqLuEQo_2utdPDMYXeo4GMlwAVgokjoielYF1VUDp_7g2qd8jX_HJO",
 });
 // 산출물 목록들 페이지
 const LazyMindMapPage = React.lazy(() => import("./page/project/MindMapPage"));
