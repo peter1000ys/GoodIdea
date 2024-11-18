@@ -231,7 +231,7 @@ const ModalPlanning = ({ selectedSticker }) => {
             text={"수정"}
           />
           {mainIdea === selectedSticker.ideaId
-            ? leader === userInfo.username && (
+            ? leader !== userInfo.username && (
                 <DefaultButton
                   onClick={handleUnSelectIdea}
                   className=""
