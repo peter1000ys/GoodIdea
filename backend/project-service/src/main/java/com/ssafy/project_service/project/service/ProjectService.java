@@ -165,7 +165,7 @@ public class ProjectService {
                                     .stream()
                                     .map( up -> {
                                         UserDto us = up.getUser();
-                                        return UserDto.builder()
+                                        return us == null ? null : UserDto.builder()
                                                 .id(us.getId())
                                                 .name(us.getName())
                                                 .grade(us.getGrade())
