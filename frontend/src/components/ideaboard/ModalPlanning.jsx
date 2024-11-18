@@ -5,6 +5,7 @@ import {
   unselectIdea,
   createIdeaComment,
   fetchIdeaDetail,
+  updateIdea, // 추가된 updateIdea 함수
 } from "../../api/axios";
 import { useUserStore } from "../../store/useUserStore";
 import useProjectStore from "../../store/useProjectStore";
@@ -41,21 +42,32 @@ const ModalPlanning = ({ selectedSticker }) => {
     advancedStack: useRef(null),
   };
 
+  // `stickerDetail` 함수를 컴포넌트 외부에 정의하여 재사용 가능하게 함
+  const stickerDetail = async () => {
+    try {
+      const result = await fetchIdeaDetail(param?.id, selectedSticker.ideaId);
+      setComments(result.comments || []);
+      setFormData({
+        serviceName: result.serviceName || "",
+        background: result.background || "",
+        introduction: result.introduction || "",
+        target: result.target || "",
+        expectedEffect: result.expectedEffect || "",
+        projectTopic: result.projectTopic || "",
+        techStack: result.techStack || "",
+        advancedStack: result.advancedStack || "",
+      });
+    } catch (error) {
+      console.error("Error fetching sticker detail:", error);
+    }
+  };
+
   // `formData` 초기화
   useEffect(() => {
     if (selectedSticker) {
-      setFormData({
-        serviceName: selectedSticker.serviceName || "",
-        background: selectedSticker.background || "",
-        introduction: selectedSticker.introduction || "",
-        target: selectedSticker.target || "",
-        expectedEffect: selectedSticker.expectedEffect || "",
-        projectTopic: selectedSticker.projectTopic || "",
-        techStack: selectedSticker.techStack || "",
-        advancedStack: selectedSticker.advancedStack || "",
-      });
+      stickerDetail();
     }
-  }, [selectedSticker]);
+  }, [selectedSticker, param]);
 
   // `formData` 변경 핸들러
   const handleFormChange = (e, fieldName) => {
@@ -75,48 +87,24 @@ const ModalPlanning = ({ selectedSticker }) => {
       const success = await selectIdea(selectedSticker.ideaId);
       if (success) {
         alert("아이디어가 성공적으로 채택되었습니다.");
+        // 필요 시, 추가적인 로직을 여기에 작성
       } else {
         alert("아이디어 채택에 실패했습니다.");
       }
     }
   };
 
-  useEffect(() => {
-    const stickerDetail = async () => {
-      try {
-        const result = await fetchIdeaDetail(param?.id, selectedSticker.ideaId);
-        setComments(result.comments || []);
-      } catch (error) {
-        console.error("Error fetching sticker detail:", error);
-      }
-    };
-
-    if (selectedSticker && selectedSticker.ideaId) {
-      stickerDetail(); // 함수 호출
-    }
-  }, [selectedSticker, param]);
-
   const handleUnSelectIdea = async () => {
     if (selectedSticker) {
       const success = await unselectIdea(selectedSticker.ideaId);
       if (success) {
         alert("아이디어 채택이 성공적으로 취소되었습니다.");
+        // 필요 시, 추가적인 로직을 여기에 작성
       } else {
         alert("아이디어 채택 취소에 실패했습니다.");
       }
     }
   };
-
-  const seviceName = { label: "서비스 명", name: "serviceName" };
-  const inputDatas = [
-    { label: "기획 배경", name: "background" },
-    { label: "서비스 소개", name: "introduction" },
-    { label: "서비스 타겟", name: "target" },
-    { label: "기대 효과", name: "expectedEffect" },
-    { label: "주제 추천", name: "projectTopic" },
-    { label: "추천 기술 스택", name: "techStack" },
-    { label: "고급 기술 스택", name: "advancedStack" },
-  ];
 
   const handleSend = async () => {
     if (commentInput.trim() === "") {
@@ -139,6 +127,40 @@ const ModalPlanning = ({ selectedSticker }) => {
     }
   };
 
+  const handleUpdateIdea = async () => {
+    try {
+      const updatedData = {
+        serviceName: formData.serviceName,
+        background: formData.background,
+        introduction: formData.introduction,
+        target: formData.target,
+        expectedEffect: formData.expectedEffect,
+        projectTopic: formData.projectTopic,
+        techStack: formData.techStack,
+        advancedStack: formData.advancedStack,
+        // 추가적으로 필요한 필드가 있다면 여기에 포함
+        x: selectedSticker.x,
+        y: selectedSticker.y,
+        color: selectedSticker.color,
+        darkColor: selectedSticker.darkColor,
+        animation: selectedSticker.animation,
+      };
+      console.log("Updating idea with data:", updatedData); // 디버깅용 로그
+      const result = await updateIdea(selectedSticker.ideaId, updatedData);
+      console.log("Update idea result:", result); // 디버깅용 로그
+      if (result) {
+        alert("아이디어가 성공적으로 업데이트되었습니다.");
+        // 업데이트 후 다시 데이터를 불러와서 UI를 즉시 반영
+        await stickerDetail();
+      } else {
+        alert("아이디어 업데이트에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("Error updating idea:", error);
+      alert("아이디어 업데이트 중 오류가 발생했습니다.");
+    }
+  };
+
   // 자동 높이 조절 함수
   const autoResizeTextarea = (ref) => {
     if (ref.current) {
@@ -154,20 +176,34 @@ const ModalPlanning = ({ selectedSticker }) => {
     });
   }, [formData]);
 
+  // 올바르게 정의된 `serviceName`과 `inputDatas`
+  const serviceName = { label: "서비스 명", name: "serviceName" };
+  const inputDatas = [
+    { label: "기획 배경", name: "background" },
+    { label: "서비스 소개", name: "introduction" },
+    { label: "서비스 타겟", name: "target" },
+    { label: "기대 효과", name: "expectedEffect" },
+    { label: "주제 추천", name: "projectTopic" },
+    { label: "추천 기술 스택", name: "techStack" },
+    { label: "고급 기술 스택", name: "advancedStack" },
+  ];
+
   return (
     <div className="flex flex-row h-full">
       {/* 왼쪽 정보 섹션 */}
       <div className="flex-1 p-6 h-full border-black border-r-[1px] space-y-4 overflow-auto">
         <div className="grid grid-cols-4 gap-10">
-          <div className="col-span-1 flex items-center">{seviceName.label}</div>
+          <div className="col-span-1 flex items-center">
+            {serviceName.label}
+          </div>
           <div className="col-span-3">
             <input
               type="text"
-              name={seviceName.name}
+              name={serviceName.name}
               className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
-              placeholder={`${seviceName.label}을 입력해주세요`}
+              placeholder={`${serviceName.label}을 입력해주세요`}
               value={formData.serviceName}
-              onChange={(e) => handleFormChange(e, seviceName.name)}
+              onChange={(e) => handleFormChange(e, serviceName.name)}
             />
           </div>
           {inputDatas.map((field) => (
@@ -186,27 +222,32 @@ const ModalPlanning = ({ selectedSticker }) => {
             </React.Fragment>
           ))}
         </div>
-        {mainIdea === selectedSticker.ideaId
-          ? leader === userInfo.username && (
-              <div className="flex flex-1 justify-end pr-2 mb-8">
+        {/* "수정" 버튼 추가 */}
+        <div className="flex flex-1 justify-end pr-2 mt-4">
+          <DefaultButton
+            onClick={handleUpdateIdea}
+            className="mr-4"
+            theme="bright"
+            text={"수정"}
+          />
+          {mainIdea === selectedSticker.ideaId
+            ? leader === userInfo.username && (
                 <DefaultButton
                   onClick={handleUnSelectIdea}
                   className=""
                   theme="bright"
                   text={"아이디어 채택 취소"}
                 />
-              </div>
-            )
-          : leader === userInfo.username && (
-              <div className="flex flex-1 justify-end pr-2 mb-8">
+              )
+            : leader === userInfo.username && (
                 <DefaultButton
                   onClick={handleSelectIdea}
                   className=""
                   theme="bright"
                   text={"아이디어 채택"}
                 />
-              </div>
-            )}
+              )}
+        </div>
       </div>
 
       {/* 오른쪽 댓글 섹션 */}
