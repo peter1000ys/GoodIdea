@@ -19,14 +19,14 @@ import NotYetSearchText from "../../components/brainstorming/NoSearchText";
 import GithubCarousel from "../../components/brainstorming/GithubCarousel";
 import NewsCarousel from "../../components/brainstorming/NewsCarousel";
 import CarouselItemSkeleton from "../../components/skeleton/CarouselItemSkeleton";
-import useGlobalLoadingStore from "../../store/useGlobalLoadingStore";
 import { colorName } from "../../global";
+import LoadingSpinner2 from "../../components/common/LoadingSpinner2";
 
 function MindMapPage() {
   const params = useParams();
   const { id } = useParams();
 
-  const { loading, startLoading, stopLoading } = useGlobalLoadingStore();
+  // const { loading, startLoading, stopLoading } = useGlobalLoadingStore();
   const [isPlanOpen, setIsPlanOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedDetail, setSelectedDetail] = useState(null);
@@ -40,6 +40,7 @@ function MindMapPage() {
   const [githubDatas, setGithubdatas] = useState([]);
   const [newsDatas, setNewsdatas] = useState([]);
   const [dataLoading, setDataLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // 스크롤 애니메이션 효과
@@ -85,7 +86,8 @@ function MindMapPage() {
   useEffect(() => {
     const init = async () => {
       try {
-        startLoading();
+        // startLoading();
+        setLoading(true);
         const response = await fetchMindMap(params?.id);
         if (response) {
           // 이미 생성된 마인드맵이 있으면
@@ -104,14 +106,15 @@ function MindMapPage() {
           setSearchKeyword(newNodes[0]?.id);
         }
       } finally {
-        stopLoading();
+        setLoading(false);
+        // stopLoading();
       }
     };
     if (params.id === undefined) return;
 
     if (!handleDetailClick) return;
     init();
-  }, [params.id, handleDetailClick, startLoading, stopLoading]);
+  }, [params.id, handleDetailClick]);
 
   // 마인드맵 검색
   const handleSearch = async () => {
@@ -243,6 +246,11 @@ function MindMapPage() {
         </div>
 
         {/* 컨텐츠 레이아웃 */}
+        {loading && (
+          <div className="flex justify-center">
+            <LoadingSpinner2 />
+          </div>
+        )}
         {!loading && (
           <div className="flex justify-center">
             {/* 컨텐츠 영역 */}
