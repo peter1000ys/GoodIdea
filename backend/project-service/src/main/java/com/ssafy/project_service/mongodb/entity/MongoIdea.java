@@ -1,7 +1,5 @@
 package com.ssafy.project_service.mongodb.entity;
 
-
-
 import com.ssafy.project_service.mongodb.entity.apiDoc.ApiDocs;
 import com.ssafy.project_service.mongodb.entity.reqDoc.ReqDocs;
 import lombok.Getter;

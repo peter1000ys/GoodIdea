@@ -7,8 +7,6 @@ import com.ssafy.project_service.mongodb.entity.reqDoc.UpdateReqDoc;
 import com.ssafy.project_service.mongodb.service.MongoIdeaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
