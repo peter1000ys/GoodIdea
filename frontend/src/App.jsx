@@ -21,10 +21,9 @@ const LazyProjectEssentialPage = React.lazy(() =>
 
 // 환경변수 확인
 console.log("Public Key from env:", import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY);
-
+const PublicApiKey = import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY;
 const client = createClient({
-  publicApiKey:
-    "pk_prod_qLJQWLsr3vhqLuEQo_2utdPDMYXeo4GMlwAVgokjoielYF1VUDp_7g2qd8jX_HJO",
+  publicApiKey: `${PublicApiKey}`,
 });
 // 산출물 목록들 페이지
 const LazyMindMapPage = React.lazy(() => import("./page/project/MindMapPage"));
@@ -55,7 +54,7 @@ function App() {
             name: "Anonymous", // 모든 사용자에게 'Anonymous'라는 이름을 반환
           }));
         }}
-        publicApiKey="pk_dev_nJXrR6Wtow_BqktuYQvAWmBdZ7ybi5UK7O-0_Ix1DlBiVGTSKzWxCSZeSDT5oWsh"
+        publicApiKey={PublicApiKey}
       >
         <BrowserRouter>
           <Routes>
