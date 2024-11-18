@@ -111,7 +111,7 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
 @app.get("/api/v1/search/recommend")
 async def recommend(keyword: str = Query(..., description="검색어")):
     # recommended_tokens = hybrid_search(keyword, es)
-    return {"data": recommend_words(keyword)}
+    return {"data": recommend_words(keyword, es)}
 
 @app.post("/api/v1/search/ai-planner")
 async def createPlanner(payload: dict):
