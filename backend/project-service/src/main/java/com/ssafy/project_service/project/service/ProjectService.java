@@ -82,14 +82,10 @@ public class ProjectService {
                 .build()
         );
 
-//        // MongoDB에 동일한 프로젝트 ID로 프로젝트 저장
-//        MongoIdea mongoIdea = new MongoIdea();
-//        mongoIdea.setId(project.getId());  // 동일한 ID 설정
-//        mongoIdea.setErd(mongoIdeaService.getSampleErdDoc());  // 예시 데이터
-//        mongoIdea.setFlowChart("default flow chart");  // 예시 데이터
-//        mongoIdeaRepository.save(mongoIdea);
 
-        users.forEach(us -> {
+        users.stream()
+                .filter(Objects::nonNull) // null 값 제거
+                .forEach(us -> {
                     Optional<UserDto> member = userServiceClient.getUser(us.getUsername());
                     if (member.isEmpty()) {
                         member = userServiceClient.joinMember( UserDto.builder()
@@ -97,10 +93,10 @@ public class ProjectService {
                                 .roleType(RoleType.USER)
                                 .build());
                     }
-            userProjectRepository.save(UserProject.builder()
-                    .project(project)
-                    .userId(member.get().getId())
-                    .build());
+                    userProjectRepository.save(UserProject.builder()
+                            .project(project)
+                            .userId(member.get().getId())
+                            .build());
                 });
 
         return ProjectResponseDto.builder()
