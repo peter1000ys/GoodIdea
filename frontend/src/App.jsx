@@ -10,7 +10,6 @@ import CommonLayout from "./components/CommonLayout";
 import MainPage from "./page/MainPage";
 import NotFoundPage from "./page/NotFoundPage";
 import LoginPage from "./page/LoginPage";
-import liveblocksClient from "../liveblocks.config"; // Liveblocks 클라이언트 import
 
 import LoadingSpinner from "./components/common/LoadingSpinner";
 
