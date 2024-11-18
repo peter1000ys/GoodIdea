@@ -74,7 +74,9 @@ function IdeaBoardPage() {
   const handleStickerClick = (index) => {
     const clickedSticker = coordinates[index];
     setSelectedSticker((prevSelectedSticker) =>
-      prevSelectedSticker === clickedSticker ? null : clickedSticker
+      prevSelectedSticker?.ideaId === clickedSticker.ideaId
+        ? null
+        : clickedSticker
     );
   };
 
