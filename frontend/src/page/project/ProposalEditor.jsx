@@ -5,14 +5,12 @@ import StarterKit from "@tiptap/starter-kit";
 import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 import { useMyPresence, useOthers, useStorage } from "@liveblocks/react";
 import { updateProposal } from "../../api/axios";
-import "./ProposalEditor.css";
 import { CursorMode, colorName } from "../../global";
 import { Cursor } from "../../components/common/Cursor";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 export function ProposalEditor() {
   const { ideaId } = useParams();
-  // const [isEditorReady, setIsEditorReady] = useState(false); // 로딩 상태 초기화
   const liveblocks = useLiveblocksExtension({
     publicApiKey: import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY,
   });

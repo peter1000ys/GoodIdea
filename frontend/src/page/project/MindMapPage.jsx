@@ -20,7 +20,6 @@ import GithubCarousel from "../../components/brainstorming/GithubCarousel";
 import NewsCarousel from "../../components/brainstorming/NewsCarousel";
 import CarouselItemSkeleton from "../../components/skeleton/CarouselItemSkeleton";
 import useGlobalLoadingStore from "../../store/useGlobalLoadingStore";
-import DeepGlowingButton from "../../components/brainstorming/DeepGlowingButton";
 import { colorName } from "../../global";
 
 function MindMapPage() {
@@ -96,7 +95,6 @@ function MindMapPage() {
             mainKeyword,
             words
           );
-          console.log(newNodes, newLinks, "nodelinks");
 
           setMindMapData({
             nodes: newNodes,
@@ -171,6 +169,7 @@ function MindMapPage() {
   );
 
   const upgradeMindMap = async () => {
+    alert("베타 기능입니다.");
     const nextNode = [];
     const nextLinks = [];
 
