@@ -62,7 +62,7 @@ public class ProjectService {
     * @param GitLabProjectResponseDto
     * @param List<GitLabUserResponseDto>
     */
-    @Transactional
+//    @Transactional
     public ProjectResponseDto createProject(UserDto user, ProjectCreateRequestDto dto, GitLabProjectResponseDto myProject, List<GitLabUserResponseDto> users) {
 
 //        같은 타입의 프로젝트를 생성하려할 경우 에러 발생
@@ -93,9 +93,9 @@ public class ProjectService {
                                 .roleType(RoleType.USER)
                                 .build());
                     }
-                    userProjectRepository.save(UserProject.builder()
+                    userProjectRepository.saveAndFlush(UserProject.builder()
                             .project(project)
-                            .userId(member.get().getId())
+                            .userId(userServiceClient.getUser(us.getUsername()).get().getId())
                             .build());
                 });
 
