@@ -71,7 +71,7 @@
 //        // given
 //        ProjectCreateRequestDto requestDto = ProjectCreateRequestDto.builder()
 //                .projectId(123L)
-//                .name("Test Project")
+//                .serviceName("Test Project")
 //                .projectType(ProjectType.공통)
 //                .description("Test project description")
 //                .build();
@@ -79,7 +79,7 @@
 //        // GitLabProjectResponseDto builder 사용
 //        GitLabProjectResponseDto gitLabProjectResponseDto = GitLabProjectResponseDto.builder()
 //                .project_id(123L)
-//                .name("gitlab-project")
+//                .serviceName("gitlab-project")
 //                .webUrl("https://gitlab.com/test-project")
 //                .createdAt("2024-10-25T12:00:00Z")
 //                .build();
@@ -96,10 +96,10 @@
 //
 //        ProjectResponseDto projectResponseDto = ProjectResponseDto.builder()
 //                .project_id(1L)
-//                .name("Test Project")
+//                .serviceName("Test Project")
 //                .projectType(ProjectType.공통)
 //                .description("Test project description")
-//                .gitlab_name("gitlab-project")
+//                .gitlabName("gitlab-project")
 //                .gitlab_url("https://gitlab.com/test-project")
 //                .gitlab_project_id(123L)
 //                .members(List.of(
@@ -139,7 +139,7 @@
 //                        preprocessResponse(prettyPrint()),
 //                        requestFields(
 //                                fieldWithPath("projectId").description("GitLab 프로젝트 ID"),
-//                                fieldWithPath("name").description("프로젝트 이름"),
+//                                fieldWithPath("serviceName").description("프로젝트 이름"),
 //                                fieldWithPath("projectType").description("프로젝트 유형 (예: 공통, 특화 등)"),
 //                                fieldWithPath("description").description("프로젝트 설명")
 //                        ),
@@ -149,10 +149,10 @@
 //                                fieldWithPath("message").description("응답 메시지"),
 //                                fieldWithPath("data.project_id").description("생성된 프로젝트 ID"),
 //                                fieldWithPath("data.gitlab_project_id").description("GitLab 프로젝트 ID"),
-//                                fieldWithPath("data.name").description("프로젝트 이름"),
+//                                fieldWithPath("data.serviceName").description("프로젝트 이름"),
 //                                fieldWithPath("data.projectType").description("프로젝트 유형"),
 //                                fieldWithPath("data.description").description("프로젝트 설명"),
-//                                fieldWithPath("data.gitlab_name").description("GitLab 프로젝트 이름"),
+//                                fieldWithPath("data.gitlabName").description("GitLab 프로젝트 이름"),
 //                                fieldWithPath("data.gitlab_url").description("GitLab 프로젝트 URL"),
 //                                fieldWithPath("data.members[].id").description("프로젝트 멤버의 ID"),
 //                                fieldWithPath("data.members[].username").description("프로젝트 멤버의 사용자 이름"),
@@ -169,17 +169,17 @@
 //        List<ProjectResponseDto> mockProjects = List.of(
 //                ProjectResponseDto.builder()
 //                        .project_id(1L)
-//                        .name("Test Project 1")
+//                        .serviceName("Test Project 1")
 //                        .description("Test Description 1")
-//                        .gitlab_name("Test Gitlab Name 1")
+//                        .gitlabName("Test Gitlab Name 1")
 //                        .gitlab_url("http://gitlab.com/test1")
 //                        .projectType(ProjectType.자율)
 //                        .build(),
 //                ProjectResponseDto.builder()
 //                        .project_id(2L)
-//                        .name("Test Project 2")
+//                        .serviceName("Test Project 2")
 //                        .description("Test Description 2")
-//                        .gitlab_name("Test Gitlab Name 2")
+//                        .gitlabName("Test Gitlab Name 2")
 //                        .gitlab_url("http://gitlab.com/test2")
 //                        .projectType(ProjectType.공통)
 //                        .build()
@@ -210,9 +210,9 @@
 //                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
 //                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
 //                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("프로젝트 ID"),
-//                                fieldWithPath("data.name").type(JsonFieldType.STRING).description("프로젝트 이름"),
+//                                fieldWithPath("data.serviceName").type(JsonFieldType.STRING).description("프로젝트 이름"),
 //                                fieldWithPath("data.description").type(JsonFieldType.STRING).description("프로젝트 설명"),
-//                                fieldWithPath("data.gitlab_name").type(JsonFieldType.STRING).description("Gitlab 프로젝트 이름"),
+//                                fieldWithPath("data.gitlabName").type(JsonFieldType.STRING).description("Gitlab 프로젝트 이름"),
 //                                fieldWithPath("data.gitlab_url").type(JsonFieldType.STRING).description("Gitlab 프로젝트 URL"),
 //                                fieldWithPath("data.projectType").type(JsonFieldType.STRING).description("프로젝트 유형")
 //                        )
@@ -245,9 +245,9 @@
 //                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
 //                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("프로젝트 목록").optional(),
 //                                fieldWithPath("data[].project_id").type(JsonFieldType.NUMBER).description("프로젝트 ID").optional(),
-//                                fieldWithPath("data[].name").type(JsonFieldType.STRING).description("프로젝트 이름").optional(),
+//                                fieldWithPath("data[].serviceName").type(JsonFieldType.STRING).description("프로젝트 이름").optional(),
 //                                fieldWithPath("data[].description").type(JsonFieldType.STRING).description("프로젝트 설명").optional(),
-//                                fieldWithPath("data[].gitlab_name").type(JsonFieldType.STRING).description("Gitlab 프로젝트 이름").optional(),
+//                                fieldWithPath("data[].gitlabMame").type(JsonFieldType.STRING).description("Gitlab 프로젝트 이름").optional(),
 //                                fieldWithPath("data[].gitlab_url").type(JsonFieldType.STRING).description("Gitlab 프로젝트 URL").optional(),
 //                                fieldWithPath("data[].projectType").type(JsonFieldType.STRING).description("프로젝트 유형").optional()
 //                        )
@@ -263,9 +263,9 @@
 //        System.out.println(userRepository.findByUsername("asd").toString());
 //        ProjectResponseDto updatedResponse = ProjectResponseDto.builder()
 //                .project_id(1L)
-//                .name("Updated Project")
+//                .serviceName("Updated Project")
 //                .description("Updated Description")
-//                .gitlab_name("Updated Gitlab Name")
+//                .gitlabName("Updated Gitlab Name")
 //                .gitlab_url("http://gitlab.com/updated")
 //                .projectType(ProjectType.자율)
 //                .build();
@@ -295,7 +295,7 @@
 //                                parameterWithName("projectId").description("수정할 프로젝트의 ID")
 //                        ),
 //                        requestFields(
-//                                fieldWithPath("name").type(JsonFieldType.STRING).description("수정할 프로젝트 이름"),
+//                                fieldWithPath("serviceName").type(JsonFieldType.STRING).description("수정할 프로젝트 이름"),
 //                                fieldWithPath("description").type(JsonFieldType.STRING).description("수정할 프로젝트 설명"),
 //                                fieldWithPath("projectType").type(JsonFieldType.STRING).description("수정할 프로젝트 유형")
 //                        ),
@@ -304,9 +304,9 @@
 //                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
 //                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
 //                                fieldWithPath("data.project_id").type(JsonFieldType.NUMBER).description("프로젝트 ID"),
-//                                fieldWithPath("data.name").type(JsonFieldType.STRING).description("프로젝트 이름"),
+//                                fieldWithPath("data.serviceName").type(JsonFieldType.STRING).description("프로젝트 이름"),
 //                                fieldWithPath("data.description").type(JsonFieldType.STRING).description("프로젝트 설명"),
-//                                fieldWithPath("data.gitlab_name").type(JsonFieldType.STRING).description("Gitlab 프로젝트 이름"),
+//                                fieldWithPath("data.gitlabName").type(JsonFieldType.STRING).description("Gitlab 프로젝트 이름"),
 //                                fieldWithPath("data.gitlab_url").type(JsonFieldType.STRING).description("Gitlab 프로젝트 URL"),
 //                                fieldWithPath("data.projectType").type(JsonFieldType.STRING).description("프로젝트 유형")
 //                        )

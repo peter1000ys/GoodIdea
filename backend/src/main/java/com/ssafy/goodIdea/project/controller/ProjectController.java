@@ -88,7 +88,7 @@ public class ProjectController {
     @DeleteMapping("/{projectId}/delete")
     public ApiResponse<MsgType> deleteProject(@CurrentUser User user,
                                               @PathVariable("projectId") Long projectId) {
-        projectService.deleteProject(projectId);
+        projectService.deleteProject(user, projectId);
         return ApiResponse.ok(MsgType.PROJECT_DELETE_SUCCESS);
     }
 

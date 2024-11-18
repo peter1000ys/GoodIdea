@@ -15,7 +15,22 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     hmr: {
-      protocol: "ws", // 또는 'wss'를 사용할 수 있습니다.
+      protocol: "ws",
+    },
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      "/ws": {
+        target: "ws://localhost:8080",
+        ws: true,
+      },
+      "/gateway": {
+        target: "https://goodidea.world",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });

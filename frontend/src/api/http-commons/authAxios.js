@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
+// const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = "https://goodidea.world/";
 const REFRESH_URL = BASE_URL + "/main/jwt/refresh";
 
-const authAxios = axios.create({
+const authAxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000, // 10초
   headers: {
@@ -14,7 +14,7 @@ const authAxios = axios.create({
 });
 
 // 요청 인터셉터
-authAxios.interceptors.request.use(
+authAxiosInstance.interceptors.request.use(
   async (config) => {
     const token = localStorage.getItem("accessToken");
 
@@ -28,7 +28,7 @@ authAxios.interceptors.request.use(
 );
 
 // 응답 인터셉터
-authAxios.interceptors.response.use(
+authAxiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -38,18 +38,16 @@ authAxios.interceptors.response.use(
 
       try {
         const newToken = await refreshToken();
-        authAxios.defaults.headers.common[
+        authAxiosInstance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${newToken}`;
-        return authAxios(originalRequest); // 원래의 요청을 새로운 토큰으로 재전송
+        return authAxiosInstance(originalRequest); // 원래의 요청을 새로운 토큰으로 재전송
       } catch (refreshError) {
         // 리프레시 토큰 실패 처리
         console.error("Failed to refresh token:", refreshError);
         // 로그아웃 처리나 리다이렉트 등 추가적인 처리를 여기에 구현
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("userStore");
-        window.location.href = "/login";
+        // clearAuthData();
+        // window.location.href = "/login";
         return Promise.reject(refreshError);
       }
     }
@@ -57,6 +55,11 @@ authAxios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// 로그아웃 또는 필요 시 인스턴스 제거
+export const clearAuthAxiosInstance = () => {
+  clearAuthData();
+};
 
 // 토큰 재발행 함수
 const refreshToken = async () => {
@@ -78,8 +81,6 @@ const refreshToken = async () => {
     );
     const { accessToken } = response.data;
 
-    // let accessToken = response.headers["authorization"];
-    // let refreshToken = response.headers["refreshtoken"];
     if (accessToken) {
       // 새로운 토큰 로컬 스토리지에 저장
       localStorage.setItem("accessToken", accessToken);
@@ -92,4 +93,11 @@ const refreshToken = async () => {
   }
 };
 
-export default authAxios;
+// 로그인 상태 초기화
+const clearAuthData = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("userStore");
+};
+
+export default authAxiosInstance;

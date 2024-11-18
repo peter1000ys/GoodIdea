@@ -2,9 +2,7 @@ package com.ssafy.goodIdea.planner.entity;
 
 import com.ssafy.goodIdea.idea.entity.Idea;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -13,18 +11,24 @@ public class Planner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "planner_id")
-    Long id;
+    private Long id;
 
-//    기획 배경
-    String background;
-//    서비스 소개
-    String introduce;
-//    서비스 타겟
-    String target;
-//    기대효과
-    String exception;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "idea_id", nullable = false)
+    private Idea idea;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idea_id")
-    Idea idea;
+    @Lob
+    @Column(nullable = true)
+    private String content;
+
+    @Builder
+    public Planner(Idea idea, String content) {
+        this.idea = idea;
+        this.content = content;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
 }

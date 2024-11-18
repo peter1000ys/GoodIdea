@@ -4,6 +4,7 @@ import com.ssafy.goodIdea.common.entity.BaseTime;
 import com.ssafy.goodIdea.reqDocs.entity.ReqDocs;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,13 +15,26 @@ public class Req extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "req_id")
-    Long id;
-
-    String url;
-    String domain;
-    String description;
+    private Long reqId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reqDocs_id")
-    ReqDocs reqDocsId;
+    @JoinColumn(name = "reqDocs_id", nullable = false)
+    private ReqDocs reqDocs;
+
+    @Column(length = 1000, nullable = false)
+    private String url; // URL
+
+    @Column(length = 1000, nullable = false)
+    private String domain; // 도메인
+
+    @Column(length = 1000)
+    private String description; // 설명
+
+    @Builder
+    public Req(ReqDocs reqDocs, String url, String domain, String description) {
+        this.reqDocs = reqDocs;
+        this.url = url;
+        this.domain = domain;
+        this.description = description;
+    }
 }

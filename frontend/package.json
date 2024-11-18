@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.2.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,12 +11,34 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dineug/erd-editor": "^3.2.5",
+    "@hocuspocus/provider": "^2.13.7",
+    "@liveblocks/client": "^2.11.1",
+    "@liveblocks/react": "^2.11.1",
+    "@liveblocks/react-tiptap": "^2.11.1",
+    "@liveblocks/react-ui": "^2.11.1",
+    "@stomp/stompjs": "^7.0.0",
+    "@tiptap/extension-collaboration": "^2.9.1",
+    "@tiptap/extension-collaboration-cursor": "^2.9.1",
+    "@tiptap/react": "^2.9.1",
+    "@tiptap/starter-kit": "^2.9.1",
+    "@uiw/react-md-editor": "^4.0.4",
     "axios": "^1.7.7",
     "d3": "^7.9.0",
+    "dompurify": "^3.1.7",
+    "frontend": "file:",
+    "gsap": "^3.12.5",
+    "lodash": "^4.17.21",
+    "lucide-react": "^0.454.0",
+    "mermaid": "^11.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.27.0",
+    "sockjs-client": "^1.6.1",
+    "y-websocket": "^2.0.4",
+    "yjs": "^13.6.20",
     "zustand": "^5.0.0"
   },
   "devDependencies": {
