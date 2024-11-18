@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
 import DefaultButton from "../common/DefaultButton";
 import {
   selectIdea,
@@ -18,7 +18,55 @@ const ModalPlanning = ({ selectedSticker }) => {
   const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
 
-  const handleChange = (value) => {
+  // 왼쪽 정보 섹션을 위한 상태 추가
+  const [formData, setFormData] = useState({
+    serviceName: "",
+    background: "",
+    introduction: "",
+    target: "",
+    expectedEffect: "",
+    projectTopic: "",
+    techStack: "",
+    advancedStack: "",
+  });
+
+  // `textarea` 자동 높이 조절을 위한 refs
+  const textareaRefs = {
+    background: useRef(null),
+    introduction: useRef(null),
+    target: useRef(null),
+    expectedEffect: useRef(null),
+    projectTopic: useRef(null),
+    techStack: useRef(null),
+    advancedStack: useRef(null),
+  };
+
+  // `formData` 초기화
+  useEffect(() => {
+    if (selectedSticker) {
+      setFormData({
+        serviceName: selectedSticker.serviceName || "",
+        background: selectedSticker.background || "",
+        introduction: selectedSticker.introduction || "",
+        target: selectedSticker.target || "",
+        expectedEffect: selectedSticker.expectedEffect || "",
+        projectTopic: selectedSticker.projectTopic || "",
+        techStack: selectedSticker.techStack || "",
+        advancedStack: selectedSticker.advancedStack || "",
+      });
+    }
+  }, [selectedSticker]);
+
+  // `formData` 변경 핸들러
+  const handleFormChange = (e, fieldName) => {
+    setFormData({
+      ...formData,
+      [fieldName]: e.target.value,
+    });
+  };
+
+  // 댓글 입력 핸들러
+  const handleCommentChange = (value) => {
     setCommentInput(value);
   };
 
@@ -43,16 +91,18 @@ const ModalPlanning = ({ selectedSticker }) => {
       }
     };
 
-    stickerDetail(); // 함수 호출
-  }, [selectedSticker.ideaId, param]);
+    if (selectedSticker && selectedSticker.ideaId) {
+      stickerDetail(); // 함수 호출
+    }
+  }, [selectedSticker, param]);
 
   const handleUnSelectIdea = async () => {
     if (selectedSticker) {
       const success = await unselectIdea(selectedSticker.ideaId);
       if (success) {
-        alert("아이디어가 성공적으로 채택되었습니다.");
+        alert("아이디어 채택이 성공적으로 취소되었습니다.");
       } else {
-        alert("아이디어 채택에 실패했습니다.");
+        alert("아이디어 채택 취소에 실패했습니다.");
       }
     }
   };
@@ -61,7 +111,7 @@ const ModalPlanning = ({ selectedSticker }) => {
   const inputDatas = [
     { label: "기획 배경", name: "background" },
     { label: "서비스 소개", name: "introduction" },
-    { label: "서비스 타켓", name: "target" },
+    { label: "서비스 타겟", name: "target" },
     { label: "기대 효과", name: "expectedEffect" },
     { label: "주제 추천", name: "projectTopic" },
     { label: "추천 기술 스택", name: "techStack" },
@@ -89,6 +139,21 @@ const ModalPlanning = ({ selectedSticker }) => {
     }
   };
 
+  // 자동 높이 조절 함수
+  const autoResizeTextarea = (ref) => {
+    if (ref.current) {
+      ref.current.style.height = "auto"; // 기존 높이 초기화
+      ref.current.style.height = `${ref.current.scrollHeight}px`; // 새로운 높이 설정
+    }
+  };
+
+  // `formData`가 변경될 때마다 `textarea`의 높이 조절
+  useLayoutEffect(() => {
+    Object.values(textareaRefs).forEach((ref) => {
+      autoResizeTextarea(ref);
+    });
+  }, [formData]);
+
   return (
     <div className="flex flex-row h-full">
       {/* 왼쪽 정보 섹션 */}
@@ -101,8 +166,8 @@ const ModalPlanning = ({ selectedSticker }) => {
               name={seviceName.name}
               className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md"
               placeholder={`${seviceName.label}을 입력해주세요`}
-              value={selectedSticker?.[seviceName.name] || ""}
-              onChange={(e) => handleChange(e.target.value)}
+              value={formData.serviceName}
+              onChange={(e) => handleFormChange(e, seviceName.name)}
             />
           </div>
           {inputDatas.map((field) => (
@@ -111,10 +176,11 @@ const ModalPlanning = ({ selectedSticker }) => {
               <div className="col-span-3">
                 <textarea
                   name={field.name}
-                  className="w-full min-h-28 bg-gray-100 border border-gray-300 p-2 rounded-md"
+                  ref={textareaRefs[field.name]}
+                  className="w-full bg-gray-100 border border-gray-300 p-2 rounded-md overflow-hidden"
                   placeholder={`${field.label}을 입력해주세요`}
-                  value={selectedSticker?.[field.name] || ""}
-                  onChange={(e) => handleChange(e.target.value)}
+                  value={formData[field.name]}
+                  onChange={(e) => handleFormChange(e, field.name)}
                 />
               </div>
             </React.Fragment>
@@ -152,7 +218,7 @@ const ModalPlanning = ({ selectedSticker }) => {
           <input
             type="text"
             value={commentInput}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e) => handleCommentChange(e.target.value)}
             placeholder="댓글을 입력해주세요"
             className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none h-10"
           />
@@ -164,7 +230,7 @@ const ModalPlanning = ({ selectedSticker }) => {
           </button>
         </div>
         {/* 댓글 리스트 */}
-        <div className="space-y-4">
+        <div className="space-y-4 mt-4">
           {comments && comments.length > 0 ? (
             comments.map((comment, index) => {
               // createdAt을 "YYYY.MM.DD" 형식으로 변환
@@ -186,10 +252,7 @@ const ModalPlanning = ({ selectedSticker }) => {
                 >
                   <div className="flex justify-between items-center">
                     <p className="ml-2 font-semibold">{commenterName}</p>
-                    <p className="text-sm text-gray-500">
-                      {formattedDate}
-                    </p>{" "}
-                    {/* 변환된 날짜 표시 */}
+                    <p className="text-sm text-gray-500">{formattedDate}</p>
                   </div>
                   <Divier />
                   <p className="ml-2 py-2">{comment.commentContent}</p>
