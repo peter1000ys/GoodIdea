@@ -75,6 +75,7 @@ const AIPlanForm = ({ onClose, projectId }) => {
   };
 
   const generatePlanHandler = async () => {
+    if (isLoading) return;
     // 검증: 모든 태그 배열에 최소 하나 이상의 태그가 있는지 확인
     const emptyTags = Object.keys(tags).filter((key) => tags[key].length === 0);
     if (emptyTags.length > 0) {
