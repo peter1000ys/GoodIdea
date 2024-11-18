@@ -23,6 +23,7 @@ Jinja2
 jiter
 MarkupSafe
 mpmath
+konlpy
 networkx
 numpy
 openai
