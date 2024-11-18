@@ -5,10 +5,64 @@ import torch
 from openai import OpenAI
 from datetime import datetime, timedelta
 from fastapi import HTTPException
+from konlpy.tag import Okt
+from collections import Counter
+
+okt = Okt()
 
 # KcElectra 모델 로드
 tokenizer = AutoTokenizer.from_pretrained("beomi/KcELECTRA-base-v2022")
 model = AutoModel.from_pretrained("beomi/KcELECTRA-base-v2022")
+
+
+def tokenize_input(sentence):
+    # 입력 문장을 형태소 분석기로 토큰화 (명사 추출)
+    tokens = okt.nouns(sentence)
+    return tokens
+
+def extract_related_words(news_hits):
+    # 검색된 뉴스에서 tokens 필드 추출
+    all_tokens = []
+    for hit in news_hits:
+        all_tokens.extend(hit["_source"]["tokens"])
+    
+    # 단어 빈도 계산
+    token_counter = Counter(all_tokens)
+    return token_counter.most_common(10)  # 상위 10개 연관 단어 반환
+
+def search_related_news(es, tokens):
+    # ElasticSearch 쿼리 생성
+    query = {
+        "size": 10,
+        "query": {
+            "bool": {
+                "should": [
+                    {"match": {"tokens": token}} for token in tokens
+                ]
+            }
+        }
+    }
+
+    # 검색 실행
+    response = es.search(index="news-topic", body=query)
+    return response["hits"]["hits"]
+
+def recommend_words(sentence):
+    # 입력 문장 토큰화
+    tokens = tokenize_input(sentence)
+    
+    if not tokens:
+        return {"error": "No valid tokens found in the input."}
+    
+    # ElasticSearch에서 관련 뉴스 검색
+    news_hits = search_related_news(tokens)
+
+    if not news_hits:
+        return {"error": "No related news found in ElasticSearch."}
+    
+    # 연관 단어 추출
+    related_words = extract_related_words(news_hits)
+    return {"keywords": [word for word, freq in related_words]}
 
 # 단어 임베딩 벡터 생성 함수
 def generate_embedding(token):
