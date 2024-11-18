@@ -184,8 +184,6 @@ public class ProjectService {
      */
     public List<ProjectResponseDto> getUserProjects(UserDto user, Optional<ProjectType> projectType, Optional<Integer> grade) {
         List<UserProject> userProjects;
-        System.out.println(projectType.toString());
-        System.out.println(projectType.isPresent());
 
         if ( user.getRoleType() != RoleType.CONSULTANT) {
             // 동적 쿼리 처리
@@ -213,17 +211,67 @@ public class ProjectService {
                     .collect(Collectors.toList());
         }
         else {
-            List<Project> projects = projectRepository.findAll();
-            return projects.stream().map( (project) -> {
-                    return ProjectResponseDto.builder()
-                            .project_id(project.getId())
-                            .teamName(project.getTeamName())
-                            .gitlabName(project.getGitlabName())
-                            .gitlab_url(project.getGitlab_url())
-                            .projectType(project.getProjectType())
-                            .build();
+            List<Long> projectIds = userProjectRepository.findDistinctProjectIds();
+
+            // 동적 쿼리 처리
+            if (projectType.isPresent() && grade.isPresent()) {
+                projectIds = projectIds.stream().map( (projectId) -> {
+                    Project nowp = projectRepository.findById(projectId).orElseThrow( () -> new BaseException(ErrorType.PROJECT_NOT_FOUND));
+                    if ( nowp.getProjectType().equals(projectType.get())
+                            && userServiceClient.getUserById(nowp.getLeader()).orElseThrow( () -> new BaseException(ErrorType.USER_NOT_FOUND))
+                            .getGrade().equals(grade.get()) ){
+                        return projectId;
                     }
-            ).collect(Collectors.toList());
+                    else
+                        return null;
+                })
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            } else if (projectType.isPresent()) {
+                projectIds = projectIds.stream().map( (projectId) -> {
+                    Project nowp = projectRepository.findById(projectId).orElseThrow( () -> new BaseException(ErrorType.PROJECT_NOT_FOUND));
+                    if ( nowp.getProjectType().equals(projectType.get())){
+                        return projectId;
+                    }
+                    else
+                        return null;
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            } else if (grade.isPresent()) {
+                projectIds = projectIds.stream().map( (projectId) -> {
+                    Project nowp = projectRepository.findById(projectId).orElseThrow( () -> new BaseException(ErrorType.PROJECT_NOT_FOUND));
+                    if ( userServiceClient.getUserById(nowp.getLeader()).orElseThrow( () -> new BaseException(ErrorType.USER_NOT_FOUND))
+                            .getGrade().equals(grade.get()) ){
+                        return projectId;
+                    }
+                    else
+                        return null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+            }
+
+            return projectIds.stream().map( (projectId) -> {
+                Optional<Project> op = projectRepository.findById(projectId);
+                if ( op.isEmpty() ) {
+                    return null;
+                }
+
+                else {
+                    Project np = op.get();
+                    return ProjectResponseDto.builder()
+                            .project_id(np.getId())
+                            .teamName(np.getTeamName())
+                            .gitlabName(np.getGitlabName())
+                            .gitlab_url(np.getGitlab_url())
+                            .projectType(np.getProjectType())
+                            .build();
+                }
+            }
+            )
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
         }
 
 
