@@ -7,6 +7,7 @@ import {
 } from "@liveblocks/react";
 import { CursorMode, colorName } from "../../global";
 import { Cursor } from "../common/Cursor";
+import RequirementsTableSkeleton from "../skeleton/RequirementsTableSkeleton";
 
 function RequirementsTable() {
   const storage = useStorage((storage) => storage.requirements); // 항상 최상위에서 호출
@@ -110,7 +111,7 @@ function RequirementsTable() {
   // };
   // storage가 초기화되지 않은 경우 로딩 상태 표시
   if (storage === null) {
-    return <div>Loading...</div>;
+    return <RequirementsTableSkeleton columnWidths={columnWidths} />;
   }
 
   return (
