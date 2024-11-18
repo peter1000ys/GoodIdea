@@ -64,19 +64,6 @@ const AIPlanForm = ({ onClose, projectId }) => {
   };
 
   const generatePlanHandler = async () => {
-    if (
-      !generatedPlan.background ||
-      !generatedPlan.service_intro ||
-      !generatedPlan.target_users ||
-      !generatedPlan.expected_effects ||
-      !generatedPlan.project_topics ||
-      !generatedPlan.tech_stack ||
-      !generatedPlan.advanced_stack
-    ) {
-      alert("값을 입력해주세요.");
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
     setIsCompleted(false);
