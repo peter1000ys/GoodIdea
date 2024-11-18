@@ -64,16 +64,14 @@ const AIPlanForm = ({ onClose, projectId }) => {
   };
 
   const generatePlanHandler = async () => {
-    if (
-      !generatedPlan.background ||
-      !generatedPlan.service_intro ||
-      !generatedPlan.target_users ||
-      !generatedPlan.expected_effects ||
-      !generatedPlan.project_topics ||
-      !generatedPlan.tech_stack ||
-      !generatedPlan.advanced_stack
-    ) {
-      alert("값을 입력해주세요.");
+    // 검증: 모든 태그 배열에 최소 하나 이상의 태그가 있는지 확인
+    const emptyTags = Object.keys(tags).filter((key) => tags[key].length === 0);
+    if (emptyTags.length > 0) {
+      alert(
+        `${emptyTags.join(", ")} ${
+          emptyTags.length > 1 ? "키워드를" : "키워드를"
+        } 입력해주세요.`
+      );
       return;
     }
 
