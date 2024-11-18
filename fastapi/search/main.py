@@ -10,7 +10,7 @@ import httpx
 from pathlib import Path
 import requests
 import json
-from recommend import hybrid_search, generate_embedding, get_top_tokens_last_7_days, createAIPlanner
+from recommend import hybrid_search, generate_embedding, get_top_tokens_last_7_days, createAIPlanner, recommend_words
 from elasticsearch import Elasticsearch
 
 app = FastAPI()
@@ -110,9 +110,8 @@ async def get_news(query: str = Query(..., description="검색할 키워드를 �
 
 @app.get("/api/v1/search/recommend")
 async def recommend(keyword: str = Query(..., description="검색어")):
-    recommended_tokens = hybrid_search(keyword, es)
-    
-    return {"data": recommended_tokens}
+    # recommended_tokens = hybrid_search(keyword, es)
+    return {"data": recommend_words(keyword)}
 
 @app.post("/api/v1/search/ai-planner")
 async def createPlanner(payload: dict):
