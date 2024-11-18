@@ -34,18 +34,19 @@ function IdeaBoardPage() {
     };
   }, []);
 
-  // 마우스로 화면 끌 때 스페이스바 누르고 움직임
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === " ") {
+      // 스페이스바 눌림을 감지하고, 특정 조건에서만 동작
+      if (e.key === " " && !isModalOpen) {
+        // 모달이 열려있을 때는 동작하지 않음
         e.preventDefault();
-        setSpacePressed(true); // 스페이스바 눌림 상태
+        setSpacePressed(true);
       }
     };
 
     const handleKeyUp = (e) => {
       if (e.key === " ") {
-        setSpacePressed(false); // 스페이스바 떼짐 상태
+        setSpacePressed(false);
       }
     };
 
@@ -56,7 +57,7 @@ function IdeaBoardPage() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, []);
+  }, [isModalOpen]); // 모달 상태에 따라 이벤트 핸들러 동작
 
   const fetchIdeas = useCallback(async () => {
     const data = await fetchIdea(param?.id);
