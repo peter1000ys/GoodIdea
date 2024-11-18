@@ -78,8 +78,9 @@ const ModalPlanning = ({ selectedSticker }) => {
   };
 
   // 댓글 입력 핸들러
-  const handleCommentChange = (value) => {
-    setCommentInput(value);
+  const handleCommentChange = (e) => {
+    console.log(e.target.value);
+    setCommentInput(e.target.value);
   };
 
   const handleSelectIdea = async () => {
@@ -88,6 +89,7 @@ const ModalPlanning = ({ selectedSticker }) => {
       if (success) {
         alert("아이디어가 성공적으로 채택되었습니다.");
         // 필요 시, 추가적인 로직을 여기에 작성
+        useProjectStore.setState({ mainIdea: selectedSticker });
       } else {
         alert("아이디어 채택에 실패했습니다.");
       }
@@ -100,6 +102,7 @@ const ModalPlanning = ({ selectedSticker }) => {
       if (success) {
         alert("아이디어 채택이 성공적으로 취소되었습니다.");
         // 필요 시, 추가적인 로직을 여기에 작성
+        useProjectStore.setState({ mainIdea: null });
       } else {
         alert("아이디어 채택 취소에 실패했습니다.");
       }
@@ -107,7 +110,8 @@ const ModalPlanning = ({ selectedSticker }) => {
   };
 
   const handleSend = async () => {
-    if (commentInput.trim() === "") {
+    // 공백만 입력된 경우 체크
+    if (!commentInput.trim()) {
       alert("댓글을 입력해주세요.");
       return;
     }
@@ -230,23 +234,23 @@ const ModalPlanning = ({ selectedSticker }) => {
             theme="bright"
             text={"수정"}
           />
-          {mainIdea === selectedSticker.ideaId
-            ? leader !== userInfo.username && (
-                <DefaultButton
-                  onClick={handleUnSelectIdea}
-                  className=""
-                  theme="bright"
-                  text={"아이디어 채택 취소"}
-                />
-              )
-            : leader === userInfo.username && (
-                <DefaultButton
-                  onClick={handleSelectIdea}
-                  className=""
-                  theme="bright"
-                  text={"아이디어 채택"}
-                />
-              )}
+          {mainIdea?.ideaId === selectedSticker.ideaId &&
+            leader === userInfo.username && (
+              <DefaultButton
+                onClick={handleUnSelectIdea}
+                className=""
+                theme="bright"
+                text={"아이디어 채택 취소"}
+              />
+            )}
+          {mainIdea?.ideaId === null && leader === userInfo.username && (
+            <DefaultButton
+              onClick={handleSelectIdea}
+              className=""
+              theme="bright"
+              text={"아이디어 채택"}
+            />
+          )}
         </div>
       </div>
 
@@ -259,7 +263,7 @@ const ModalPlanning = ({ selectedSticker }) => {
           <input
             type="text"
             value={commentInput}
-            onChange={(e) => handleCommentChange(e.target.value)}
+            onChange={(e) => handleCommentChange(e)}
             placeholder="댓글을 입력해주세요"
             className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none h-10"
           />
