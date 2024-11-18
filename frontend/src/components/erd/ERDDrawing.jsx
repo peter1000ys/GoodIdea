@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "@dineug/erd-editor";
 import { useStorage, useMutation } from "@liveblocks/react";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 export function ERDDrawing() {
   const erdData = useStorage((root) => root.erdData);
@@ -68,7 +69,7 @@ export function ERDDrawing() {
   }, [editor, erdData]);
 
   if (erdData === null) {
-    return <div>로딩중</div>;
+    return <LoadingSpinner />;
   }
   return (
     <div className="w-full h-full flex flex-col">

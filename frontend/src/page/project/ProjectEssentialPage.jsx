@@ -34,7 +34,7 @@ function ProjectEssentialPage() {
     <>
       <Room>
         <Helmet>
-          <title>프로젝트 기본 정보 페이지</title>
+          <title>GOODIDEA - 기본 정보</title>
         </Helmet>
         <ProjectEssentialEditor />
       </Room>

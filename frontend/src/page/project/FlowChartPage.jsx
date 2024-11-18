@@ -46,7 +46,7 @@ export default function FlowChartPage() {
     <>
       <Room>
         <Helmet>
-          <title>FLOWCHART 페이지</title>
+          <title>GOODIDEA - FLOWCHART</title>
         </Helmet>
         <ProposalEditor />
       </Room>

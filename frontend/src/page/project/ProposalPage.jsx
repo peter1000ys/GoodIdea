@@ -40,7 +40,7 @@ export default function ProposalPage() {
     <>
       <Room>
         <Helmet>
-          <title>기획서</title>
+          <title>GOODIDEA - 기획서</title>
         </Helmet>
         <ProposalEditor />
       </Room>

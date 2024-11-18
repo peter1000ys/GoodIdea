@@ -171,7 +171,7 @@ function MindMapPage() {
   return (
     <>
       <Helmet>
-        <title>마인드맵페이지</title>
+        <title>GOODIDEA - 마인드맵</title>
       </Helmet>
 
       <div className="h-full w-full flex flex-col relative pb-10">

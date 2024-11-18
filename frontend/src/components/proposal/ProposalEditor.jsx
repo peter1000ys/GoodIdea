@@ -106,7 +106,19 @@ function ProposalEditor() {
   }, [updateMyPresence]);
 
   if (storage === null) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex-1 w-full h-full p-4 bg-gray-100">
+        {/* 스켈레톤 편집기 영역 */}
+        <div className="w-full h-[675px] rounded border bg-gray-200 animate-pulse p-4">
+          <div className="h-6 w-3/4 bg-gray-300 rounded mb-4"></div>
+          <div className="h-4 w-full bg-gray-300 rounded mb-2"></div>
+          <div className="h-4 w-5/6 bg-gray-300 rounded mb-2"></div>
+          <div className="h-4 w-4/6 bg-gray-300 rounded mb-2"></div>
+          <div className="h-4 w-full bg-gray-300 rounded mb-2"></div>
+          <div className="h-4 w-5/6 bg-gray-300 rounded"></div>
+        </div>
+      </div>
+    );
   }
 
   // 커서
