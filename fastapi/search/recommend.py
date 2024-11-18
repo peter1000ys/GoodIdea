@@ -66,7 +66,7 @@ def recommend_words(sentence, es):
         return {"error": "No related news found in ElasticSearch."}
     
     # 연관 단어 추출 (입력된 토큰 제외)
-    related_words = extract_related_words(news_hits, excluded_tokens=set(tokens)+["대사", "지원", "감독", "현장", "경기", "최고", "인사", "전국", "시작", "올해", "추진", "투자", "연속", "시장", "세계", "지역", "최대", "국민"])
+    related_words = extract_related_words(news_hits, excluded_tokens=set(tokens+["대사", "지원", "감독", "현장", "경기", "최고", "인사", "전국", "시작", "올해", "추진", "투자", "연속", "시장", "세계", "지역", "최대", "국민"]))
     return [word for word, freq in related_words]
 
 # 단어 임베딩 벡터 생성 함수
