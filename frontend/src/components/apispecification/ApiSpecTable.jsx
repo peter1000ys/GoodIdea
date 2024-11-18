@@ -8,6 +8,7 @@ import {
 import { CursorMode, colorName } from "../../global";
 import { Cursor } from "../common/Cursor";
 import EnhancedModal from "./EnhancedModal";
+import ApiSpecTableSkeleton from "../skeleton/ApiSpecTableSkeleton";
 
 function ApiSpecTable() {
   const storage = useStorage((storage) => storage.apiSpecifications); // apiSpecifications 저장소 접근
@@ -128,7 +129,7 @@ function ApiSpecTable() {
     [selectedSpec]
   );
   if (storage === null) {
-    return <div>Loading...</div>;
+    return <ApiSpecTableSkeleton columnWidths={columnWidths} />;
   }
 
   return (

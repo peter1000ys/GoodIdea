@@ -208,7 +208,7 @@ function IdeaBoardPage() {
   return (
     <>
       <Helmet>
-        <title>아이디어보드 페이지</title>
+        <title>GOODIDEA - 아이디어보드</title>
       </Helmet>
       <div
         ref={containerRef}
