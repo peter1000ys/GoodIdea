@@ -62,7 +62,7 @@ public class ProjectService {
     * @param GitLabProjectResponseDto
     * @param List<GitLabUserResponseDto>
     */
-//    @Transactional
+    @Transactional
     public ProjectResponseDto createProject(UserDto user, ProjectCreateRequestDto dto, GitLabProjectResponseDto myProject, List<GitLabUserResponseDto> users) {
 
 //        같은 타입의 프로젝트를 생성하려할 경우 에러 발생
@@ -99,8 +99,6 @@ public class ProjectService {
                             .build());
                 });
 
-
-
         return ProjectResponseDto.builder()
                 .project_id(project.getId())
                 .projectType(project.getProjectType())
@@ -113,7 +111,8 @@ public class ProjectService {
                         userProjectService.findAllByProjectId(project.getId())
                                 .stream()
                                 .map( up -> {
-                                    UserDto us = up.getUser();
+                                    Long upUserId = up.getUserId();
+                                    UserDto us = userServiceClient.getUserById(upUserId).get();
                                     return UserDto.builder()
                                             .id(us.getId())
                                             .name(us.getName())
