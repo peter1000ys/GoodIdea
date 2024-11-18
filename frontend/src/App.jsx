@@ -20,7 +20,7 @@ const LazyProjectEssentialPage = React.lazy(() =>
 );
 
 // 환경변수 확인
-console.log("Public Key from env:", import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY);
+// console.log("Public Key from env:", import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY);
 const PublicApiKey = import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY;
 const client = createClient({
   publicApiKey: `${PublicApiKey}`,

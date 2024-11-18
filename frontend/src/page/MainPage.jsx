@@ -320,7 +320,7 @@ function MainPage() {
               flex flex-col justify-center items-center gap-8 relative`}
           >
             <img
-              src="/bonobono.png"
+              src="/bonobono.webp"
               alt="bonobono"
               className="absolute "
               style={{

@@ -1,11 +1,54 @@
 import React, { useEffect, useState } from "react";
 import "@dineug/erd-editor";
-import { useStorage, useMutation } from "@liveblocks/react";
+import {
+  useStorage,
+  useMutation,
+  useMyPresence,
+  useOthers,
+} from "@liveblocks/react";
 import LoadingSpinner from "../common/LoadingSpinner";
+import { CursorMode, colorName } from "../../global";
+import { Cursor } from "../common/Cursor";
 
 export function ERDDrawing() {
   const erdData = useStorage((root) => root.erdData);
   const [editor, setEditor] = useState(null);
+
+  // 커서
+  const [{ cursor }, updateMyPresence] = useMyPresence();
+  const others = useOthers();
+  const [cursorState, setCursorState] = useState({ mode: CursorMode.Hidden });
+
+  // 커서
+  useEffect(() => {
+    function onKeyUp(e) {
+      if (e.key === "/") {
+        setCursorState({
+          mode: CursorMode.Chat,
+          previousMessage: null,
+          message: "",
+        });
+      } else if (e.key === "Escape") {
+        updateMyPresence({ message: "" });
+        setCursorState({ mode: CursorMode.Hidden });
+      }
+    }
+
+    window.addEventListener("keyup", onKeyUp);
+
+    function onKeyDown(e) {
+      if (e.key === "/") {
+        e.preventDefault();
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [updateMyPresence]);
 
   // Liveblocks에 ERD 데이터를 저장
   const updateERDData = useMutation(({ storage }, newData) => {
@@ -71,11 +114,98 @@ export function ERDDrawing() {
   if (erdData === null) {
     return <LoadingSpinner />;
   }
+
+  // 커서
+  function handlePointerMove(e) {
+    const cursor = { x: Math.floor(e.clientX), y: Math.floor(e.clientY) };
+    updateMyPresence({ cursor });
+  }
+
+  // 커서
+  function handlePointerLeave(e) {
+    updateMyPresence({ cursor: null });
+  }
   return (
-    <div className="w-full h-full flex flex-col">
+    <div
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="w-full h-full flex flex-col"
+    >
       <div className="flex-1 flex">
         <div className="relative flex-1" id="app-erd" />;
       </div>
+      {cursor && (
+        <div
+          className="absolute top-0 left-0"
+          style={{
+            transform: `translateX(${cursor.x}px) translateY(${cursor.y}px)`,
+          }}
+        >
+          {cursorState.mode === CursorMode.Chat && (
+            <>
+              {/* <img src="cursor.svg" /> */}
+
+              <div
+                className="absolute top-5 left-2 bg-blue-500 px-4 py-2 text-sm leading-relaxed text-white"
+                onKeyUp={(e) => e.stopPropagation()}
+                style={{
+                  borderRadius: 20,
+                }}
+              >
+                {cursorState.previousMessage && (
+                  <div>{cursorState.previousMessage}</div>
+                )}
+                <input
+                  className="w-60 border-none	bg-transparent text-white placeholder-blue-300 outline-none"
+                  autoFocus={true}
+                  onChange={(e) => {
+                    updateMyPresence({ message: e.target.value });
+                    setCursorState({
+                      mode: CursorMode.Chat,
+                      previousMessage: null,
+                      message: e.target.value,
+                    });
+                  }}
+                  onKeyDown={(e) => {
+                    console.log(e.key, CursorMode.Chat);
+                    if (e.key === "Enter") {
+                      setCursorState({
+                        mode: CursorMode.Chat,
+                        previousMessage: cursorState.message,
+                        message: "",
+                      });
+                    } else if (e.key === "Escape") {
+                      setCursorState({
+                        mode: CursorMode.Hidden,
+                      });
+                    }
+                  }}
+                  placeholder={
+                    cursorState.previousMessage ? "" : "Say something…"
+                  }
+                  value={cursorState.message}
+                  maxLength={50}
+                />
+              </div>
+            </>
+          )}
+        </div>
+      )}
+      {others.map(({ connectionId, presence }) => {
+        if (presence == null || !presence.cursor) {
+          return null;
+        }
+
+        return (
+          <Cursor
+            key={connectionId}
+            color={colorName[connectionId % colorName.length]}
+            x={presence.cursor.x}
+            y={presence.cursor.y}
+            message={presence.message}
+          />
+        );
+      })}
     </div>
   );
 }
