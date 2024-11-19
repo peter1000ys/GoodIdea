@@ -1,7 +1,8 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.2.3",
+  "description": "A collaborative for remote teams",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

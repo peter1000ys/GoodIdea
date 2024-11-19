@@ -41,6 +41,15 @@ const MindMap = ({ mindMapData, onClick }) => {
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force("collision", d3.forceCollide().radius(10));
 
+    if (mindMapData?.nodes?.length > 30) {
+      svg.attr(
+        "viewBox",
+        `0 0 ${800 + mindMapData.nodes.length * 4} ${
+          800 + mindMapData.nodes.length * 4
+        }`
+      );
+    }
+
     // 링크 그리기
     const link = svg
       .append("g")
