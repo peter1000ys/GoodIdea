@@ -272,13 +272,13 @@
 
 
 ✔ 천요성
-  - 
-  - 
-  - 
-  - 
-  - 
-  -
-  -
+  - **[Backend]** 프로젝트, 아이디어 관련 추가 서비스 로직 작성 및 오류 테스트 및 수정
+  - **[Backend]** liveblock storage에 저장된 데이터를 mongoDB에 업데이트 및 조회하는 로직 작성
+  - **[Backend]** 모놀리식 코드 MSA 구조에 맞게 분리(FeignCleint 등을 활용)
+  - **[Infra]** 서비스별 독립적인 CI/CD 파이프라인 구축(Gitlab, Jenkins)
+  - **[Infra]** MSA식 서버 구축(SpringBoot, Spring Cloud, Docker, Docker Composer, Jenkins, EC2)
+  - **[Infra]** auth-service(redis), user-service, project-service(mariaDB) DB 분리하여 구축
+  - **[Infra]** NGINX와 Gateway 서버, Eureka 서버를 활용한 트래픽 관리 작업
   -
 
 ✔ 황우성
