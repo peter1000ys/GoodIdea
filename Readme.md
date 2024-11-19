@@ -254,10 +254,10 @@
 
 - 팀장
 - UCC 제작
-- 아이디어 보드 UI 및 API 연결
-- NAV UI 초안
-- 프로젝트 생성/수정/조회 API
-- 아이디어 보드 확대/축소 등 애니메이션
+- **[Frontend]**아이디어 보드 UI 및 API 연결
+- **[Frontend]**NAV UI 초안
+- **[Frontend]**프로젝트 생성/수정/조회 API
+- **[Frontend]** 아이디어 보드 확대/축소 등 애니메이션
 -
 
 ✔ 전지훈
@@ -281,11 +281,15 @@
 -
 
 ✔ 김태연
-- **[Backend]** 아이디어 관련 기능 백엔드 기능 구현
-- **[Backend]** CRDT 관련 WebSocket 설정
-- **[Frontend]** CRDT 관련 API 연결 및 통신 설정
-- **[Frontend]** Liveblocks 라이브러리 관련 room provider 생성
-- **[Frontend]** Liveblocks 라이브러리 관련 client 생성
+
+-
+-
+-
+-
+-
+-
+-
+-
 
 ✔ 천요성
 
