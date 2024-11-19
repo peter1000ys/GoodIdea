@@ -231,7 +231,7 @@ function MainPage() {
   return (
     <>
       <Helmet>
-        <title>메인페이지</title>
+        <title>GOODIDEA - 기획을 한번에!</title>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/fonts-archive/Maplestory/Maplestory.css"
