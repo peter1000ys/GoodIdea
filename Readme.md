@@ -281,15 +281,11 @@
 -
 
 ✔ 김태연
-
--
--
--
--
--
--
--
--
+- **[Backend]** 아이디어 관련 기능 백엔드 기능 구현
+- **[Backend]** CRDT 관련 WebSocket 설정
+- **[Frontend]** CRDT 관련 API 연결 및 통신 설정
+- **[Frontend]** Liveblocks 라이브러리 관련 room provider 생성
+- **[Frontend]** Liveblocks 라이브러리 관련 client 생성
 
 ✔ 천요성
 
