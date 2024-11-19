@@ -262,13 +262,13 @@
 
 ✔ 전지훈
 
--
--
--
--
--
--
--
+- **[Frontend]** 메인 페이지
+- **[Frontend]** 산출물 페이지(REQ, API, ERD, FLOW_CHART)
+- **[Frontend]** AI 기획서
+- **[Frontend]** 기획서 (MD EDITOR)
+- **[Frontend]** AI CHAT_BOT
+- **[PT]** PPT 제작
+- **[PT]** 중간 발표
 
 ✔ 한세훈
 
