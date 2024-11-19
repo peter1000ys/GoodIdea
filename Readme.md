@@ -127,32 +127,25 @@
 
 ![Jenkins](https://img.shields.io/badge/jenkins-D24939.svg?style=flat&logo=jenkins&logoColor=white)
 ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=flat&logo=nginx&logoColor=white)
-<img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat&logo=Amazon S3&logoColor=white">
 <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=flat&logo=Amazon EC2&logoColor=white">
-<img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=flat&logo=Amazon RDS&logoColor=white">
-<img src="https://img.shields.io/badge/Google Cloud-4285F4?style=flat&logo=Google Cloud&logoColor=white">
 <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=Docker&logoColor=white">
-<img src="https://img.shields.io/badge/Kubernetes-326CE5?style=flat&logo=kubernetes&logoColor=white">
 
 ### Backend
 
 ![Spring](https://img.shields.io/badge/spring-6DB33F.svg?style=flat&logo=spring&logoColor=white)
 <img src ="https://img.shields.io/badge/Spring_Security-6DB33F?style=flat&logo=Spring-Security&logoColor=white">
 <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat&logo=springboot&logoColor=white">
-<img src="https://img.shields.io/badge/OpenAI-412991?style=flat&logo=OpenAI&logoColor=white">
 <img src="https://img.shields.io/badge/Gradle-02303A?style=flat&logo=Gradle&logoColor=white">
 <img src="https://img.shields.io/badge/Apache Kafka-231F20?style=flat&logo=Apache Kafka&logoColor=white">
+<img src="https://img.shields.io/badge/FastAPI-009688?style=flat&logo=FastAPI&logoColor=white">
 ![JWT](https://img.shields.io/badge/JWT-black?style=flat&logo=JSON%20web%20tokens)
 
 
 ### DB
 
 ![Redis](https://img.shields.io/badge/Redis-FF4438.svg?style=flat&logo=redis&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1.svg?style=flat&logo=mysql&logoColor=white)
+![MySQL](https://img.shields.io/badge/MariaDB-003545?style=flat&logo=MariaDB&logoColor=white)
 <img src="https://img.shields.io/badge/Elasticsearch-005571?style=flat&logo=elasticsearch&logoColor=white">
-<img src="https://img.shields.io/badge/Apache Airflow-017CEE?style=flat&logo=Apache Airflow&logoColor=white">
-<img src="https://img.shields.io/badge/Apache Hadoop-FFA500?style=flat&logo=apachehadoop&logoColor=white">
-<img src="https://img.shields.io/badge/Apache HBase-BE160C?style=flat&logo=apachehbase&logoColor=white">
 
 ### TOOL
 <img src="https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white">
@@ -162,10 +155,14 @@
 <img src="https://img.shields.io/badge/Jira-0052CC?style=flat&logo=jira&logoColor=white">
 <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white">
 <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white">
+<img src="https://img.shields.io/badge/OpenAI-412991?style=flat&logo=OpenAI&logoColor=white">
+<img src="https://img.shields.io/badge/Logstash-005571?style=flat&logo=Logstash&logoColor=white">
 
 ### Data
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=flat&logo=python&logoColor=ffdd54)
+<img src="https://img.shields.io/badge/Pytorch-EE4C2C?style=flat&logo=Pytorch&logoColor=white">
+<img src="https://img.shields.io/badge/Kibana-005571?style=flat&logo=Kibana&logoColor=white">
 
 </div>
 
@@ -285,14 +282,15 @@
   -
 
 ✔ 황우성
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  -
-  -
+  - **[Backend]** SpringBoot 스켈레톤 작성 ( Security 구축, 작업 표준 작성[MVC, ResponseAPI, JWT, etc...] )
+  - **[Backend]** SSAFY Gitlab OAuth 2.0 기반 회원 가입 서비스 구축
+  - **[Backend]** KcElectra 언어 모델 기반 뉴스 데이터 머신 러닝 및 학습&크롤링 자동화(매일 0시)
+  - **[Backend]** GPT 프롬프트 기반 AI 기획서 생성 서비스 작성
+  - **[Backend]** 실시간 뉴스 검색 기능 및 사용자 검색어 기반 Github 레포지토리 조회 서비스 작성
+  - **[Backend]** 멤버 및 프로젝트 서비스 로직 작성(유저 역할 자동 구분[교육생/코치], GitLab 유저 토큰 관리(Redis) 및 정보 조회 )
+  - **[Infra]** 모놀리식 CI/CD Test 서버 구축 ( Docker, Jenkins, MariaDB, Redis )
+  - **[Infra]** 뉴스 기사 기반 단어 추천 서비스 인프라 구축 ( FASTAPI, DOCKER, JENKINS )
+  - **[Infra]** 머신러닝 서버 기능별 분리(추천, 크롤링, 학습) 및 크롤링 파이프라인 구축( Kafka, ElasticSearch, LogStash, Kibana )
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=BDBDC8&height=150&section=footer" width="100%" >
 
