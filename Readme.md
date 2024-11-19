@@ -100,29 +100,29 @@
  <summary>📢 기능 GIF</summary>
  <div markdonw="1">
 
-### 마인드맵 기능
+![gif1](/uploads/343ba34d823ac46e51c84f5cae80b6bb/gif1.gif)
+![gif2](/uploads/987fe1e4a999a15272c7a211ccf48036/gif2.gif)
+![gif3](/uploads/02db450a20b1639f2855f8baf4e53593/gif3.gif)
+![gif4](/uploads/48e7761f4ee20a4a110263519419b2b1/gif4.gif)
+![gif5](/uploads/6de9b8389127fffa7f28eb2c0790bdb6/gif5.gif)
+![gif6](/uploads/28aa1388762d814b81c23082127af103/gif6.gif)
+![gif7](/uploads/4bfff855bf6c4907afbf354766a3fa64/gif7.gif)
+![gif8](/uploads/4267636d9596e6fafe17c20cbc75edf6/gif8.gif)
+![gif9](/uploads/d7b18e05817ae9793a821aaca7edc180/gif9.gif)
+![gif10](/uploads/449bc42a71138734f221eaee164aee53/gif10.gif)
+![gif11](/uploads/f76310c773c593cd93be796caa0675a3/gif11.gif)
 
-![마인드맵 기능]()
+### 마인드맵 기능
 
 ### AI 기획서 기능
 
-![뉴스 3줄 요약]()
-
 ### 실시간 협업
-
-![실시간 주식]()
 
 ### 산출물 관리
 
-![모의투자 시연]()
-
 ### 아이디어 보드
 
-![아이디어 보드]()
-
 ### AI 챗봇
-
-![AI챗봇]()
 
  </div>
 </details>
@@ -200,9 +200,9 @@
 
 # 📚 프로젝트 산출물
 
-## 1. Figma(url)
+## 1. Figma([url](https://www.figma.com/design/PlhssolhdTtgMaYcgImZ6B/C105?node-id=0-1&node-type=canvas&t=JCbGzA0Uc2WUfZQ6-0))
 
-![GoodIdea]()
+![figma](/uploads/57845c1a32e83e0654687a99df379b9d/figma.JPG)
 
 ## 2. ERD
 
@@ -210,7 +210,7 @@
 
 ## 3. 요구사항 명세서
 
-![요구사항명세서]()
+![요구](/uploads/926f51ccc506bbd5b19d559f8614b02e/요구.JPG)
 
 ## 4. 아키텍처
 
