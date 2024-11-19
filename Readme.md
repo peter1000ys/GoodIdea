@@ -1,9 +1,8 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=BDBDC8&height=150&section=header" width="100%" >
 
-
 # Newstock
-기획이 어려운 SSAFY인을 위한 [SSAFY 프로젝트 기획 보조] 서비스 “**GoodIdea**”
 
+기획이 어려운 SSAFY인을 위한 [SSAFY 프로젝트 기획 보조] 서비스 “**GoodIdea**”
 
 `SSAFY 11th 자율 PJT`
 
@@ -11,8 +10,8 @@
 
 ![image (21).png](Picture/Logo.png)
 
-
 # 목차
+
 1. [서비스 소개](#-서비스-소개)
 2. [화면 소개](#-화면-소개)
 3. [기술 스택](#-기술-스택)
@@ -20,16 +19,17 @@
 5. [프로젝트 산출물](#-프로젝트-산출물)
 6. [팀원 구성](#-팀원-구성)
 
-
 ---
 
 # ✨ 서비스 소개
+
 ## 기획 배경
-  - SSAFY 프로젝트 진행 시 기획 단계에서 다음과 같은 어려움을 해결하고자 서비스 개발
-  - 아이디어 부족: 창의적인 프로젝트 주제 선정의 어려움.
-  - 효율성 저하: 팀원 간 실시간 협업과 기획 내용 공유의 비효율성.
-  - 트렌드 반영: 최신 기술 스택과 취업 시장 트렌드 반영 부족.
-  - 문서 작성 부담: 프로젝트 명세서, ERD 등 산출물 작성의 어려움.
+
+- SSAFY 프로젝트 진행 시 기획 단계에서 다음과 같은 어려움을 해결하고자 서비스 개발
+- 아이디어 부족: 창의적인 프로젝트 주제 선정의 어려움.
+- 효율성 저하: 팀원 간 실시간 협업과 기획 내용 공유의 비효율성.
+- 트렌드 반영: 최신 기술 스택과 취업 시장 트렌드 반영 부족.
+- 문서 작성 부담: 프로젝트 명세서, ERD 등 산출물 작성의 어려움.
 
 ## 기능 소개 🔍
 
@@ -54,6 +54,7 @@
     - 팀원 간 기획 문서 실시간 작성 및 수정 가능.
 
 ### 📌 산출물 관리
+
     - 기획 산출물 생성 및 관리
     - 기획서
     - 요구사항 명세서
@@ -100,21 +101,34 @@
  <div markdonw="1">
 
 ### 마인드맵 기능
+
 ![마인드맵 기능]()
+
 ### AI 기획서 기능
+
 ![뉴스 3줄 요약]()
+
 ### 실시간 협업
+
 ![실시간 주식]()
+
 ### 산출물 관리
+
 ![모의투자 시연]()
+
 ### 아이디어 보드
+
 ![아이디어 보드]()
+
 ### AI 챗봇
+
 ![AI챗봇]()
+
  </div>
 </details>
 
 # 🛠 기술 스택
+
 <div align="center">
 
 ### Frontend
@@ -144,7 +158,6 @@
 <img src="https://img.shields.io/badge/Apache Kafka-231F20?style=flat&logo=Apache Kafka&logoColor=white">
 ![JWT](https://img.shields.io/badge/JWT-black?style=flat&logo=JSON%20web%20tokens)
 
-
 ### DB
 
 ![Redis](https://img.shields.io/badge/Redis-FF4438.svg?style=flat&logo=redis&logoColor=white)
@@ -155,6 +168,7 @@
 <img src="https://img.shields.io/badge/Apache HBase-BE160C?style=flat&logo=apachehbase&logoColor=white">
 
 ### TOOL
+
 <img src="https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white">
 <img src="https://img.shields.io/badge/GitLab-FC6D26?style=flat&logo=GitLab&logoColor=white">
 <img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white">
@@ -170,6 +184,7 @@
 </div>
 
 # 📌 기술 상세 설명
+
 ![슬라이드1]()
 ![슬라이드2]()
 ![슬라이드3]()
@@ -181,19 +196,22 @@
 ![슬라이드9]()
 ![슬라이드10]()
 
-
 # 📚 프로젝트 산출물
 
 ## 1. Figma(url)
+
 ![GoodIdea]()
 
 ## 2. ERD
+
 ![ERD]()
 
 ## 3. 요구사항 명세서
+
 ![요구사항명세서]()
 
 ## 4. 아키텍처
+
 ![아키텍처]()
 
 # 👨‍👨‍👧‍👦 팀원 구성
@@ -202,12 +220,12 @@
   <tbody>
     <tr>
       <td align="center">
-        <img src="Picture/juho.png" alt="FE 팀장 : 이주호" width="100px"/>
+        <img src="Picture/juho.JPG" alt="FE 팀장 : 이주호" width="100px"/>
         <br />
         <sub><b>FE 팀장 : 이주호</b></sub>
       </td>
       <td align="center">
-        <img src="Picture/jh.png" alt="BE 팀원 : 전지훈" width="100px"/>
+        <img src="Picture/jh.jpg" alt="BE 팀원 : 전지훈" width="100px"/>
         <br />
         <sub><b>FE/AI 팀원 : 전지훈</b></sub>
       </td>
@@ -227,7 +245,7 @@
         <sub><b>BE/INFRA 팀원 : 천요성</b></sub>
       </td>
       <td align="center">
-        <img src="Picture/us.png" alt="BE/AI 팀원 : 황우성" width="100px"/>
+        <img src="Picture/us.jpg" alt="BE/AI 팀원 : 황우성" width="100px"/>
         <br />
         <sub><b>BE LEADER/AI 팀원 : 황우성</b></sub>
       </td>
@@ -237,62 +255,66 @@
 <hr/>
 
 ✔ 이주호
-  - 팀장
-  - UCC 제작
-  - 아이디어 보드 UI 및 API 연결
-  - 
-  - 
-  - 
-  - 
+
+- 팀장
+- UCC 제작
+- 아이디어 보드 UI 및 API 연결
+-
+-
+-
+-
 
 ✔ 전지훈
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  -
+
+-
+-
+-
+-
+-
+-
+-
 
 ✔ 한세훈
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  
-✔ 김태연
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
 
+-
+-
+-
+-
+-
+-
+-
+
+✔ 김태연
+
+-
+-
+-
+-
+-
+-
+-
+-
 
 ✔ 천요성
-  - 
-  - 
-  - 
-  - 
-  - 
-  -
-  -
-  -
+
+-
+-
+-
+-
+-
+-
+-
+-
 
 ✔ 황우성
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  -
-  -
+
+-
+-
+-
+-
+-
+-
+-
+-
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=BDBDC8&height=150&section=footer" width="100%" >
-
